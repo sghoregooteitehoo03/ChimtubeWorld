@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "125527717178",
+    "project_id": "chimtubeworld",
+    "storage_bucket": "chimtubeworld.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125527717178:android:067e26a42f4c66ab660c03",
+        "android_client_info": {
+          "package_name": "com.sghore.chimtubeworld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "125527717178-67hbbo45qcl1m5a6aadp78kt5balv84n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCksYCDwOVH8MJmikRw9aC4iE2loyL_atQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "125527717178-67hbbo45qcl1m5a6aadp78kt5balv84n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

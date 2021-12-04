@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/youtubeFragment">
+
+
+    <fragment
+        android:id="@+id/youtubeFragment"
+        android:name="com.sghore.chimtubeworld.ui.fragment.YoutubeFragment"
+        android:label="YoutubeFragment"
+        tools:layout="@layout/fragment_youtube" />
+</navigation>
