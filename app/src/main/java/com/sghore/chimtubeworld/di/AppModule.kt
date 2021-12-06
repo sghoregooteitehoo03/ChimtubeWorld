@@ -26,15 +26,8 @@ object AppModule {
     @Provides
     fun provideRetrofit() =
         Retrofit.Builder()
-            .baseUrl(Contents.YOUTUBE_API_URL)
             .client(OkHttpClient.Builder().apply {
                 readTimeout(2, TimeUnit.MINUTES)
             }.build())
             .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-    @Singleton
-    @Provides
-    fun provideRetrofitService(retrofit: Retrofit) =
-        retrofit.create(RetrofitService::class.java)
 }

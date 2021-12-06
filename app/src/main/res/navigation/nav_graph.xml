@@ -11,4 +11,10 @@
         android:name="com.sghore.chimtubeworld.ui.fragment.YoutubeFragment"
         android:label="YoutubeFragment"
         tools:layout="@layout/fragment_youtube" />
+
+    <fragment
+        android:id="@+id/twitchFragment"
+        android:name="com.sghore.chimtubeworld.ui.fragment.TwitchFragment"
+        android:label="TwitchFragment"
+        tools:layout="@layout/fragment_twitch" />
 </navigation>

@@ -18,9 +18,11 @@ class YoutubeViewModel @Inject constructor(
     val allChannelList: LiveData<List<Channel>> = _allChannelList
 
     fun getChannelInfo() = viewModelScope.launch {
-        val channelList = repository.getChannelInfo()
-        if (channelList != null) {
+        try {
+            val channelList = repository.getChannelInfo()
             _allChannelList.value = channelList.toList()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

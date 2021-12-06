@@ -2,27 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_youtube"
+        android:id="@id/youtubeFragment"
         android:icon="@android:color/holo_red_dark"
-        android:title="유튜브"/>
+        android:title="유튜브" />
 
     <item
-        android:id="@+id/menu_twitch"
+        android:id="@id/twitchFragment"
         android:icon="@android:color/holo_purple"
-        android:title="트위치"/>
+        android:title="트위치" />
 
     <item
         android:id="@+id/menu_webtoon"
         android:icon="@android:color/holo_green_dark"
-        android:title="웹툰"/>
+        android:title="웹툰" />
 
     <item
         android:id="@+id/menu_cafe"
         android:icon="@android:color/holo_green_light"
-        android:title="카페"/>
+        android:title="카페" />
 
     <item
         android:id="@+id/menu_goods"
         android:icon="@android:color/black"
-        android:title="굿즈"/>
+        android:title="굿즈" />
 </menu>

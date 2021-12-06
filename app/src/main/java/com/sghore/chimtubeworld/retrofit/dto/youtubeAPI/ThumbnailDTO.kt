@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.retrofit.dto
+package com.sghore.chimtubeworld.retrofit.dto.youtubeAPI
 
 data class ThumbnailDTO(
     val default: DefaultDTO,

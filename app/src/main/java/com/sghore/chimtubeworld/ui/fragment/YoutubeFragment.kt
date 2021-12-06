@@ -49,8 +49,6 @@ class YoutubeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObserver() // 옵저버 설정
-
-        mViewModel.getChannelInfo()
     }
 
     // 옵저버 설정
@@ -63,6 +61,8 @@ class YoutubeFragment : Fragment() {
                 subContentAdapter.syncData(channelList.filter { channel ->
                     channel.type == 1
                 })
+            } else { // 리스트가 없으면 로드함
+                mViewModel.getChannelInfo()
             }
         }
     }
