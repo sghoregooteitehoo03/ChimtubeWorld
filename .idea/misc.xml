@@ -7,10 +7,12 @@
         <entry key="app/src/main/res/drawable/shape_round.xml" value="0.147" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_webtoon.xml" value="0.21512603759765625" />
         <entry key="app/src/main/res/layout/fragment_youtube.xml" value="0.13745117187499994" />
         <entry key="app/src/main/res/layout/item_content_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_content_sub.xml" value="0.37577209472656253" />
         <entry key="app/src/main/res/layout/item_crew.xml" value="0.2325149536132814" />
+        <entry key="app/src/main/res/layout/item_webtoon.xml" value="0.26395263671875" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.36041666666666666" />
       </map>
     </option>

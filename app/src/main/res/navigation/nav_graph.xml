@@ -17,4 +17,10 @@
         android:name="com.sghore.chimtubeworld.ui.fragment.TwitchFragment"
         android:label="TwitchFragment"
         tools:layout="@layout/fragment_twitch" />
+
+    <fragment
+        android:id="@+id/webToonFragment"
+        tools:layout="@layout/fragment_webtoon"
+        android:name="com.sghore.chimtubeworld.ui.fragment.WebToonFragment"
+        android:label="WebToonFragment" />
 </navigation>

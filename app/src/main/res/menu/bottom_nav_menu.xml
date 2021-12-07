@@ -12,7 +12,7 @@
         android:title="트위치" />
 
     <item
-        android:id="@+id/menu_webtoon"
+        android:id="@id/webToonFragment"
         android:icon="@android:color/holo_green_dark"
         android:title="웹툰" />
 
