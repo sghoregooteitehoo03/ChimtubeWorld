@@ -17,7 +17,7 @@
         android:title="웹툰" />
 
     <item
-        android:id="@+id/menu_cafe"
+        android:id="@id/cafeFragment"
         android:icon="@android:color/holo_green_light"
         android:title="카페" />
 

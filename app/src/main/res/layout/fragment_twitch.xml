@@ -55,7 +55,7 @@
                     android:scaleType="centerCrop"
                     app:isBlur="@{!viewmodel.mainChannelData.isOnline()}"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:setImage="@{viewmodel.mainChannelData.thumbnailImage}"
+                    app:setTwitchBroadcastImage="@{viewmodel.mainChannelData.thumbnailImage}"
                     tools:src="@drawable/test" />
 
                 <ImageView

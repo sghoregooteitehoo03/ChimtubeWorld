@@ -20,7 +20,13 @@
 
     <fragment
         android:id="@+id/webToonFragment"
-        tools:layout="@layout/fragment_webtoon"
         android:name="com.sghore.chimtubeworld.ui.fragment.WebToonFragment"
-        android:label="WebToonFragment" />
+        android:label="WebToonFragment"
+        tools:layout="@layout/fragment_webtoon" />
+
+    <fragment
+        android:id="@+id/cafeFragment"
+        android:name="com.sghore.chimtubeworld.ui.fragment.CafeFragment"
+        android:label="CafeFragment"
+        tools:layout="@layout/fragment_cafe" />
 </navigation>
