@@ -29,4 +29,9 @@
         android:name="com.sghore.chimtubeworld.ui.fragment.CafeFragment"
         android:label="CafeFragment"
         tools:layout="@layout/fragment_cafe" />
+    <fragment
+        android:id="@+id/storeFragment"
+        android:name="com.sghore.chimtubeworld.ui.fragment.StoreFragment"
+        android:label="StoreFragment"
+        tools:layout="@layout/fragment_store" />
 </navigation>

@@ -64,7 +64,7 @@ class ExampleUnitTest {
         }
     }
 
-//    https://cafe.naver.com/zilioner?iframe_url=/ArticleList.nhn%3Fsearch.clubid=29646865%26search.boardtype=C%26search.page=1%26userDisplay=10
+    //    https://cafe.naver.com/zilioner?iframe_url=/ArticleList.nhn%3Fsearch.clubid=29646865%26search.boardtype=C%26search.page=1%26userDisplay=10
 //    https://cafe.naver.com/zilioner?iframe_url=/ArticleList.nhn%3Fsearch.clubid=29646865%26search.menuid={61}%26search.boardtype=L%26search.page={1}%26userDisplay=10
     @Test
     fun jsoupTest() {
@@ -117,5 +117,29 @@ class ExampleUnitTest {
 
             println("title: $title, image: $thumbnailImage, userName: $userName, date: $postDate")
         }
+    }
+
+    @Test
+    fun getGoodsInfoTest() {
+        // 머치머치
+//        val url = "https://much-merch.com/product/list.html?cate_no=299"
+//        val doc = Jsoup.connect(url)
+//            .userAgent("19.0.1.84.52")
+//            .get()
+//
+//        val goodsList = doc.select("ul.prdList")
+//            .select("li.xans-record-")
+//            .filter { it.attr("id").isNotEmpty() }
+
+        // 네이버 스토어
+        val url = "https://smartstore.naver.com/uldd/search?q=%ED%86%B5%EB%8B%AD%EC%B2%9C%EC%82%AC"
+        val doc = Jsoup.connect(url)
+            .userAgent("19.0.1.84.52")
+            .get()
+
+        val goodsList = doc.select("ul._2XA8xyEsOb")
+            .select("li._3S7Ho5J2Ql")
+
+        assertEquals(10, goodsList.size)
     }
 }

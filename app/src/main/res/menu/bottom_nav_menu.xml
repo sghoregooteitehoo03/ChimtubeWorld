@@ -22,7 +22,7 @@
         android:title="카페" />
 
     <item
-        android:id="@+id/menu_goods"
+        android:id="@id/storeFragment"
         android:icon="@android:color/black"
         android:title="굿즈" />
 </menu>
