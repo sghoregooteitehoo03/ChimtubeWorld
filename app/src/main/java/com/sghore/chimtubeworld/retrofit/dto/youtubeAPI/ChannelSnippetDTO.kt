@@ -1,6 +1,6 @@
 package com.sghore.chimtubeworld.retrofit.dto.youtubeAPI
 
-data class SnippetDTO(
+data class ChannelSnippetDTO(
     val title: String,
     val description: String,
     val publishedAt: String,

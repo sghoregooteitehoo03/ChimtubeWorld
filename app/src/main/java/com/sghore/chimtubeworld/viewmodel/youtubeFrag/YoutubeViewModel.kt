@@ -14,8 +14,8 @@ class YoutubeViewModel @Inject constructor(
     private val repository: YoutubeRepository
 ) : ViewModel() {
 
-    private val _allChannelList = MutableLiveData<List<Channel>>(null)
-    val allChannelList: LiveData<List<Channel>> = _allChannelList
+    private val _allChannelList = MutableLiveData<List<Channel?>>(null)
+    val allChannelList: LiveData<List<Channel?>> = _allChannelList
 
     fun getChannelInfo() = viewModelScope.launch {
         try {

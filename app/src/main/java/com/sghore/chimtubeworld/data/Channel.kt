@@ -1,6 +1,7 @@
 package com.sghore.chimtubeworld.data
 
 data class Channel(
+    val id: String,
     val name: String,
     val explains: Array<String>,
     val url: String,

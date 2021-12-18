@@ -12,6 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="?attr/selectableItemBackground"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -28,7 +29,7 @@
             android:id="@+id/content_title_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{channelData.explains[0]}"
@@ -43,7 +44,6 @@
             android:id="@+id/content_channel_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{channelData.name}"

@@ -16,46 +16,51 @@ class YoutubeRepository @Inject constructor(
 ) {
 
     // 채널의 정보를 가져옴
-    suspend fun getChannelInfo(): MutableList<Channel> {
+    suspend fun getChannelInfo(): MutableList<Channel?> {
         val retrofitService = retrofitBuilder.baseUrl(Contents.YOUTUBE_API_URL)
             .build()
             .create(RetrofitService::class.java)
-        val channelList = mutableListOf<Channel>() // 채널 리스트
+        val channelList = arrayOfNulls<Channel>(7)
+            .toMutableList() // 채널 리스트
         // 채널의 Id 및 API에서 가져오지 못하는 부가설명을 가져옴
         val documents = store.collection(Contents.COLLECTION_YOUTUBE_LINK)
             .get()
             .await()
             .documents
+        // 채널 아이디 배열            [0] = 채널아이디, [1] = 플레이리스트 아이디
+        val channelIdArr = documents.map { (it["id"] as String).split("|")[0] }
+            .toTypedArray()
 
-        documents.forEach { document ->
+        // API를 통해 채널들의 정보를 가져옴
+        val result = retrofitService.getYChannelInfo(channelIdArr)
+            .await()
+
+        result.items.forEach { channelInfo ->
+            // 채널들을 배열순서에 맞쳐 리스트에 집어넣기 위한 인덱스 값
+            val index = channelIdArr.indexOf(channelInfo.id)
+            val document = documents[index]
             val linkInfo = LinkInfo(
                 id = document["id"] as String,
                 url = document["url"] as String,
                 explain = document["explain"] as String,
                 type = (document["type"] as Long).toInt()
             )
-
-            // API를 통해 채널의 정보를 가져옴
-            val result = retrofitService.getYChannelInfo(linkInfo.id)
-                ?.await()
-                ?: throw NullPointerException() // API 실패 시
-
-            val snippet = result.items[0].snippet
             val explain = if (linkInfo.type == 0) {
-                snippet.description
+                channelInfo.snippet.description
             } else {
                 linkInfo.explain
             }
 
             val channelData = Channel(
-                name = snippet.title,
+                id = linkInfo.id,
+                name = channelInfo.snippet.title,
                 explains = arrayOf(explain),
                 url = linkInfo.url,
-                image = snippet.thumbnails.medium.url,
+                image = channelInfo.snippet.thumbnails.medium.url,
                 type = linkInfo.type
             )
 
-            channelList.add(channelData)
+            channelList[index] = channelData
         }
 
         return channelList

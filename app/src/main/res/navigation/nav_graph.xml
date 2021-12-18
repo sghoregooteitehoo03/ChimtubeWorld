@@ -10,7 +10,11 @@
         android:id="@+id/youtubeFragment"
         android:name="com.sghore.chimtubeworld.ui.fragment.YoutubeFragment"
         android:label="YoutubeFragment"
-        tools:layout="@layout/fragment_youtube" />
+        tools:layout="@layout/fragment_youtube" >
+        <action
+            android:id="@+id/action_youtubeFragment_to_videosFragment"
+            app:destination="@id/videosFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/twitchFragment"
@@ -29,9 +33,26 @@
         android:name="com.sghore.chimtubeworld.ui.fragment.CafeFragment"
         android:label="CafeFragment"
         tools:layout="@layout/fragment_cafe" />
+
     <fragment
         android:id="@+id/storeFragment"
         android:name="com.sghore.chimtubeworld.ui.fragment.StoreFragment"
         android:label="StoreFragment"
         tools:layout="@layout/fragment_store" />
+
+    <fragment
+        android:id="@+id/videosFragment"
+        android:name="com.sghore.chimtubeworld.ui.fragment.VideosFragment"
+        android:label="VideosFragment"
+        tools:layout="@layout/fragment_videos" >
+        <argument
+            android:name="channelName"
+            app:argType="string" />
+        <argument
+            android:name="channelId"
+            app:argType="string" />
+        <argument
+            android:name="typeImageRes"
+            app:argType="integer" />
+    </fragment>
 </navigation>

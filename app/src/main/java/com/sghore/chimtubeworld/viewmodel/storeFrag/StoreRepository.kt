@@ -35,6 +35,7 @@ class StoreRepository @Inject constructor(
                 linkInfo.id
             )
             val storeInfo = Channel(
+                id = "",
                 name = linkInfo.explain,
                 explains = arrayOf(),
                 url = linkInfo.url,

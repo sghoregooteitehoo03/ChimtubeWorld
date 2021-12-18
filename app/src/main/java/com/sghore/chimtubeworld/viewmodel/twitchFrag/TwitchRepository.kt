@@ -61,6 +61,7 @@ class TwitchRepository @Inject constructor(
                     )
                 } else {
                     Channel(
+                        id = userInfo.id,
                         name = userInfo.displayName,
                         explains = arrayOf(linkInfo.explain),
                         url = linkInfo.url,
@@ -94,7 +95,7 @@ class TwitchRepository @Inject constructor(
             val streamData = retrofitService.getTUserStream(accessKey, userInfo.login)
                 ?.await()
                 ?: throw NullPointerException() // API 실패 시
-            var isOnline = false
+            val isOnline: Boolean
 
             val thumbnailImage = if (streamData.data.isEmpty()) {
                 isOnline = false
@@ -107,6 +108,7 @@ class TwitchRepository @Inject constructor(
             }
 
             Channel(
+                id = userInfo.id,
                 name = userInfo.displayName,
                 explains = arrayOf(linkInfo.explain, followData.total.toString()),
                 url = linkInfo.url,

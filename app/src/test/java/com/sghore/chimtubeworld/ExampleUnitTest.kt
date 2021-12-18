@@ -14,9 +14,17 @@ import retrofit2.Retrofit
 import retrofit2.await
 import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
+import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalField
+import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.floor
+import kotlin.time.Duration
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -30,36 +38,38 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun followsTexttest() {
-        val follows = "500"
-        if (follows.toInt() / 10000 > 0) {
-            val divideResult = follows.toDouble() / 10000
-            println("팔로워 ${floor(divideResult * 10) / 10f}만명")
-        } else {
-            val divideResult = follows.toInt()
-            println("팔로워 ${DecimalFormat("#,###").format(divideResult)}명")
-        }
-    }
-
-    @Test
     fun retrofitTest() {
-//        https://static-cdn.jtvnw.net/previews-ttv/live_user_zoodasa-{width}x{height}.jpg
+        // UCUj6rrhMTR9pipbAWBAMvUQ, UCC1LvVTX2ySKYjeIXkAtvsQ, UCewitUbsXnyjvJjGgxa0IYw, UCxQXvvaqwA2NzPXs5775ogw
+        // UCAmff0euQRf6RwVlbB8PLMw, UCgiO7Kxib0SZEG0DoeuBkdQ, UCEkcg9WqCX4sGxRQ3uUkekA
         runBlocking {
             val builder = Retrofit.Builder()
-                .baseUrl(Contents.TWITCH_API_URL)
+                .baseUrl(Contents.YOUTUBE_API_URL)
                 .client(OkHttpClient.Builder().apply {
                     readTimeout(2, TimeUnit.MINUTES)
                 }.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             val retrofit = builder.create(RetrofitService::class.java)
+            val array = arrayOf(
+                "UCUj6rrhMTR9pipbAWBAMvUQ",
+                "UCC1LvVTX2ySKYjeIXkAtvsQ",
+                "UCewitUbsXnyjvJjGgxa0IYw",
+                "UCxQXvvaqwA2NzPXs5775ogw",
+                "UCAmff0euQRf6RwVlbB8PLMw",
+                "UCgiO7Kxib0SZEG0DoeuBkdQ",
+                "UCEkcg9WqCX4sGxRQ3uUkekA"
+            )
 
-            val result = retrofit.getTUserStream(
-                "Bearer 3u0x3d7dngj9jormp20nw4zd6b3ls0",
-                "zilioner"
-            )?.await()
+            val result = retrofit.getYChannelInfo(array)
+                .await()
+            val channelList = arrayOfNulls<String>(7)
+                .toMutableList()
 
-            println("res: $result")
+            result.items.forEach {
+                val index = array.indexOf(it.id)
+                channelList[index] = it.id
+            }
+            println("res: ${channelList.toList()}")
             println("끝")
         }
     }
@@ -74,7 +84,7 @@ class ExampleUnitTest {
             .userAgent("19.0.1.84.52")
             .header(
                 "accept",
-                "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
             )
             .header("accept-encoding", "gzip, deflate, br")
             .header("accept-language", "ko-KR,ko;q=0.9")
@@ -120,26 +130,30 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun getGoodsInfoTest() {
-        // 머치머치
-//        val url = "https://much-merch.com/product/list.html?cate_no=299"
-//        val doc = Jsoup.connect(url)
-//            .userAgent("19.0.1.84.52")
-//            .get()
-//
-//        val goodsList = doc.select("ul.prdList")
-//            .select("li.xans-record-")
-//            .filter { it.attr("id").isNotEmpty() }
+    fun getVideosTest() {
+        runBlocking {
+            val builder = Retrofit.Builder()
+                .baseUrl(Contents.YOUTUBE_API_URL)
+                .client(OkHttpClient.Builder().apply {
+                    readTimeout(2, TimeUnit.MINUTES)
+                }.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val retrofit = builder.create(RetrofitService::class.java)
 
-        // 네이버 스토어
-        val url = "https://smartstore.naver.com/uldd/search?q=%ED%86%B5%EB%8B%AD%EC%B2%9C%EC%82%AC"
-        val doc = Jsoup.connect(url)
-            .userAgent("19.0.1.84.52")
-            .get()
+            val playlistItems = retrofit.getYPlaylistItems(
+                "UUUj6rrhMTR9pipbAWBAMvUQ",
+                null
+            ).await()
 
-        val goodsList = doc.select("ul._2XA8xyEsOb")
-            .select("li._3S7Ho5J2Ql")
+            val videosId = playlistItems.items.map { it.contentDetails.videoId }
+                .toTypedArray()
 
-        assertEquals(10, goodsList.size)
+            val videosResponse = retrofit.getYVideos(videosId)
+                .await()
+
+            println("끝")
+            println("res: $videosResponse")
+        }
     }
 }

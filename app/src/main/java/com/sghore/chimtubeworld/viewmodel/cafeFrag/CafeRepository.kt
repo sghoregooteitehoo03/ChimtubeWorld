@@ -40,6 +40,7 @@ class CafeRepository @Inject constructor(
             .text()
 
         return Channel(
+            id = "",
             name = cafeTitle,
             explains = arrayOf(DecimalFormat("#,###").format(memberNumbers)),
             url = Contents.CAFE_MAIN_URL,

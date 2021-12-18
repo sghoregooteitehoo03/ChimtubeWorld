@@ -1,5 +1,5 @@
 package com.sghore.chimtubeworld.retrofit.dto.youtubeAPI
 
-data class ChannelDTO(
-    val items: List<ChannelItemDTO>
+data class PlaylistItemsDetailsDTO(
+    val videoId: String
 )

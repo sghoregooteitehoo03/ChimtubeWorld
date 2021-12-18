@@ -80,6 +80,9 @@ dependencies {
 
     // Jsoup
     implementation 'org.jsoup:jsoup:1.13.1'
+
+    // Custom Tabs
+    implementation "androidx.browser:browser:1.4.0"
 }
 
 kapt {

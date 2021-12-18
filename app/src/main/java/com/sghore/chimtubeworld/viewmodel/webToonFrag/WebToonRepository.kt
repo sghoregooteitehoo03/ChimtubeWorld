@@ -44,6 +44,7 @@ class WebToonRepository @Inject constructor(
                 .text()
 
             val webToon = Channel(
+                id = "",
                 name = title,
                 explains = arrayOf("최종업데이트: $lastUpdate"),
                 url = mainUrl + nextUrl,
