@@ -39,11 +39,10 @@ class ExampleUnitTest {
 
     @Test
     fun retrofitTest() {
-        // UCUj6rrhMTR9pipbAWBAMvUQ, UCC1LvVTX2ySKYjeIXkAtvsQ, UCewitUbsXnyjvJjGgxa0IYw, UCxQXvvaqwA2NzPXs5775ogw
-        // UCAmff0euQRf6RwVlbB8PLMw, UCgiO7Kxib0SZEG0DoeuBkdQ, UCEkcg9WqCX4sGxRQ3uUkekA
+        // 109ace, 1983kej, rooftopcat99, yagubu, zilioner, kiyulking, noizemasta, hanryang1125
         runBlocking {
             val builder = Retrofit.Builder()
-                .baseUrl(Contents.YOUTUBE_API_URL)
+                .baseUrl(Contents.TWITCH_API_URL)
                 .client(OkHttpClient.Builder().apply {
                     readTimeout(2, TimeUnit.MINUTES)
                 }.build())
@@ -51,25 +50,28 @@ class ExampleUnitTest {
                 .build()
             val retrofit = builder.create(RetrofitService::class.java)
             val array = arrayOf(
-                "UCUj6rrhMTR9pipbAWBAMvUQ",
-                "UCC1LvVTX2ySKYjeIXkAtvsQ",
-                "UCewitUbsXnyjvJjGgxa0IYw",
-                "UCxQXvvaqwA2NzPXs5775ogw",
-                "UCAmff0euQRf6RwVlbB8PLMw",
-                "UCgiO7Kxib0SZEG0DoeuBkdQ",
-                "UCEkcg9WqCX4sGxRQ3uUkekA"
+                "109ace",
+                "1983kej",
+                "rooftopcat99",
+                "yagubu",
+                "zilioner",
+                "kiyulking",
+                "noizemasta",
+                "hanryang1125"
             )
 
-            val result = retrofit.getYChannelInfo(array)
-                .await()
-            val channelList = arrayOfNulls<String>(7)
-                .toMutableList()
-
-            result.items.forEach {
-                val index = array.indexOf(it.id)
-                channelList[index] = it.id
-            }
-            println("res: ${channelList.toList()}")
+//            val result = retrofit.test(
+//                "Bearer 3u0x3d7dngj9jormp20nw4zd6b3ls0",
+//                array
+//            ).await()
+//            val channelList = arrayOfNulls<String>(array.size)
+//                .toMutableList()
+//
+//            result.data.forEach {
+//                val index = array.indexOf(it.login)
+//                channelList[index] = it.login
+//            }
+//            println("res: ${channelList}}")
             println("끝")
         }
     }
@@ -133,7 +135,7 @@ class ExampleUnitTest {
     fun getVideosTest() {
         runBlocking {
             val builder = Retrofit.Builder()
-                .baseUrl(Contents.YOUTUBE_API_URL)
+                .baseUrl(Contents.TWITCH_API_URL)
                 .client(OkHttpClient.Builder().apply {
                     readTimeout(2, TimeUnit.MINUTES)
                 }.build())
@@ -141,19 +143,14 @@ class ExampleUnitTest {
                 .build()
             val retrofit = builder.create(RetrofitService::class.java)
 
-            val playlistItems = retrofit.getYPlaylistItems(
-                "UUUj6rrhMTR9pipbAWBAMvUQ",
-                null
+            val playlistItems = retrofit.getTVideos(
+                "Bearer 3u0x3d7dngj9jormp20nw4zd6b3ls0",
+                "66375105",
+                "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6MjB9fQ"
             ).await()
 
-            val videosId = playlistItems.items.map { it.contentDetails.videoId }
-                .toTypedArray()
-
-            val videosResponse = retrofit.getYVideos(videosId)
-                .await()
-
             println("끝")
-            println("res: $videosResponse")
+            println("res: ${playlistItems}")
         }
     }
 }

@@ -20,7 +20,11 @@
         android:id="@+id/twitchFragment"
         android:name="com.sghore.chimtubeworld.ui.fragment.TwitchFragment"
         android:label="TwitchFragment"
-        tools:layout="@layout/fragment_twitch" />
+        tools:layout="@layout/fragment_twitch" >
+        <action
+            android:id="@+id/action_twitchFragment_to_videosFragment"
+            app:destination="@id/videosFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/webToonFragment"

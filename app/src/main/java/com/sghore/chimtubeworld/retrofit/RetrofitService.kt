@@ -33,20 +33,28 @@ interface RetrofitService {
     @GET("users")
     fun getTUserInfo(
         @Header("Authorization") accessKey: String,
-        @Query("login") loginId: String
-    ): Call<UserDTO>?
+        @Query("login") loginId: Array<String>
+    ): Call<UserDTO>
 
     @Headers("Client-ID: ${Contents.CLIENT_ID}")
     @GET("users/follows?first=1")
     fun getTUserFollows(
         @Header("Authorization") accessKey: String,
         @Query("to_id") id: String,
-    ): Call<UserFollowsDTO>?
+    ): Call<UserFollowsDTO>
 
     @Headers("Client-ID: ${Contents.CLIENT_ID}")
     @GET("streams")
     fun getTUserStream(
         @Header("Authorization") accessKey: String,
         @Query("user_login") loginId: String,
-    ): Call<StreamDTO>?
+    ): Call<StreamDTO>
+
+    @Headers("Client-ID: ${Contents.CLIENT_ID}")
+    @GET("videos")
+    fun getTVideos(
+        @Header("Authorization") accessKey: String,
+        @Query("user_id") userId: String,
+        @Query("after") afterPage: String?
+    ): Call<com.sghore.chimtubeworld.retrofit.dto.twitchAPI.VideosDTO>
 }

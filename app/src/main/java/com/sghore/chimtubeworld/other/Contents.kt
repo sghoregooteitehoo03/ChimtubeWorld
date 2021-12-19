@@ -1,6 +1,10 @@
 package com.sghore.chimtubeworld.other
 
 object Contents {
+    const val YOUTUBE_PACKAGE_NAME = "com.google.android.youtube"
+    const val TWITCH_CHANNEL_PACKAGE_NAME = "twitch://stream/"
+    const val TWITCH_VIDEO_PACKAGE_NAME = "twitch://video/"
+
     const val YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3/"
     const val TWITCH_API_URL = "https://api.twitch.tv/helix/"
     const val CAFE_MAIN_URL = "https://cafe.naver.com/zilioner"

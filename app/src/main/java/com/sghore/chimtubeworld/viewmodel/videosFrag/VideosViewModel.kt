@@ -18,11 +18,7 @@ class VideosViewModel @AssistedInject constructor(
 ) : ViewModel() {
     val vidoes = repository.getVideos(
         channelId = channelId,
-        categoryUrl = if (typeImageRes == R.drawable.ic_youtube) {
-            Contents.YOUTUBE_API_URL
-        } else {
-            Contents.TWITCH_API_URL
-        }
+        typeImageRes = typeImageRes
     ).asLiveData(viewModelScope.coroutineContext)
 
     @dagger.assisted.AssistedFactory

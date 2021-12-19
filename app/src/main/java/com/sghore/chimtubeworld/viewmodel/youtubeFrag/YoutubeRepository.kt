@@ -20,13 +20,14 @@ class YoutubeRepository @Inject constructor(
         val retrofitService = retrofitBuilder.baseUrl(Contents.YOUTUBE_API_URL)
             .build()
             .create(RetrofitService::class.java)
-        val channelList = arrayOfNulls<Channel>(7)
-            .toMutableList() // 채널 리스트
         // 채널의 Id 및 API에서 가져오지 못하는 부가설명을 가져옴
         val documents = store.collection(Contents.COLLECTION_YOUTUBE_LINK)
             .get()
             .await()
             .documents
+        // 채널 리스트
+        val channelList = arrayOfNulls<Channel>(documents.size)
+            .toMutableList()
         // 채널 아이디 배열            [0] = 채널아이디, [1] = 플레이리스트 아이디
         val channelIdArr = documents.map { (it["id"] as String).split("|")[0] }
             .toTypedArray()

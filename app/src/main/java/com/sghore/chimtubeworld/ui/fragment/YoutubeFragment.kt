@@ -16,8 +16,6 @@ import com.sghore.chimtubeworld.ui.custom.GridItemDecoration
 import com.sghore.chimtubeworld.viewmodel.youtubeFrag.YoutubeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO:
-//  . 채널 가져오는 기능 수정하기 O
 
 @AndroidEntryPoint
 class YoutubeFragment : Fragment(), MainContentAdapter.MainContentItemListener,

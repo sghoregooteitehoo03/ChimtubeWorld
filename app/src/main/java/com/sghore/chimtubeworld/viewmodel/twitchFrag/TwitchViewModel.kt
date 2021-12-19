@@ -15,9 +15,9 @@ class TwitchViewModel @Inject constructor(
     private val repository: TwitchRepository
 ) : ViewModel() {
 
-    private val _twitchUserList = MutableLiveData<List<Channel>?>(null)
+    private val _twitchUserList = MutableLiveData<List<Channel?>>(null)
     private val _mainChannelData = MutableLiveData<Channel?>(null)
-    val twitchUserList: LiveData<List<Channel>?> = _twitchUserList
+    val twitchUserList: LiveData<List<Channel?>> = _twitchUserList
     val mainChannelData: LiveData<Channel?> = _mainChannelData
 
     fun getTwitchUserInfo() = viewModelScope.launch {
@@ -25,7 +25,7 @@ class TwitchViewModel @Inject constructor(
             val userList = repository.getTwitchUserInfo()
 
             _twitchUserList.value = userList
-            _mainChannelData.value = userList.filter { it.type == 0 }[0]
+            _mainChannelData.value = userList.filter { it?.type == 0 }[0]
         } catch (e: Exception) {
             e.printStackTrace()
         }

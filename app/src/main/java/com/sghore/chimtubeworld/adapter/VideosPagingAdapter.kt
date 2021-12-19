@@ -28,7 +28,7 @@ class VideosPagingAdapter : PagingDataAdapter<Video, VideosViewHolder>(diffUtil)
     private companion object diffUtil : DiffUtil.ItemCallback<Video>() {
 
         override fun areItemsTheSame(oldItem: Video, newItem: Video): Boolean {
-            return (oldItem.uploadTime == newItem.uploadTime) && (oldItem.title == newItem.title)
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Video, newItem: Video): Boolean {

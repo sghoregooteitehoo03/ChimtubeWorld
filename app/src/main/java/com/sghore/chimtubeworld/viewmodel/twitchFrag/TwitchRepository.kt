@@ -23,65 +23,69 @@ class TwitchRepository @Inject constructor(
 ) {
 
     // 트위치 채널의 정보를 가져옴
-    suspend fun getTwitchUserInfo(): List<Channel> {
-        var accessKey = "" // API 액세스 키
+    suspend fun getTwitchUserInfo(): List<Channel?> {
         val retrofitService = retrofitBuilder.baseUrl(Contents.TWITCH_API_URL)
             .build()
             .create(RetrofitService::class.java)
-        val channelList = mutableListOf<Channel>()
         // Twitch Id 및 설명을 가져옴
         val documents = store.collection(Contents.COLLECTION_TWITCH_LINK)
             .get()
             .await()
             .documents
+        val accessKey = "Bearer ${documents[0].get("AUTH").toString()}" // API 액세스 키
 
-        documents.forEach { document ->
+        // 채널 리스트
+        val channelList = arrayOfNulls<Channel>(documents.size - 1) // AccessKey 제외
+            .toMutableList()
+        // 채널 아이디 배열
+        val channelIdArr = documents.filter { (it["type"] as Long).toInt() != -1 }.map {
+            (it["id"] as String)
+        }.toTypedArray()
+
+        // Twitch API를 통해 채널의 정보를 가져옴
+        val result = retrofitService.getTUserInfo(accessKey, channelIdArr)
+            .await()
+
+        result.data.forEach { userData ->
+            // 채널들을 배열순서에 맞쳐 리스트에 집어넣기 위한 인덱스 값
+            val index = channelIdArr.indexOf(userData.login)
+            val document = documents[index + 1]
             val type = (document["type"] as Long).toInt()
 
-            if (type != -1) { // ACCESS KEY 가져온 후
-                val linkInfo = LinkInfo(
-                    id = document["id"] as String,
-                    url = document["url"] as String,
-                    explain = document["explain"] as String,
-                    type = (document["type"] as Long).toInt()
+            val linkInfo = LinkInfo(
+                id = document["id"] as String,
+                url = document["url"] as String,
+                explain = document["explain"] as String,
+                type = type
+            )
+
+            val channelData = if (type == 0) { // 침착맨 채널의 정보일 때
+                getTwitchUserState(
+                    retrofitService,
+                    accessKey,
+                    userData,
+                    linkInfo
                 )
-                // Twitch API를 통해 채널의 정보를 가져옴
-                val result = retrofitService.getTUserInfo(accessKey, linkInfo.id)
-                    ?.await()
-                    ?: throw NullPointerException() // API 실패 시
-
-                // API 요청 성공
-                val userInfo = result.data[0]
-                val channelData = if (type == 0) {
-                    getTwitchUserState(
-                        retrofitService,
-                        accessKey,
-                        userInfo,
-                        linkInfo
-                    )
-                } else {
-                    Channel(
-                        id = userInfo.id,
-                        name = userInfo.displayName,
-                        explains = arrayOf(linkInfo.explain),
-                        url = linkInfo.url,
-                        image = userInfo.profile_image_url,
-                        thumbnailImage = userInfo.offline_image_url,
-                        type = linkInfo.type,
-                        isOnline = false
-                    )
-                }
-
-                channelList.add(channelData) // 리스트 추가
-            } else { // ACCESS KEY 가져오기 전
-                accessKey = "Bearer ${document["AUTH"] as String}"
+            } else {
+                Channel(
+                    id = userData.id,
+                    name = userData.displayName,
+                    explains = arrayOf(linkInfo.explain),
+                    url = linkInfo.url,
+                    image = userData.profile_image_url,
+                    thumbnailImage = userData.offline_image_url,
+                    type = linkInfo.type,
+                    isOnline = false
+                )
             }
 
+            channelList[index] = channelData // 리스트 추가
         }
 
-        return channelList
+        return channelList.toList()
     }
 
+    // 침착맨의 팔로워 방송여부 등을 가져옴
     private suspend fun getTwitchUserState(
         retrofitService: RetrofitService,
         accessKey: String,
@@ -90,17 +94,18 @@ class TwitchRepository @Inject constructor(
     ): Channel {
         val channelData = CoroutineScope(Dispatchers.IO).async {
             val followData = retrofitService.getTUserFollows(accessKey, userInfo.id)
-                ?.await()
-                ?: throw NullPointerException() // API 실패 시
+                .await() // 팔로우 수
             val streamData = retrofitService.getTUserStream(accessKey, userInfo.login)
-                ?.await()
-                ?: throw NullPointerException() // API 실패 시
-            val isOnline: Boolean
+                .await() // 방송 데이터
+            val isOnline: Boolean // 방송 여부
 
+            // 썸네일
             val thumbnailImage = if (streamData.data.isEmpty()) {
+                // 방송이 오프라인 일 때
                 isOnline = false
                 userInfo.offline_image_url
             } else {
+                // 방송이 온라인 일 때
                 isOnline = true
                 streamData.data[0].thumbnailUrl
                     .replace("{width}", "1920")
