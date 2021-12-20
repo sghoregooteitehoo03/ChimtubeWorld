@@ -24,15 +24,7 @@ class OpenOtherApp(
                     .setPackage(packageName)
             )
         } else { // 해당 패키지가 휴대폰에 설치되어 있지 않을 때
-            CustomTabsIntent.Builder().let {
-                ResourcesCompat.getDrawable(context.resources, R.drawable.ic_back, null)
-                    ?.toBitmap()
-                    ?.let { bitmap ->
-                        it.setCloseButtonIcon(bitmap)
-                    }
-
-                it.build().launchUrl(context, Uri.parse(url))
-            }
+            openCustomTabs(url)
         }
     }
 
@@ -45,15 +37,32 @@ class OpenOtherApp(
                     .setPackage(packageName)
             )
         } else { // 해당 패키지가 휴대폰에 있지 않을 때
-            CustomTabsIntent.Builder().let {
-                ResourcesCompat.getDrawable(context.resources, R.drawable.ic_back, null)
-                    ?.toBitmap()
-                    ?.let { bitmap ->
-                        it.setCloseButtonIcon(bitmap)
-                    }
+            openCustomTabs(url)
+        }
+    }
 
-                it.build().launchUrl(context, Uri.parse(url))
-            }
+    fun openNaverWebToon(packageName: String, url: String) {
+        // 해당 패키지가 휴대폰에 설치되어 있을 때
+        if (isPackageInstalled(packageName)) {
+            // 네이버 웹툰 실행
+            context.startActivity(
+                Intent(Intent.ACTION_VIEW)
+                    .setPackage(packageName)
+            )
+        } else { // 해당 패키지가 휴대폰에 설치되어 있지 않을 때
+            openCustomTabs(url)
+        }
+    }
+
+    fun openCustomTabs(url: String) {
+        CustomTabsIntent.Builder().let {
+            ResourcesCompat.getDrawable(context.resources, R.drawable.ic_back, null)
+                ?.toBitmap()
+                ?.let { bitmap ->
+                    it.setCloseButtonIcon(bitmap)
+                }
+
+            it.build().launchUrl(context, Uri.parse(url))
         }
     }
 

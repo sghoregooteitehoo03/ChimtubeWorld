@@ -16,9 +16,6 @@ import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.viewmodel.twitchFrag.TwitchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO:
-//  . 아이템 클릭 이벤트 구현 O
-//  . Twitch API 수정 O
 @AndroidEntryPoint
 class TwitchFragment : Fragment(), View.OnClickListener, TwitchUserAdapter.TwitchUserItemListener {
     private val mViewModel by viewModels<TwitchViewModel>()

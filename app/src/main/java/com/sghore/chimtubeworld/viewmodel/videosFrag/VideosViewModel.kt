@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.other.Contents
 import dagger.assisted.Assisted
@@ -19,7 +20,7 @@ class VideosViewModel @AssistedInject constructor(
     val vidoes = repository.getVideos(
         channelId = channelId,
         typeImageRes = typeImageRes
-    ).asLiveData(viewModelScope.coroutineContext)
+    ).cachedIn(viewModelScope).asLiveData(viewModelScope.coroutineContext)
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {

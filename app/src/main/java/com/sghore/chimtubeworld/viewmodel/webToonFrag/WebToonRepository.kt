@@ -1,5 +1,6 @@
 package com.sghore.chimtubeworld.viewmodel.webToonFrag
 
+import android.graphics.Color
 import com.sghore.chimtubeworld.data.Channel
 import org.jsoup.Jsoup
 import javax.inject.Inject
@@ -10,6 +11,14 @@ class WebToonRepository @Inject constructor(
 
     fun getWebToonList(): MutableList<Channel> {
         val webToonList = mutableListOf<Channel>()
+        val colorList = listOf(
+            Color.parseColor("#C3B9A0"),
+            Color.parseColor("#CA7466"),
+            Color.parseColor("#64B6D1"),
+            Color.parseColor("#8BBD8E"),
+            Color.parseColor("#7A9937")
+        ) // 배경색 리스트
+
         val mainUrl = "https://comic.naver.com" // 네이버 웹툰 url
         // 이말년의 웹툰을 검색한 url
         val searchUrl =
@@ -24,12 +33,14 @@ class WebToonRepository @Inject constructor(
             .select("li h5 a")
 
         // 웹툰의 썸네일을 가져오는 작업
-        for (element in elements) {
+        for ((index, element) in elements.withIndex()) {
             val nextUrl = element.attr("href")
             val imageDoc = Jsoup.connect(mainUrl + nextUrl)
                 .userAgent("19.0.1.84.52")
                 .get()
 
+            // 웹툰 아이디
+            val id = nextUrl.split("=")[1]
             // 웹툰 썸네일
             val image = imageDoc.select("div.comicinfo")
                 .select("img")
@@ -44,12 +55,12 @@ class WebToonRepository @Inject constructor(
                 .text()
 
             val webToon = Channel(
-                id = "",
+                id = id,
                 name = title,
                 explains = arrayOf("최종업데이트: $lastUpdate"),
                 url = mainUrl + nextUrl,
                 image = image,
-                type = 0
+                type = colorList[index]
             )
             webToonList.add(webToon)
         }

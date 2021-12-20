@@ -6,6 +6,7 @@ import android.os.Build
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -44,6 +45,11 @@ fun setTwitchBroadcastImage(view: ImageView, stringImage: String?, isBlur: Boole
     if (isBlur) {
         view.setColorFilter(ContextCompat.getColor(view.context, R.color.black_blur))
     }
+}
+
+@BindingAdapter("app:setCardBackgroundColor")
+fun setCardBackgroundColor(view: CardView, color: Int) {
+    view.setCardBackgroundColor(color)
 }
 
 @BindingAdapter("app:setCafePostDate")
