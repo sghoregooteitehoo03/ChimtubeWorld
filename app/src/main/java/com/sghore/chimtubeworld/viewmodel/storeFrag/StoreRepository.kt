@@ -68,7 +68,8 @@ class StoreRepository @Inject constructor(
                         title = goodsName,
                         userName = "",
                         postDate = "",
-                        postImage = image
+                        postImage = image,
+                        ""
                     )
                     goodsList.add(goodsData)
                 }

@@ -9,6 +9,11 @@ import com.sghore.chimtubeworld.data.Post
 import com.sghore.chimtubeworld.databinding.ItemCafePostBinding
 
 class CafePostPagingAdapter : PagingDataAdapter<Post, CafePostViewHolder>(diffUtil) {
+    private lateinit var mListener: CafePostItemListener
+
+    interface CafePostItemListener {
+        fun onPostClickListener(pos: Int)
+    }
 
     override fun onBindViewHolder(holder: CafePostViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -17,7 +22,7 @@ class CafePostPagingAdapter : PagingDataAdapter<Post, CafePostViewHolder>(diffUt
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CafePostViewHolder {
         val view =
             ItemCafePostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CafePostViewHolder(view)
+        return CafePostViewHolder(view, mListener)
     }
 
     private companion object diffUtil : DiffUtil.ItemCallback<Post>() {
@@ -29,4 +34,11 @@ class CafePostPagingAdapter : PagingDataAdapter<Post, CafePostViewHolder>(diffUt
             return oldItem == newItem
         }
     }
+
+    fun setOnItemListener(_listener: CafePostItemListener) {
+        mListener = _listener
+    }
+
+    fun getPostData(pos: Int) =
+        getItem(pos)
 }

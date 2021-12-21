@@ -11,11 +11,11 @@ import org.jsoup.Connection
 import org.jsoup.Jsoup
 
 class CafePostPagingSource(
-    private val categoryId: Int = -1
+    private val categoryId: Int
 ) :
     PagingSource<Int, Post>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Post>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Post>): Int {
         return 1
     }
 
@@ -52,6 +52,9 @@ class CafePostPagingSource(
                     val imageDoc = postDoc.select("div.movie-img")
                         .select("a")
 
+                    val url = "https://m.cafe.naver.com" + titleDocs[index] // 게시글 url
+                        .select("a.article")
+                        .attr("href")
                     val title = titleDocs[index] // 제목
                         .select("a.article")
                         .text()
@@ -69,7 +72,8 @@ class CafePostPagingSource(
                             title = title,
                             userName = userName,
                             postDate = postDate,
-                            postImage = thumbnailImage
+                            postImage = thumbnailImage,
+                            url = url
                         )
                     )
                 }

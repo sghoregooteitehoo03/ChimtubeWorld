@@ -69,6 +69,17 @@ fun setFollowCount(view: TextView, follows: String?) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
+@BindingAdapter("app:setSelectedText")
+fun setSelectedText(view: TextView, isSelected: Boolean) {
+    val color = if (isSelected) {
+        view.resources.getColor(R.color.black, null)
+    } else {
+        view.resources.getColor(android.R.color.tab_indicator_text, null)
+    }
+    view.setTextColor(color)
+}
+
 @BindingAdapter("app:setVideoDurationText")
 fun setVideoDurationText(view: TextView, duration: Long) {
     val durationStr = SimpleDateFormat(

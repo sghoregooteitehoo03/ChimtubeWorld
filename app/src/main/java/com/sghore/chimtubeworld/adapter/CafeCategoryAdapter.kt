@@ -4,16 +4,33 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.viewholder.CafeCategoryViewHolder
+import com.sghore.chimtubeworld.data.CafeCategory
 import com.sghore.chimtubeworld.databinding.ItemCafeCategoryBinding
 
 class CafeCategoryAdapter : RecyclerView.Adapter<CafeCategoryViewHolder>() {
+    private var previousSelectedPos = -1
     private val categoryList =
-        listOf("전체", "방송일정 및 공지", "침착맨 이야기", "팬아트", "침착맨 짤", "추천영상", "해줘요", "찾아주세요", "침착맨 갤러리")
+        listOf(
+            CafeCategory("전체", -1),
+            CafeCategory("방송일정 및 공지", 5),
+            CafeCategory("침착맨 이야기", 1),
+            CafeCategory("팬아트", 2),
+            CafeCategory("침착맨 짤", 6),
+            CafeCategory("추천영상", 55),
+            CafeCategory("해줘요", 4),
+            CafeCategory("찾아주세요", 56),
+            CafeCategory("침착맨 갤러리", 33),
+        )
+    private lateinit var itemListener: CafeCategoryItemListener
+
+    interface CafeCategoryItemListener {
+        fun onCategoryClickListener(pos: Int)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CafeCategoryViewHolder {
         val view =
             ItemCafeCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CafeCategoryViewHolder(view)
+        return CafeCategoryViewHolder(view, itemListener)
     }
 
     override fun onBindViewHolder(holder: CafeCategoryViewHolder, position: Int) {
@@ -21,4 +38,26 @@ class CafeCategoryAdapter : RecyclerView.Adapter<CafeCategoryViewHolder>() {
     }
 
     override fun getItemCount() = categoryList.size
+
+    fun setOnItemListener(_listener: CafeCategoryItemListener) {
+        itemListener = _listener
+    }
+
+    fun getCategoryId(pos: Int) =
+        categoryList[pos].categoryId
+
+    // 카테고리 선택
+    fun selectCategory(pos: Int) {
+        if (pos != previousSelectedPos) { // 선택한 위치가 이전에 선택한 위치랑 다를 때
+            categoryList[pos].isSelected = true
+
+            if (previousSelectedPos != -1) { // 이전에 선택한 위치가 존재할 때
+                categoryList[previousSelectedPos].isSelected = false
+                notifyItemChanged(previousSelectedPos)
+            }
+
+            notifyItemChanged(pos)
+            previousSelectedPos = pos
+        }
+    }
 }

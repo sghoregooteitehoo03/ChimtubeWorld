@@ -1,5 +1,6 @@
 package com.sghore.chimtubeworld.viewmodel.cafeFrag
 
+import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.sghore.chimtubeworld.adapter.paging.CafePostPagingSource
@@ -12,9 +13,9 @@ import javax.inject.Inject
 class CafeRepository @Inject constructor(
 
 ) {
-    fun getCafePosts() =
+    fun getCafePosts(categoryId: LiveData<Int>) =
         Pager(PagingConfig(10)) {
-            CafePostPagingSource()
+            CafePostPagingSource(categoryId.value ?: -1)
         }.flow
 
     // 침착맨 팬카페의 정보를 가져옴

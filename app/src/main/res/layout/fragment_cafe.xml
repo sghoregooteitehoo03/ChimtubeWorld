@@ -5,9 +5,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="com.sghore.chimtubeworld.viewmodel.cafeFrag.CafeViewModel" />
+
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -60,6 +66,7 @@
                         android:layout_marginTop="16dp"
                         android:background="@drawable/shape_corner_rec_normal"
                         android:backgroundTint="@color/cafe_banner"
+                        android:onClick="@{clickListener}"
                         app:layout_constraintTop_toBottomOf="@id/title_main_text">
 
                         <LinearLayout
@@ -126,6 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:nestedScrollingEnabled="false"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toBottomOf="@id/title_sub_text"
@@ -137,6 +145,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="true"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/item_cafe_post" />
