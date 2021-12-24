@@ -4,11 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.data.Channel
 import com.sghore.chimtubeworld.data.Goods
 import com.sghore.chimtubeworld.data.LinkInfo
-import com.sghore.chimtubeworld.data.Post
 import com.sghore.chimtubeworld.other.Contents
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -33,8 +29,8 @@ class StoreRepository @Inject constructor(
                 explain = document["explain"] as String
             )
             val image = getStoreImage(
-                linkInfo.url,
-                linkInfo.id
+                linkInfo.id.split("|")[0], // 이미지를 읽어올 url
+                linkInfo.id.split("|")[1] // 이미지의 ID
             )
             val storeInfo = Channel(
                 id = "",
@@ -64,17 +60,17 @@ class StoreRepository @Inject constructor(
     // 사이트에 접속하여 스토어 이미지를 읽어옴
     private fun getStoreImage(url: String, storeId: String): String {
         val doc = getConnection(url)
-        var imageUrl = doc.select("a")
-            .filter { it.attr("href") == storeId }[0]
-            .select("img")
-            .attr("src")
 
-        if (!imageUrl.startsWith("https://")) {
-            imageUrl = StringBuilder(imageUrl).insert(0, Contents.STORE_MUCH_MERCH_URL)
-                .toString()
+        return if (url.startsWith(Contents.STORE_MUCH_MERCH_URL)) { // 머치머치
+            Contents.STORE_MUCH_MERCH_URL + doc.select("div.brand_box")
+                .filter { it.select("div.brand_data").eachText().contains(storeId) }[0]
+                .select("img")
+                .attr("src")
+        } else { // 네이버
+            doc.select("div._36jXoyswJd")
+                .select("img")
+                .attr("src")
         }
-
-        return imageUrl
     }
 
     private fun getMuchMerchList(doc: Document): List<Goods> =

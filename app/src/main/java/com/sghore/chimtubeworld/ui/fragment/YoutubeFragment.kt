@@ -17,7 +17,9 @@ import com.sghore.chimtubeworld.ui.custom.GridItemDecoration
 import com.sghore.chimtubeworld.viewmodel.youtubeFrag.YoutubeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
+// TODO:
+//  . 로딩 애니메이션 추가
+//  . back 툴바 구현
 @AndroidEntryPoint
 class YoutubeFragment : Fragment(), MainContentAdapter.MainContentItemListener,
     SubContentAdapter.SubContentItemListener {

@@ -156,26 +156,16 @@ class ExampleUnitTest {
 
     @Test
     fun test() {
-        val url =
-            "https://smartstore.naver.com/webtoonfriends/search?q=%EC%9D%B4%EB%A7%90%EB%85%84&st=RELEVANCE&free=false&dt=IMAGE&page=1&size=40"
+        val url = "https://much-merch.com/board/brand/list.html?board_no=5"
         val jsoup = Jsoup.connect(url)
             .userAgent("19.0.1.84.52")
             .get()
 
-        val list = jsoup.select("div._3ZEeXLwPLs")
-            .select("li.-qHwcFXhj0")
-        list.forEach {
-            val image = it.select("div._2JNWBGd-04")
-                .select("img")
-                .attr("src")
-            val title = it.select("strong.QNNliuiAk3")
-                .text()
-            val price = it.select("div._23DThs7PLJ")
-                .text()
-            val nextUrl = it.select("a")
-                .attr("href")
+        val image = jsoup.select("div.brand_box")
+            .filter { it.select("div.brand_data").eachText().contains("Calmdownman,침착맨,437") }[0]
+            .select("img")
+            .attr("src")
 
-            println("image: $image, title: $title, price: $price, url: $nextUrl")
-        }
+        println("image: $image")
     }
 }

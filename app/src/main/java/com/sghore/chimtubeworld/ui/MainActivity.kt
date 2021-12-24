@@ -14,6 +14,9 @@ import com.sghore.chimtubeworld.databinding.ActivityMainBinding
 import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+// TODO:
+//  . 툴바 추가 O
+//  . 바텀 nav 이미지 추가 O
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val globalViewModel by viewModels<GlobalViewModel>()
@@ -40,7 +43,10 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navFrag.navController
 
+        binding.bottomNavView.itemIconTintList = null
         binding.bottomNavView.setupWithNavController(navController)
+
+        setSupportActionBar(binding.mainToolbar) // 툴바 설정
         setViewPager()
         setObserver()
     }

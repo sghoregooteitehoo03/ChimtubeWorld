@@ -23,9 +23,6 @@ import com.sghore.chimtubeworld.viewmodel.storeFrag.StoreViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 // TODO:
-//  . 카테고리별로 리스트 읽어오기 O
-//  . 상품 자세히보기 화면 작업 마무리 O
-//  . 아이템 클릭 시 자세히 보기 기능 구현 O
 //  . 아이템 로딩 장면 추가
 //  . 카테고리 아이템 수정
 

@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@id/youtubeFragment"
-        android:icon="@android:color/holo_red_dark"
+        android:icon="@drawable/selector_youtube"
         android:title="유튜브" />
 
     <item
         android:id="@id/twitchFragment"
-        android:icon="@android:color/holo_purple"
+        android:icon="@drawable/selector_twitch"
         android:title="트위치" />
 
     <item
         android:id="@id/webToonFragment"
-        android:icon="@android:color/holo_green_dark"
+        android:icon="@drawable/selector_webtoon"
         android:title="웹툰" />
 
     <item
         android:id="@id/cafeFragment"
-        android:icon="@android:color/holo_green_light"
+        android:icon="@drawable/selector_cafe"
         android:title="카페" />
 
     <item
         android:id="@id/storeFragment"
-        android:icon="@android:color/black"
+        android:icon="@drawable/selector_store"
         android:title="굿즈" />
 </menu>
