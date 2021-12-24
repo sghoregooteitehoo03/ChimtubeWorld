@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.MainContentAdapter
 import com.sghore.chimtubeworld.adapter.SubContentAdapter
@@ -22,6 +23,7 @@ class YoutubeFragment : Fragment(), MainContentAdapter.MainContentItemListener,
     SubContentAdapter.SubContentItemListener {
 
     private val mViewModel by viewModels<YoutubeViewModel>()
+    private val spanCount = 2
 
     private lateinit var mainContentAdapter: MainContentAdapter
     private lateinit var subContentAdapter: SubContentAdapter
@@ -46,7 +48,8 @@ class YoutubeFragment : Fragment(), MainContentAdapter.MainContentItemListener,
             this.mainList.adapter = mainContentAdapter
             with(this.subList) {
                 adapter = subContentAdapter
-                addItemDecoration(GridItemDecoration(context))
+                layoutManager = GridLayoutManager(requireContext(), spanCount)
+                addItemDecoration(GridItemDecoration(context, spanCount, 12))
             }
 
             lifecycleOwner = viewLifecycleOwner

@@ -2,6 +2,7 @@ package com.sghore.chimtubeworld.viewmodel.storeFrag
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.data.Channel
+import com.sghore.chimtubeworld.data.Goods
 import com.sghore.chimtubeworld.data.LinkInfo
 import com.sghore.chimtubeworld.data.Post
 import com.sghore.chimtubeworld.other.Contents
@@ -10,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import javax.inject.Inject
 
 class StoreRepository @Inject constructor(
@@ -49,35 +51,14 @@ class StoreRepository @Inject constructor(
         return storeInfoList.toList()
     }
 
-    fun getGoodsList(url: String): List<Post> {
-        val goodsList = mutableListOf<Post>()
-        if (url.startsWith(Contents.STORE_MUCH_MERCH_URL)) {
-            val doc = getConnection(url)
+    fun getGoodsList(url: String): List<Goods> {
+        val doc = getConnection(url)
 
-            doc.select("ul.prdList")
-                .select("li.xans-record-")
-                .filter { it.attr("id").isNotEmpty() }
-                .forEach { element ->
-                    val image = "https:" + element.select("div.prdImg img")
-                        .filter { it.attr("id").isNotEmpty() }[0]
-                        .attr("src")
-                    val goodsName = element.select("div.description span")
-                        .text()
-
-                    val goodsData = Post(
-                        title = goodsName,
-                        userName = "",
-                        postDate = "",
-                        postImage = image,
-                        ""
-                    )
-                    goodsList.add(goodsData)
-                }
+        return if (url.startsWith(Contents.STORE_MUCH_MERCH_URL)) {
+            getMuchMerchList(doc)
         } else {
-
+            getNaverStoreList(doc)
         }
-
-        return goodsList.toList()
     }
 
     // 사이트에 접속하여 스토어 이미지를 읽어옴
@@ -95,6 +76,56 @@ class StoreRepository @Inject constructor(
 
         return imageUrl
     }
+
+    private fun getMuchMerchList(doc: Document): List<Goods> =
+        doc.select("ul.prdList")
+            .select("li.xans-record-")
+            .filter { it.attr("id").isNotEmpty() }
+            .map { element ->
+                val goodsName = element.select("div.description span")[2]
+                    .text()
+                val goodsPrice = element.select("li.xans-record-")
+                    .filter { it.attr("rel") == "판매가" }[0]
+                    .select("span")[1]
+                    .text()
+                val thumbnailImage = "https:" + element.select("div.prdImg")
+                    .select("img")
+                    .filter { it.attr("id").isNotEmpty() }[0]
+                    .attr("src")
+                val nextUrl = Contents.STORE_MUCH_MERCH_URL + element.select("div.prdImg")
+                    .select("a")
+                    .attr("href")
+
+                Goods(
+                    title = goodsName,
+                    price = goodsPrice,
+                    thumbnailImage = thumbnailImage,
+                    url = nextUrl,
+                    type = Contents.STORE_MUCH_MERCH_URL
+                )
+            }
+
+    private fun getNaverStoreList(doc: Document): List<Goods> =
+        doc.select("div._3ZEeXLwPLs")
+            .select("li.-qHwcFXhj0")
+            .map { element ->
+                val goodsName = element.select("strong.QNNliuiAk3")
+                    .text()
+                val goodsPrice = element.select("div._23DThs7PLJ")
+                    .text()
+                val thumbnailImage = element.select("img._25CKxIKjAk")
+                    .attr("src")
+                val nextUrl = Contents.STORE_NAVER_URL + element.select("a")
+                    .attr("href")
+
+                Goods(
+                    title = goodsName,
+                    price = goodsPrice,
+                    thumbnailImage = thumbnailImage,
+                    url = nextUrl,
+                    type = Contents.STORE_NAVER_URL
+                )
+            }
 
     private fun getConnection(url: String) =
         Jsoup.connect(url)

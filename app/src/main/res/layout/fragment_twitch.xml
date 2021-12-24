@@ -59,9 +59,8 @@
                     android:layout_height="208dp"
                     android:background="@drawable/shape_corner_rec_normal"
                     android:scaleType="centerCrop"
-                    app:isBlur="@{!viewmodel.mainChannelData.isOnline()}"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:setTwitchBroadcastImage="@{viewmodel.mainChannelData.thumbnailImage}"
+                    app:setTwitchBroadcastImage="@{viewmodel.mainChannelData}"
                     tools:src="@drawable/test" />
 
                 <ImageView

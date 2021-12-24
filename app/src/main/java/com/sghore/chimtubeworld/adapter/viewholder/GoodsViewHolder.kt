@@ -5,33 +5,25 @@ import android.util.DisplayMetrics
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.sghore.chimtubeworld.adapter.GoodsAdapter
+import com.sghore.chimtubeworld.data.Goods
 import com.sghore.chimtubeworld.data.Post
 import com.sghore.chimtubeworld.databinding.ItemGoodsInfoBinding
 import kotlin.math.roundToInt
 
 
 class GoodsViewHolder(
-    private val binding: ItemGoodsInfoBinding
+    private val binding: ItemGoodsInfoBinding,
+    private val itemListener: GoodsAdapter.GoodsItemListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        val layoutParams = GridLayoutManager.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        val margin: Float = convertDpToPx(5, itemView.resources)
-        layoutParams.setMargins(
-            margin.toInt(), margin.toInt(), margin.toInt(),
-            margin.toInt()
-        )
-        itemView.layoutParams = layoutParams
+        itemView.setOnClickListener {
+            itemListener.onGoodsClickListener(bindingAdapterPosition)
+        }
     }
 
-    fun bind(data: Post) {
+    fun bind(data: Goods) {
         binding.goodsData = data
     }
-
-    private fun convertDpToPx(dp: Int, resource: Resources) =
-        (dp * (resource.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
-            .toFloat()
 }

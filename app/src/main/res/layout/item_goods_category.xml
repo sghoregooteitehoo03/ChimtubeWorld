@@ -25,6 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:setImage="@{channelData.image}"
+            app:setImageBlur="@{channelData.selected}"
             tools:src="@drawable/test" />
 
         <TextView

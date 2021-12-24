@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.sghore.chimtubeworld.adapter.WebToonAdapter
 import com.sghore.chimtubeworld.databinding.FragmentWebtoonBinding
 import com.sghore.chimtubeworld.other.Contents
@@ -17,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class WebToonFragment : Fragment(), WebToonAdapter.WebToonItemListener {
     private val mViewModel by viewModels<WebToonViewModel>()
+    private val spanCount = 2
 
     private lateinit var webToonAdapter: WebToonAdapter
 
@@ -35,7 +37,8 @@ class WebToonFragment : Fragment(), WebToonAdapter.WebToonItemListener {
         with(binding) {
             with(this.webtoonList) {
                 adapter = webToonAdapter
-                addItemDecoration(GridItemDecoration(context))
+                layoutManager = GridLayoutManager(requireContext(), spanCount)
+                addItemDecoration(GridItemDecoration(context, spanCount, 12))
             }
 
             lifecycleOwner = viewLifecycleOwner

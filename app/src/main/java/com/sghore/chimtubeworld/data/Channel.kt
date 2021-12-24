@@ -10,4 +10,5 @@ data class Channel(
     val type: Int,
     val isOnline: Boolean? = null
 ) {
+    var isSelected: Boolean = false
 }

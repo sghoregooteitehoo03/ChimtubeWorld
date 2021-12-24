@@ -2,7 +2,9 @@ package com.sghore.chimtubeworld.bind
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.media.Image
 import android.os.Build
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -12,6 +14,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.data.Channel
 import com.sghore.chimtubeworld.data.Post
 import com.sghore.chimtubeworld.data.Video
 import java.math.RoundingMode
@@ -31,19 +34,30 @@ fun setImage(view: ImageView, stringImage: String?) {
     }
 }
 
-@BindingAdapter("app:setTwitchBroadcastImage", "app:isBlur", requireAll = false)
-fun setTwitchBroadcastImage(view: ImageView, stringImage: String?, isBlur: Boolean = false) {
+@BindingAdapter("app:setTwitchBroadcastImage")
+fun setTwitchBroadcastImage(view: ImageView, channelData: Channel?) {
     view.clipToOutline = true
 
-    if (stringImage != null) {
+    if (channelData != null) {
         Glide.with(view.context)
-            .load(stringImage)
+            .load(channelData.thumbnailImage)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
             .into(view)
+
+        if (channelData.isOnline != true) {
+            view.setColorFilter(ContextCompat.getColor(view.context, R.color.black_blur))
+        }
     }
+}
+
+@BindingAdapter("app:setImageBlur")
+fun setImageBlur(view: ImageView, isBlur: Boolean) {
+
     if (isBlur) {
-        view.setColorFilter(ContextCompat.getColor(view.context, R.color.black_blur))
+        view.setColorFilter(0)
+    } else {
+        view.setColorFilter(ContextCompat.getColor(view.context, R.color.black_alpha_50))
     }
 }
 
@@ -129,6 +143,7 @@ private fun getViewCountText(viewCount: Long): String {
     }
 }
 
+// TODO: 업로드 시간 버그 수정
 private fun getUploadTimeText(uploadTime: Long): String {
     val currentTime = System.currentTimeMillis()
     val diffTime = currentTime - uploadTime

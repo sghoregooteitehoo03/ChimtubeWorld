@@ -6,19 +6,24 @@
     <data>
 
         <variable
-            name="goodsData"
-            type="com.sghore.chimtubeworld.data.Goods" />
+            name="imageData"
+            type="String" />
+
+        <variable
+            name="isSelected"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="120dp">
+        android:layout_width="60dp"
+        android:layout_height="60dp">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            app:setImage="@{goodsData.thumbnailImage}"
+            android:layout_marginEnd="6dp"
+            app:setImageBlur="@{isSelected}"
+            app:setImage="@{imageData}"
             tools:src="@drawable/test" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

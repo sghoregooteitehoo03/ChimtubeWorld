@@ -5,6 +5,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="gviewmodel"
+            type="com.sghore.chimtubeworld.viewmodel.GlobalViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,5 +36,26 @@
             app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/bottom_nav_menu" />
+
+        <LinearLayout
+            android:id="@+id/pager_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/black_alpha_50"
+            android:clickable="true"
+            android:elevation="8dp"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:visibility="@{gviewmodel.showGoodsList != null ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/detail_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

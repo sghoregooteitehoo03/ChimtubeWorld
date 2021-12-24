@@ -20,8 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-// TODO:
-//  . 게시글 클릭 시 커스텀탭스로 이동 O
 @AndroidEntryPoint
 class CafeFragment : Fragment(), View.OnClickListener,
     CafeCategoryAdapter.CafeCategoryItemListener,
