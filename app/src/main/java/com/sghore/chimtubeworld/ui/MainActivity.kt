@@ -2,8 +2,11 @@ package com.sghore.chimtubeworld.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -14,9 +17,6 @@ import com.sghore.chimtubeworld.databinding.ActivityMainBinding
 import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO:
-//  . 툴바 추가 O
-//  . 바텀 nav 이미지 추가 O
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val globalViewModel by viewModels<GlobalViewModel>()
@@ -42,13 +42,61 @@ class MainActivity : AppCompatActivity() {
         val navFrag =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navFrag.navController
+        navController.let {
+            binding.bottomNavView.itemIconTintList = null
+            binding.bottomNavView.setupWithNavController(it)
 
-        binding.bottomNavView.itemIconTintList = null
-        binding.bottomNavView.setupWithNavController(navController)
+            it.addOnDestinationChangedListener { controller, destination, arguments ->
+                when (destination.id) {
+                    R.id.videosFragment -> { // 영상 리스트 화면
+                        // 아이콘이 선택되게 함
+                        if (controller.backQueue.size == 3) { // YoutubeFrag -> VideoFrag
+                            setMenuItemChecked(false, binding.bottomNavView.selectedItemId)
+                            setMenuItemChecked(true, R.id.youtubeFragment)
+                        } else if (controller.backQueue.size == 4) { // TwtichFrag -> VideoFrag
+                            setMenuItemChecked(false, binding.bottomNavView.selectedItemId)
+                            setMenuItemChecked(true, R.id.twitchFragment)
+                        }
 
-        setSupportActionBar(binding.mainToolbar) // 툴바 설정
+                        binding.toolbarText.visibility = View.GONE
+                        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                    }
+                    else -> {
+                        binding.toolbarText.visibility = View.VISIBLE
+                        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                    }
+                }
+            }
+        }
+
+        // 툴바 설정
+        setSupportActionBar(binding.mainToolbar)
+        supportActionBar?.title = ""
+
         setViewPager()
         setObserver()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> false
+        }
+    }
+
+    override fun onBackPressed() {
+        // 페이저 레이아웃이 보이고 있을 때
+        if (globalViewModel.showGoodsList.value != null) {
+            // 레이아웃에서 벗어남
+            globalViewModel.showGoodsList.value = null
+            globalViewModel.selectedGoodsPos.value = -1
+            pagerAdapter.syncData(listOf())
+        } else {
+            super.onBackPressed()
+        }
     }
 
     // 옵저버 설정
@@ -82,15 +130,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        // 페이저 레이아웃이 보이고 있을 때
-        if (globalViewModel.showGoodsList.value != null) {
-            // 레이아웃에서 벗어남
-            globalViewModel.showGoodsList.value = null
-            globalViewModel.selectedGoodsPos.value = -1
-            pagerAdapter.syncData(listOf())
-        } else {
-            super.onBackPressed()
-        }
+    private fun setMenuItemChecked(isChecked: Boolean, fragmentRes: Int) {
+        binding.bottomNavView
+            .menu
+            .findItem(fragmentRes)
+            .isChecked = isChecked
     }
 }

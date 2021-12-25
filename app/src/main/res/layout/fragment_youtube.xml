@@ -5,82 +5,100 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="com.sghore.chimtubeworld.viewmodel.youtubeFrag.YoutubeViewModel" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="12dp">
+            android:layout_height="wrap_content"
+            android:visibility="@{viewmodel.isLoading() ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/title_main_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="YouTube"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/subtitle_main_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="침투부 채널"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@id/title_main_text"
-                app:layout_constraintStart_toEndOf="@id/title_main_text" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/main_list"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:overScrollMode="never"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/title_main_text"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_content_main" />
+                android:layout_height="match_parent"
+                android:padding="12dp">
 
-            <TextView
-                android:id="@+id/title_sub_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Sub Contents"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_list" />
+                <TextView
+                    android:id="@+id/title_main_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="YouTube"
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/subtitle_sub_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="침착맨 외부 방송"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@id/title_sub_text"
-                app:layout_constraintStart_toEndOf="@id/title_sub_text" />
+                <TextView
+                    android:id="@+id/subtitle_main_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="침투부 채널"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/title_main_text"
+                    app:layout_constraintStart_toEndOf="@id/title_main_text" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/sub_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical"
-                android:overScrollMode="never"
-                app:layout_constraintTop_toBottomOf="@id/title_sub_text"
-                tools:itemCount="4"
-                tools:listitem="@layout/item_content_sub" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/main_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/title_main_text"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_content_main" />
+
+                <TextView
+                    android:id="@+id/title_sub_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Sub Contents"
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/main_list" />
+
+                <TextView
+                    android:id="@+id/subtitle_sub_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="침착맨 외부 방송"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/title_sub_text"
+                    app:layout_constraintStart_toEndOf="@id/title_sub_text" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/sub_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:overScrollMode="never"
+                    app:layout_constraintTop_toBottomOf="@id/title_sub_text"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_content_sub" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewmodel.isLoading() ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

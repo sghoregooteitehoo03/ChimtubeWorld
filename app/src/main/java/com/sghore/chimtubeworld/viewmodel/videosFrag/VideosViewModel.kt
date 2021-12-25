@@ -1,9 +1,6 @@
 package com.sghore.chimtubeworld.viewmodel.videosFrag
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.other.Contents
@@ -17,6 +14,10 @@ class VideosViewModel @AssistedInject constructor(
     @Assisted val channelId: String,
     @Assisted val typeImageRes: Int
 ) : ViewModel() {
+    // 로딩 여부
+    val isLoading = MutableLiveData(true)
+
+    // 영상 리스트
     val vidoes = repository.getVideos(
         channelId = channelId,
         typeImageRes = typeImageRes

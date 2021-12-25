@@ -32,7 +32,7 @@
         <entry key="app/src/main/res/layout/fragment_store_detail.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_video.xml" value="0.28229166666666666" />
-        <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.18232879638671878" />
         <entry key="app/src/main/res/layout/fragment_webtoon.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_youtube.xml" value="0.20412979351032448" />
         <entry key="app/src/main/res/layout/item_cafe_category.xml" value="0.25" />
@@ -43,8 +43,9 @@
         <entry key="app/src/main/res/layout/item_goods_category.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_goods_info.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_goods_item.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/item_loading_video.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_preview_image.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/item_video.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_video.xml" value="0.18" />
         <entry key="app/src/main/res/layout/item_webtoon.xml" value="0.2" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.36041666666666666" />
       </map>

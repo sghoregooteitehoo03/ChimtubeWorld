@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.Channel
 import com.sghore.chimtubeworld.data.Post
@@ -22,6 +23,17 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
+
+@BindingAdapter("app:setLoadingListLayout")
+fun setLoadingListLayout(view: ShimmerFrameLayout, isLoading: Boolean) {
+    if (isLoading) {
+        view.visibility = View.VISIBLE
+        view.startShimmer()
+    } else {
+        view.visibility = View.GONE
+        view.stopShimmer()
+    }
+}
 
 @BindingAdapter("app:setImage")
 fun setImage(view: ImageView, stringImage: String?) {
@@ -143,7 +155,6 @@ private fun getViewCountText(viewCount: Long): String {
     }
 }
 
-// TODO: 업로드 시간 버그 수정
 private fun getUploadTimeText(uploadTime: Long): String {
     val currentTime = System.currentTimeMillis()
     val diffTime = currentTime - uploadTime

@@ -1,12 +1,14 @@
 package com.sghore.chimtubeworld.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.VideosPagingAdapter
 import com.sghore.chimtubeworld.data.Video
@@ -41,10 +43,14 @@ class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener {
         val binding = FragmentVideosBinding.inflate(inflater)
         videosAdapter = VideosPagingAdapter().apply {
             setOnItemListener(this@VideosFragment)
+            addLoadStateListener { loadState ->
+                mViewModel.isLoading.value = loadState.source.refresh is LoadState.Loading
+            }
         }
 
         // 바인딩 설정
         with(binding) {
+            this.viewmodel = mViewModel
             this.subtitleMainText.text = args.channelName
             this.videoTypeImage.setImageResource(args.typeImageRes)
             this.videoList.adapter = videosAdapter

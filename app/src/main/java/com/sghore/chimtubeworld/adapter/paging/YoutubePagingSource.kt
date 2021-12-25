@@ -63,8 +63,8 @@ class YoutubePagingSource(
                 Locale.KOREA
             )
             // 업로드 시간
-            val uploadTime = dateFormat.parse(response.snippet.publishedAt)
-                ?.time ?: 0 + 32400000 // (+9 Hours) UTC -> KOREA
+            val uploadTime =
+                dateFormat.parse(response.snippet.publishedAt).time + 32400000 // (+9 Hours) UTC -> KOREA
             // 영상 길이
             val duration = Duration.parse(response.contentDetails.duration)
                 .inWholeMilliseconds - 32400000 // (-9 Hours) KOREA -> UTC
@@ -72,7 +72,7 @@ class YoutubePagingSource(
             Video(
                 id = response.id,
                 title = response.snippet.title, // 제목
-                thumbnail = response.snippet.thumbnails.medium.url, // 썸네일 이미지
+                thumbnail = response.snippet.thumbnails.high.url, // 썸네일 이미지
                 uploadTime = uploadTime,
                 viewCount = response.statistics.viewCount.toLong(), // 조회수
                 duration = duration,

@@ -10,7 +10,7 @@
         android:id="@+id/youtubeFragment"
         android:name="com.sghore.chimtubeworld.ui.fragment.YoutubeFragment"
         android:label="YoutubeFragment"
-        tools:layout="@layout/fragment_youtube" >
+        tools:layout="@layout/fragment_youtube">
         <action
             android:id="@+id/action_youtubeFragment_to_videosFragment"
             app:destination="@id/videosFragment" />
@@ -20,7 +20,7 @@
         android:id="@+id/twitchFragment"
         android:name="com.sghore.chimtubeworld.ui.fragment.TwitchFragment"
         android:label="TwitchFragment"
-        tools:layout="@layout/fragment_twitch" >
+        tools:layout="@layout/fragment_twitch">
         <action
             android:id="@+id/action_twitchFragment_to_videosFragment"
             app:destination="@id/videosFragment" />
@@ -48,7 +48,7 @@
         android:id="@+id/videosFragment"
         android:name="com.sghore.chimtubeworld.ui.fragment.VideosFragment"
         android:label="VideosFragment"
-        tools:layout="@layout/fragment_videos" >
+        tools:layout="@layout/fragment_videos">
         <argument
             android:name="channelName"
             app:argType="string" />

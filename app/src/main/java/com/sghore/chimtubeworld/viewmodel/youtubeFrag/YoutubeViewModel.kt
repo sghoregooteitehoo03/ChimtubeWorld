@@ -13,14 +13,18 @@ import javax.inject.Inject
 class YoutubeViewModel @Inject constructor(
     private val repository: YoutubeRepository
 ) : ViewModel() {
+    private val _isLoading = MutableLiveData(true) // 로딩 여부
+    private val _allChannelList = MutableLiveData<List<Channel?>>(null) // 채널 리스트
 
-    private val _allChannelList = MutableLiveData<List<Channel?>>(null)
     val allChannelList: LiveData<List<Channel?>> = _allChannelList
+    val isLoading: LiveData<Boolean> = _isLoading
 
     fun getChannelInfo() = viewModelScope.launch {
         try {
             val channelList = repository.getChannelInfo()
+
             _allChannelList.value = channelList.toList()
+            _isLoading.value = false // 로딩 끝
         } catch (e: Exception) {
             e.printStackTrace()
         }

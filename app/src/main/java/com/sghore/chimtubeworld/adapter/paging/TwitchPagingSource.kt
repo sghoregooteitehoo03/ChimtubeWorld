@@ -66,8 +66,8 @@ class TwitchPagingSource(
                 Locale.KOREA
             )
             // 업로드 시간
-            val uploadTime = dateFormat.parse(videoData.publishedAt)
-                ?.time ?: 0 + 32400000 // (+9 Hours) UTC -> KOREA
+            val uploadTime =
+                dateFormat.parse(videoData.publishedAt).time + 32400000 // (+9 Hours) UTC -> KOREA
             // 영상 길이
             val duration = Duration.parse(videoData.duration)
                 .inWholeMilliseconds - 32400000 // (-9 Hours) KOREA -> UTC
