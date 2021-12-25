@@ -23,16 +23,15 @@
             android:background="?attr/selectableItemBackground"
             android:padding="16sp">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/channel_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/shape_round"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:setImage="@{channelData.image}"
+                app:setCircleImage="@{channelData.image}"
                 tools:src="@drawable/test" />
 
             <TextView

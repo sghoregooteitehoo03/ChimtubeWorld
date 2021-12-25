@@ -10,6 +10,8 @@
         <entry key="app/src/main/res/drawable/ic_store.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_store_darker.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_twitch.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/ic_twitch_bedge.xml" value="0.158" />
+        <entry key="app/src/main/res/drawable/ic_twitch_betge.xml" value="0.158" />
         <entry key="app/src/main/res/drawable/ic_twitch_darker.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_webtoon_darker.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_youtube.xml" value="0.1235" />
@@ -22,6 +24,11 @@
         <entry key="app/src/main/res/drawable/shape_corner_rec_large.xml" value="0.122" />
         <entry key="app/src/main/res/drawable/shape_corner_rec_normal.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/shape_corner_rec_small.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/shape_offline.xml" value="0.158" />
+        <entry key="app/src/main/res/drawable/shape_offline_layout.xml" value="0.158" />
+        <entry key="app/src/main/res/drawable/shape_online.xml" value="0.158" />
+        <entry key="app/src/main/res/drawable/shape_online_layout.xml" value="0.158" />
+        <entry key="app/src/main/res/drawable/shape_online_text.xml" value="0.158" />
         <entry key="app/src/main/res/drawable/shape_rectangle_12.xml" value="0.148" />
         <entry key="app/src/main/res/drawable/shape_round.xml" value="0.147" />
         <entry key="app/src/main/res/drawable/shape_round_border.xml" value="0.1235" />
@@ -30,7 +37,7 @@
         <entry key="app/src/main/res/layout/fragment_cafe.xml" value="0.23224639892578125" />
         <entry key="app/src/main/res/layout/fragment_store.xml" value="0.18716278076171877" />
         <entry key="app/src/main/res/layout/fragment_store_detail.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_video.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.18232879638671878" />
         <entry key="app/src/main/res/layout/fragment_webtoon.xml" value="0.1" />

@@ -7,18 +7,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.TwitchUserAdapter
 import com.sghore.chimtubeworld.data.Channel
 import com.sghore.chimtubeworld.databinding.FragmentTwitchBinding
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.ui.custom.GridItemDecoration
 import com.sghore.chimtubeworld.viewmodel.twitchFrag.TwitchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TwitchFragment : Fragment(), View.OnClickListener, TwitchUserAdapter.TwitchUserItemListener {
     private val mViewModel by viewModels<TwitchViewModel>()
+    private val spanCount = 4
 
     private lateinit var twitchUserAdapter: TwitchUserAdapter
 
@@ -37,7 +40,11 @@ class TwitchFragment : Fragment(), View.OnClickListener, TwitchUserAdapter.Twitc
         with(binding) {
             this.viewmodel = mViewModel
             this.clickListener = this@TwitchFragment
-            this.twitchUserList.adapter = twitchUserAdapter
+            with(this.twitchUserList) {
+                adapter = twitchUserAdapter
+                layoutManager = GridLayoutManager(requireContext(), spanCount)
+                addItemDecoration(GridItemDecoration(context, spanCount, 12))
+            }
 
             lifecycleOwner = viewLifecycleOwner
         }
@@ -47,7 +54,6 @@ class TwitchFragment : Fragment(), View.OnClickListener, TwitchUserAdapter.Twitc
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setObserver()
     }
 

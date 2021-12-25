@@ -47,18 +47,17 @@ class GridItemDecoration(
                 //오른쪽 아이템
                 outRect.left = halfSize
             }
-        } else if (spanCount == 3) {
+        } else if (spanCount >= 3) {
             when (spanIndex) {
                 0 -> {
                     //왼쪽 아이템
                     outRect.right = halfSize
                 }
-                1 -> {
-                    //중간 아이템
-                    outRect.right = halfSize
+                spanCount - 1 -> { // 오른쪽 아이템
                     outRect.left = halfSize
                 }
-                else -> { // 오른쪽 아이템
+                else -> { //중간 아이템
+                    outRect.right = halfSize
                     outRect.left = halfSize
                 }
             }

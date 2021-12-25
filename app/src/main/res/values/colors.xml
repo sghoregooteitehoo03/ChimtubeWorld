@@ -13,4 +13,7 @@
     <color name="black_alpha_50">#80000000</color>
     <color name="black_blur">#4D000000</color>
     <color name="cafe_banner">#60D171</color>
+
+    <color name="green_online_color">#24FF1E</color>
+    <color name="red_online_color">#E60014</color>
 </resources>

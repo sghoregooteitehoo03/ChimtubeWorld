@@ -15,10 +15,14 @@ class TwitchViewModel @Inject constructor(
     private val repository: TwitchRepository
 ) : ViewModel() {
 
-    private val _twitchUserList = MutableLiveData<List<Channel?>>(null)
-    private val _mainChannelData = MutableLiveData<Channel?>(null)
+    private val _twitchUserList = MutableLiveData<List<Channel?>>(null) // 트위치 유저 리스트
+    private val _mainChannelData = MutableLiveData<Channel?>(null) // 침착맨 채널 정보
+    private val _isLoading = MutableLiveData(true) // 로딩 여부
+
     val twitchUserList: LiveData<List<Channel?>> = _twitchUserList
     val mainChannelData: LiveData<Channel?> = _mainChannelData
+    val isLoading: LiveData<Boolean> = _isLoading
+
 
     fun getTwitchUserInfo() = viewModelScope.launch {
         try { // 문제가 발생하지 않았을 때
@@ -26,6 +30,7 @@ class TwitchViewModel @Inject constructor(
 
             _twitchUserList.value = userList
             _mainChannelData.value = userList.filter { it?.type == 0 }[0]
+            _isLoading.value = false // 로딩 끝
         } catch (e: Exception) {
             e.printStackTrace()
         }

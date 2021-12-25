@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -18,6 +19,7 @@ import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.Channel
 import com.sghore.chimtubeworld.data.Post
 import com.sghore.chimtubeworld.data.Video
+import de.hdodenhof.circleimageview.CircleImageView
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -43,6 +45,24 @@ fun setImage(view: ImageView, stringImage: String?) {
         Glide.with(view.context)
             .load(stringImage)
             .into(view)
+    }
+}
+
+@BindingAdapter("app:setCircleImage")
+fun setCircleImage(view: CircleImageView, stringImage: String?) {
+    if (stringImage != null) {
+        Glide.with(view.context)
+            .load(stringImage)
+            .into(view)
+    }
+}
+
+@BindingAdapter("app:setTwitchOnlineLayout")
+fun setTwitchOnlineLayout(view: ConstraintLayout, isOnline: Boolean) {
+    view.background = if (isOnline) {
+        view.resources.getDrawable(R.drawable.shape_online_layout, null)
+    } else {
+        view.resources.getDrawable(R.drawable.shape_offline_layout, null)
     }
 }
 
