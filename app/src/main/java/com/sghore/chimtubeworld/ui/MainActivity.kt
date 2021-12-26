@@ -1,16 +1,14 @@
 package com.sghore.chimtubeworld.ui
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
-import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.StoreDetailPagerAdapter
 import com.sghore.chimtubeworld.databinding.ActivityMainBinding
@@ -73,6 +71,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.mainToolbar)
         supportActionBar?.title = ""
 
+        binding.closePagerBtn.setOnClickListener {
+            onBackPressed()
+        }
+
         setViewPager()
         setObserver()
     }
@@ -104,8 +106,18 @@ class MainActivity : AppCompatActivity() {
         // 굿즈 리스트
         globalViewModel.showGoodsList.observe(this) { goodsList ->
             if (goodsList != null) {
+                with(window) {
+                    decorView.systemUiVisibility = 0
+                    statusBarColor = Color.BLACK
+                }
+
                 pagerAdapter.syncData(goodsList)
             } else {
+                with(window) {
+                    decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    statusBarColor = Color.WHITE
+                }
+
                 pagerAdapter.notifyChangeInPosition(1)
             }
         }

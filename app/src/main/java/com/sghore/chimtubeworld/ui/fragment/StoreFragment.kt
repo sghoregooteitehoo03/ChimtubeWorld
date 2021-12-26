@@ -1,7 +1,6 @@
 package com.sghore.chimtubeworld.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,22 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.viewpager2.widget.ViewPager2
-import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.GoodsAdapter
 import com.sghore.chimtubeworld.adapter.GoodsCategoryAdapter
-import com.sghore.chimtubeworld.adapter.StoreDetailPagerAdapter
 import com.sghore.chimtubeworld.databinding.FragmentStoreBinding
 import com.sghore.chimtubeworld.ui.custom.GridItemDecoration
-import com.sghore.chimtubeworld.ui.custom.SpannableGridLayoutManager
-import com.sghore.chimtubeworld.ui.custom.SpannableGridLayoutManager.SpanInfo
 import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import com.sghore.chimtubeworld.viewmodel.storeFrag.StoreViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
-// TODO:
-//  . 아이템 로딩 장면 추가
-//  . 카테고리 아이템 수정
 
 @AndroidEntryPoint
 class StoreFragment : Fragment(),
@@ -54,6 +44,7 @@ class StoreFragment : Fragment(),
 
         // 바인딩 설정
         with(binding) {
+            this.viewmodel = mViewModel
             with(this.goodsCategoryList) {
                 adapter = categoryAdapter
                 itemAnimator = null
@@ -61,7 +52,7 @@ class StoreFragment : Fragment(),
             with(this.goodsList) {
                 adapter = goodsAdapter
                 layoutManager = GridLayoutManager(requireContext(), spanCount)
-                addItemDecoration(GridItemDecoration(context, spanCount, 6))
+                addItemDecoration(GridItemDecoration(context, spanCount, 4))
             }
 
             lifecycleOwner = viewLifecycleOwner

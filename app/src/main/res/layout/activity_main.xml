@@ -66,7 +66,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/bottom_nav_menu" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pager_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -80,12 +80,24 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="gone">
 
+            <ImageButton
+                android:id="@+id/close_pager_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@null"
+                android:src="@drawable/ic_close"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/detail_viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:clipChildren="false"
-                android:clipToPadding="false" />
-        </LinearLayout>
+                android:clipToPadding="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/close_pager_btn" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
