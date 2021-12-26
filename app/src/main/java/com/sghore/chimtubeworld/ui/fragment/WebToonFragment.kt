@@ -35,6 +35,7 @@ class WebToonFragment : Fragment(), WebToonAdapter.WebToonItemListener {
 
         // 바인딩 설정
         with(binding) {
+            this.viewmodel = mViewModel
             with(this.webtoonList) {
                 adapter = webToonAdapter
                 layoutManager = GridLayoutManager(requireContext(), spanCount)

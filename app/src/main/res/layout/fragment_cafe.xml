@@ -24,14 +24,14 @@
             android:id="@+id/top_banner_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp">
+            android:background="@color/white">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:titleEnabled="false">
 
@@ -137,6 +137,8 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toBottomOf="@id/title_sub_text"
+                app:restoreListState="@{viewmodel.categoryListState}"
+                app:setScrollPosition="@{viewmodel.selectedPos}"
                 tools:listitem="@layout/item_cafe_category" />
         </com.google.android.material.appbar.AppBarLayout>
 

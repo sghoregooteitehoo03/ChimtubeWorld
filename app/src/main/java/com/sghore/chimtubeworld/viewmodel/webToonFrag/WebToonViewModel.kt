@@ -13,13 +13,15 @@ import javax.inject.Inject
 class WebToonViewModel @Inject constructor(
     private val repository: WebToonRepository
 ) : ViewModel() {
-    private val _webToonList = MutableLiveData<List<Channel>?>(null)
+    private val _webToonList = MutableLiveData<List<Channel>?>(null) // 웹툰 리스트
+    private val _isLoading = MutableLiveData(true) // 로딩 여부
     val webToonList: LiveData<List<Channel>?> = _webToonList
+    val isLoading: LiveData<Boolean> = _isLoading
 
     fun getWebToonList() = viewModelScope.launch {
-
         _webToonList.value = CoroutineScope(Dispatchers.IO).async {
             repository.getWebToonList()
         }.await()
+        _isLoading.value = false // 로딩 끝
     }
 }

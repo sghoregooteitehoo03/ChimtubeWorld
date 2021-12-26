@@ -34,10 +34,10 @@
         <entry key="app/src/main/res/drawable/shape_round_border.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/shape_sideded_rounded_rec.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_cafe.xml" value="0.23224639892578125" />
+        <entry key="app/src/main/res/layout/fragment_cafe.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_store.xml" value="0.18716278076171877" />
         <entry key="app/src/main/res/layout/fragment_store_detail.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.320789794921875" />
         <entry key="app/src/main/res/layout/fragment_video.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.18232879638671878" />
         <entry key="app/src/main/res/layout/fragment_webtoon.xml" value="0.1" />

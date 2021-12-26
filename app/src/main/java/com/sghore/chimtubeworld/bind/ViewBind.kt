@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.media.Image
 import android.os.Build
+import android.os.Parcelable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,6 +13,7 @@ import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -20,6 +22,10 @@ import com.sghore.chimtubeworld.data.Channel
 import com.sghore.chimtubeworld.data.Post
 import com.sghore.chimtubeworld.data.Video
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -63,6 +69,19 @@ fun setTwitchOnlineLayout(view: ConstraintLayout, isOnline: Boolean) {
         view.resources.getDrawable(R.drawable.shape_online_layout, null)
     } else {
         view.resources.getDrawable(R.drawable.shape_offline_layout, null)
+    }
+}
+
+@BindingAdapter("app:setScrollPosition")
+fun setScrollPosition(view: RecyclerView, pos: Int) {
+    view.scrollToPosition(pos)
+}
+
+@BindingAdapter("app:restoreListState")
+fun restoreListState(view: RecyclerView, saveState: Parcelable?) {
+    CoroutineScope(Dispatchers.Main).launch {
+        delay(10)
+        view.layoutManager?.onRestoreInstanceState(saveState)
     }
 }
 

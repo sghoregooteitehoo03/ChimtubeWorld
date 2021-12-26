@@ -1,5 +1,6 @@
 package com.sghore.chimtubeworld.viewmodel.cafeFrag
 
+import android.os.Parcelable
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -20,6 +21,7 @@ class CafeViewModel @Inject constructor(
     private val _cafeInfoData = MutableLiveData<Channel>(null) // 카페 정보
     val cafeInfoData: LiveData<Channel> = _cafeInfoData
 
+    val categoryListState = MutableLiveData<Parcelable?>(null) // 카테고리 리스트 복원 데이터
     val selectedPos = MutableLiveData(0) // 카테고리 선택된 위치
     val categoryId = MutableLiveData<Int>() // 카테고리 아이디
     val cafePosts = repository.getCafePosts(categoryId) // 카페 게시글 리스트

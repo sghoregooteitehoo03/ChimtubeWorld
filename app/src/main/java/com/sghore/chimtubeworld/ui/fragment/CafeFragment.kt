@@ -8,17 +8,16 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.CafeCategoryAdapter
 import com.sghore.chimtubeworld.adapter.CafePostPagingAdapter
 import com.sghore.chimtubeworld.databinding.FragmentCafeBinding
 import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.ui.custom.LinearItemDecoration
 import com.sghore.chimtubeworld.viewmodel.cafeFrag.CafeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CafeFragment : Fragment(), View.OnClickListener,
@@ -26,6 +25,7 @@ class CafeFragment : Fragment(), View.OnClickListener,
     CafePostPagingAdapter.CafePostItemListener {
 
     private val mViewModel by viewModels<CafeViewModel>()
+    private var isExpanded = true
 
     private lateinit var binding: FragmentCafeBinding
     private lateinit var categoryAdapter: CafeCategoryAdapter
@@ -55,8 +55,23 @@ class CafeFragment : Fragment(), View.OnClickListener,
             with(this.cafeCategoryList) {
                 adapter = categoryAdapter
                 itemAnimator = null
+                addItemDecoration(
+                    LinearItemDecoration(requireContext(), 12)
+                )
             }
-            this.cafePostList.adapter = postAdapter
+            with(this.cafePostList) {
+                adapter = postAdapter
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        // 프래그먼트를 구성할 때 리스트의 위치가 0이 아니면 카페 배너 레이아웃을 접음
+                        if (computeVerticalScrollOffset() != 0 && isExpanded) {
+                            isExpanded = false
+                            binding.topBannerLayout.setExpanded(isExpanded, false)
+                        }
+                    }
+                })
+            }
 
             lifecycleOwner = viewLifecycleOwner
         }
@@ -67,6 +82,13 @@ class CafeFragment : Fragment(), View.OnClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObserver()
+    }
+
+    override fun onDestroyView() {
+        // 프래그먼트가 삭제되기 전에 카테고리 리스트 상태를 저장시킴
+        mViewModel.categoryListState.value =
+            binding.cafeCategoryList.layoutManager?.onSaveInstanceState()
+        super.onDestroyView()
     }
 
     // 뷰 클릭 이벤트
@@ -82,7 +104,10 @@ class CafeFragment : Fragment(), View.OnClickListener,
 
     // 카테고리 클릭 이벤트
     override fun onCategoryClickListener(pos: Int) {
-        mViewModel.selectedPos.value = pos
+        // 선택한 위치가 이전에 선택한 위치랑 다를 때
+        if (pos != categoryAdapter.previousSelectedPos) {
+            mViewModel.selectedPos.value = pos
+        }
     }
 
     // 게시글 클릭 이벤트
@@ -94,6 +119,12 @@ class CafeFragment : Fragment(), View.OnClickListener,
 
     // 옵저버 설정
     private fun setObserver() {
+        // 카테고리 리스트 복원 데이터
+        mViewModel.categoryListState.observe(viewLifecycleOwner) { saveState ->
+            if (saveState != null) {
+                mViewModel.categoryListState.value = null
+            }
+        }
         // 카테고리 선택한 위치
         mViewModel.selectedPos.observe(viewLifecycleOwner) { pos ->
             val categoryId = categoryAdapter.getCategoryId(pos)
@@ -104,7 +135,11 @@ class CafeFragment : Fragment(), View.OnClickListener,
         // 카테고리 아이디
         mViewModel.categoryId.observe(viewLifecycleOwner) { categoryId ->
             postAdapter.refresh() // 카테고리 아이디에 따라 게시글을 새로 불러옴
-            binding.cafePostList.scrollToPosition(0)
+            if (postAdapter.itemCount != 0) {
+                // 카테고리 정보가 바뀌었을 때 리스트에 위치를 맨 위로 만듬
+                postAdapter.notifyDataSetChanged()
+                binding.cafePostList.scrollToPosition(0)
+            }
         }
         // 카페 정보
         mViewModel.cafeInfoData.observe(viewLifecycleOwner) { cafeInfo ->
