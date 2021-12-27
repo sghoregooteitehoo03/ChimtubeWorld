@@ -55,15 +55,9 @@ class OpenOtherApp(
     }
 
     fun openCustomTabs(url: String) {
-        CustomTabsIntent.Builder().let {
-            ResourcesCompat.getDrawable(context.resources, R.drawable.ic_back, null)
-                ?.toBitmap()
-                ?.let { bitmap ->
-                    it.setCloseButtonIcon(bitmap)
-                }
-
-            it.build().launchUrl(context, Uri.parse(url))
-        }
+        CustomTabsIntent.Builder()
+            .build()
+            .launchUrl(context, Uri.parse(url))
     }
 
     // 패키지 존재여부 확인
