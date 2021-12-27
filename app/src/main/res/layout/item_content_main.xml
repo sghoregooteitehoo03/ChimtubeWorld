@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16sp"
-        app:cardBackgroundColor="@color/gray_bright"
+        app:cardBackgroundColor="@color/gray_bright_night"
         app:cardCornerRadius="12dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +42,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{channelData.name}"
-                android:textColor="@color/black"
+                android:textColor="@color/item_color"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/channel_explain_text"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -33,7 +33,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{postData.title}"
-                android:textColor="@color/black"
+                android:textColor="@color/item_color"
                 app:layout_constraintBottom_toTopOf="@+id/post_info_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

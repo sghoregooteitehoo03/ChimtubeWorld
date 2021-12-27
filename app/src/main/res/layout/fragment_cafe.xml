@@ -23,8 +23,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/top_banner_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
@@ -44,7 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Community"
-                        android:textColor="@color/black"
+                        android:textColor="@color/item_color"
                         android:textSize="22sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -73,7 +72,7 @@
                             android:layout_width="168dp"
                             android:layout_height="168dp"
                             android:background="@drawable/shape_round"
-                            android:backgroundTint="@color/white"
+                            android:backgroundTint="@color/item_reverse_color"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="12dp"
@@ -98,7 +97,7 @@
                                 android:gravity="center"
                                 android:maxLines="1"
                                 android:text="@{viewmodel.cafeInfoData.name}"
-                                android:textColor="@color/black"
+                                android:textColor="@color/item_color"
                                 android:textSize="18sp"
                                 tools:text="§ 침투부 카페 §" />
 
@@ -120,7 +119,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="게시글"
-                        android:textColor="@color/black"
+                        android:textColor="@color/item_color"
                         android:textSize="22sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/cafe_banner_layout" />

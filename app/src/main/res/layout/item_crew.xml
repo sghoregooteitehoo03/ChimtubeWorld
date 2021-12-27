@@ -35,7 +35,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:text="@{channelData.name}"
-            android:textColor="@color/black"
+            android:textColor="@color/item_color"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

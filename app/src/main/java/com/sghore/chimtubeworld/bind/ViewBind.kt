@@ -139,7 +139,7 @@ fun setFollowCount(view: TextView, follows: String?) {
 @BindingAdapter("app:setSelectedText")
 fun setSelectedText(view: TextView, isSelected: Boolean) {
     val color = if (isSelected) {
-        view.resources.getColor(R.color.black, null)
+        view.resources.getColor(R.color.item_color, null)
     } else {
         view.resources.getColor(android.R.color.tab_indicator_text, null)
     }

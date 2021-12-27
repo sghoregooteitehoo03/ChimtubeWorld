@@ -1,5 +1,6 @@
 package com.sghore.chimtubeworld.ui
 
+import android.content.res.Configuration
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,6 +16,8 @@ import com.sghore.chimtubeworld.databinding.ActivityMainBinding
 import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+// TODO:
+//  . StoreDetailFragment 재구성 버그 수정
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val globalViewModel by viewModels<GlobalViewModel>()
@@ -106,18 +109,16 @@ class MainActivity : AppCompatActivity() {
         // 굿즈 리스트
         globalViewModel.showGoodsList.observe(this) { goodsList ->
             if (goodsList != null) {
-                with(window) {
-                    decorView.systemUiVisibility = 0
-                    statusBarColor = Color.BLACK
-                }
-
+                setStatusBarColor(Color.BLACK)
                 pagerAdapter.syncData(goodsList)
             } else {
-                with(window) {
-                    decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                    statusBarColor = Color.WHITE
+                if (isDarkMode()) {
+                    setStatusBarColor(Color.BLACK)
+                } else {
+                    setStatusBarColor(Color.WHITE)
                 }
 
+                pagerAdapter.syncData(listOf())
                 pagerAdapter.notifyChangeInPosition(1)
             }
         }
@@ -147,5 +148,28 @@ class MainActivity : AppCompatActivity() {
             .menu
             .findItem(fragmentRes)
             .isChecked = isChecked
+    }
+
+    private fun isDarkMode(): Boolean {
+        return when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            else -> false
+        }
+    }
+
+    // Status bar 설정
+    private fun setStatusBarColor(color: Int) {
+        if (color == Color.WHITE) {
+            with(window) {
+                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                statusBarColor = Color.WHITE
+            }
+        } else {
+            with(window) {
+                decorView.systemUiVisibility = 0
+                statusBarColor = Color.BLACK
+            }
+        }
     }
 }

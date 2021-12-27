@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_corner_rec_normal"
-            android:backgroundTint="@android:color/white"
+            android:backgroundTint="?android:colorBackground"
             android:padding="12dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -84,7 +84,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@{goodsData.price}"
-                    android:textColor="@color/black"
+                    android:textColor="@color/item_color"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="@id/thumbnail_image"
                     app:layout_constraintStart_toStartOf="@id/thumbnail_image"

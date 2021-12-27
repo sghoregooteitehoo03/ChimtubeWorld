@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Twitch Live"
-                    android:textColor="@color/black"
+                    android:textColor="@color/item_color"
                     android:textSize="22sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -120,7 +120,7 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="2dp"
                         android:text="@{viewmodel.mainChannelData.name}"
-                        android:textColor="@color/black"
+                        android:textColor="@color/item_color"
                         android:textSize="18sp"
                         app:layout_constraintBottom_toTopOf="@id/follow_text"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -160,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="Twitch Crew"
-                    android:textColor="@color/black"
+                    android:textColor="@color/item_color"
                     android:textSize="22sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/twitch_channel_layout" />
