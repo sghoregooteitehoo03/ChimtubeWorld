@@ -98,7 +98,6 @@ class MainActivity : AppCompatActivity() {
             // 레이아웃에서 벗어남
             globalViewModel.showGoodsList.value = null
             globalViewModel.selectedGoodsPos.value = -1
-            pagerAdapter.syncData(listOf())
         } else {
             super.onBackPressed()
         }
@@ -118,13 +117,15 @@ class MainActivity : AppCompatActivity() {
                     setStatusBarColor(Color.WHITE)
                 }
 
-                pagerAdapter.syncData(listOf())
                 pagerAdapter.notifyChangeInPosition(1)
+                pagerAdapter.syncData(listOf())
             }
         }
         // 아이템이 선택된 위치
         globalViewModel.selectedGoodsPos.observe(this) { pos ->
-            binding.detailViewpager.setCurrentItem(pos, false)
+            if (pos != -1) {
+                binding.detailViewpager.setCurrentItem(pos, false)
+            }
         }
     }
 
