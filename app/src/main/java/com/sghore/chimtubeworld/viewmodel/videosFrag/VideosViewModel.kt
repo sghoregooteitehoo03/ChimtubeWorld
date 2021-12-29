@@ -2,12 +2,8 @@ package com.sghore.chimtubeworld.viewmodel.videosFrag
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.other.Contents
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
 class VideosViewModel @AssistedInject constructor(
     private val repository: VideosRepository,

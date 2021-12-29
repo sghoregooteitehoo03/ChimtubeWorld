@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sghore.chimtubeworld.data.Channel
 import com.sghore.chimtubeworld.data.Goods
-import com.sghore.chimtubeworld.data.Post
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +32,7 @@ class StoreViewModel @Inject constructor(
     fun getStoreImages() = viewModelScope.launch {
         _storeImages.value = CoroutineScope(Dispatchers.IO).async {
             repository.getStoreInfo()
-        }.await()
+        }.await()!!
         _isLoading.value = false // 로딩 끝
     }
 
@@ -41,6 +40,6 @@ class StoreViewModel @Inject constructor(
         _goodsList.value = listOf() // 리스트 초기화
         _goodsList.value = CoroutineScope(Dispatchers.IO).async {
             repository.getGoodsList(url)
-        }.await()
+        }.await()!!
     }
 }

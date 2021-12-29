@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.PreviewImageAdapter
 import com.sghore.chimtubeworld.data.Goods

@@ -14,8 +14,6 @@ import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await
 import javax.inject.Inject
-import kotlin.NullPointerException
-
 
 class TwitchRepository @Inject constructor(
     private val store: FirebaseFirestore,

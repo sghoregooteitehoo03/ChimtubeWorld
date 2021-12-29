@@ -6,7 +6,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.paging.TwitchPagingSource
 import com.sghore.chimtubeworld.adapter.paging.YoutubePagingSource
-import com.sghore.chimtubeworld.other.Contents
 import retrofit2.Retrofit
 import javax.inject.Inject
 

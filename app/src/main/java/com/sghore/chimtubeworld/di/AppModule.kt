@@ -1,8 +1,6 @@
 package com.sghore.chimtubeworld.di
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sghore.chimtubeworld.other.Contents
-import com.sghore.chimtubeworld.retrofit.RetrofitService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

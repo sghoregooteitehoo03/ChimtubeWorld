@@ -2,11 +2,9 @@ package com.sghore.chimtubeworld.adapter.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.data.Video
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.retrofit.RetrofitService
-import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await
 import java.text.SimpleDateFormat

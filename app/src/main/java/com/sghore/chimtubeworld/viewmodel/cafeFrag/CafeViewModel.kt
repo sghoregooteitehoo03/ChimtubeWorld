@@ -2,10 +2,8 @@ package com.sghore.chimtubeworld.viewmodel.cafeFrag
 
 import android.os.Parcelable
 import androidx.lifecycle.*
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.sghore.chimtubeworld.data.Channel
-import com.sghore.chimtubeworld.data.Post
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +30,6 @@ class CafeViewModel @Inject constructor(
     fun getCafeInfo() = viewModelScope.launch {
         _cafeInfoData.value = CoroutineScope(Dispatchers.IO).async {
             repository.getCafeInfo()
-        }.await()
+        }.await()!!
     }
 }

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.sghore.chimtubeworld.R
 
-
 class SpannableGridLayoutManager : RecyclerView.LayoutManager {
 
     private var spanLookup: GridSpanLookup? = null

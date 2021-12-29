@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sghore.chimtubeworld.data.Goods
-import com.sghore.chimtubeworld.other.Contents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +28,7 @@ class StoreDetailViewModel @Inject constructor(
     fun getStoreDetail(goods: Goods) = viewModelScope.launch {
         _previewImages.value = CoroutineScope(Dispatchers.IO).async {
             repository.getStoreDetail(goods)
-        }.await()
+        }.await()!!
         isLoading.value = false // 로딩 끝
     }
 }

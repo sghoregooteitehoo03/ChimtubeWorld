@@ -2,7 +2,6 @@ package com.sghore.chimtubeworld.retrofit
 
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.retrofit.dto.twitchAPI.StreamDTO
-import com.sghore.chimtubeworld.retrofit.dto.twitchAPI.StreamDataDTO
 import com.sghore.chimtubeworld.retrofit.dto.twitchAPI.UserDTO
 import com.sghore.chimtubeworld.retrofit.dto.twitchAPI.UserFollowsDTO
 import com.sghore.chimtubeworld.retrofit.dto.youtubeAPI.ChannelDTO
