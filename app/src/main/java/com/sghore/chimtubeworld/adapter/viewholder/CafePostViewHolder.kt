@@ -1,5 +1,6 @@
 package com.sghore.chimtubeworld.adapter.viewholder
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.CafePostPagingAdapter
 import com.sghore.chimtubeworld.data.Post
@@ -17,6 +18,17 @@ class CafePostViewHolder(
     }
 
     fun bind(data: Post?) {
+        itemView.alpha = if (data?.isRead == true) {
+            0.4f
+        } else {
+            1f
+        }
+
         binding.postData = data
+        binding.postThumbnailImage.visibility = if (data?.postImage?.isNotEmpty() == true) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 }

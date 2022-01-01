@@ -32,4 +32,9 @@ class CafeViewModel @Inject constructor(
             repository.getCafeInfo()
         }.await()!!
     }
+
+    // 히스토리 저장
+    fun readPost(articleId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.readPost(articleId)
+    }
 }

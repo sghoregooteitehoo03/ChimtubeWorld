@@ -1,8 +1,10 @@
 package com.sghore.chimtubeworld.adapter.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sghore.chimtubeworld.data.Post
+import com.sghore.chimtubeworld.db.Dao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -10,7 +12,8 @@ import org.jsoup.Connection
 import org.jsoup.Jsoup
 
 class CafePostPagingSource(
-    private val categoryId: Int
+    private val categoryId: Int,
+    private val dao: Dao
 ) :
     PagingSource<Int, Post>() {
 
@@ -54,6 +57,9 @@ class CafePostPagingSource(
                     val url = "https://m.cafe.naver.com" + titleDocs[index] // 게시글 url
                         .select("a.article")
                         .attr("href")
+                    val id = url.substringAfter("articleid=")
+                        .substringBefore("&")
+                        .toInt() // 게시글 아이디
                     val title = titleDocs[index] // 제목
                         .select("a.article")
                         .text()
@@ -65,14 +71,17 @@ class CafePostPagingSource(
                     val postDate = postDoc.select("div.date_num") // 포스팅 날짜
                         .select("span.date")
                         .text()
+                    val isRead = dao.getReadData(id).isNotEmpty() // 읽음 여부
 
                     postList.add(
                         Post(
+                            id = id,
                             title = title,
                             userName = userName,
                             postDate = postDate,
                             postImage = thumbnailImage,
-                            url = url
+                            url = url,
+                            isRead = isRead
                         )
                     )
                 }

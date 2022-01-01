@@ -5,17 +5,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.sghore.chimtubeworld.adapter.paging.CafePostPagingSource
 import com.sghore.chimtubeworld.data.Channel
+import com.sghore.chimtubeworld.data.ReadHistory
+import com.sghore.chimtubeworld.db.Dao
 import com.sghore.chimtubeworld.other.Contents
 import org.jsoup.Jsoup
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 class CafeRepository @Inject constructor(
-
+    private val dao: Dao
 ) {
     fun getCafePosts(categoryId: LiveData<Int>) =
         Pager(PagingConfig(10)) {
-            CafePostPagingSource(categoryId.value ?: -1)
+            CafePostPagingSource(categoryId.value ?: -1, dao)
         }.flow
 
     // 침착맨 팬카페의 정보를 가져옴
@@ -48,5 +50,11 @@ class CafeRepository @Inject constructor(
             image = gmImage,
             type = 0
         )
+    }
+
+    suspend fun readPost(articleId: Int) {
+        if (dao.getReadData(articleId).isEmpty()) { // 데이터가 없을 때 insert 작업
+            dao.insertReadData(ReadHistory(articleId = articleId))
+        }
     }
 }

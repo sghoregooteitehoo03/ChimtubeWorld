@@ -111,9 +111,15 @@ class CafeFragment : Fragment(), View.OnClickListener,
 
     // 게시글 클릭 이벤트
     override fun onPostClickListener(pos: Int) {
-        val postData = postAdapter.getPostData(pos)
+        val postData = postAdapter.getPostData(pos)!!.apply {
+            isRead = true
+        }
+
+        mViewModel.readPost(postData.id) // 히스토리에 저장
+        postAdapter.notifyDataSetChanged() // 뷰 재구성
+
         OpenOtherApp(requireContext())
-            .openCustomTabs(postData?.url ?: "")
+            .openCustomTabs(postData.url ?: "")
     }
 
     // 옵저버 설정

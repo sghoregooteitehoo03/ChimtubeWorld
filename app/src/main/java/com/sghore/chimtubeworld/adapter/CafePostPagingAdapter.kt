@@ -27,7 +27,7 @@ class CafePostPagingAdapter : PagingDataAdapter<Post, CafePostViewHolder>(diffUt
 
     private companion object diffUtil : DiffUtil.ItemCallback<Post>() {
         override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
-            return oldItem.title == newItem.title
+            return oldItem.url == newItem.url
         }
 
         override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {

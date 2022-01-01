@@ -156,16 +156,11 @@ class ExampleUnitTest {
 
     @Test
     fun test() {
-        val url = "https://much-merch.com/board/brand/list.html?board_no=5"
-        val jsoup = Jsoup.connect(url)
-            .userAgent("19.0.1.84.52")
-            .get()
-
-        val image = jsoup.select("div.brand_box")
-            .filter { it.select("div.brand_data").eachText().contains("Calmdownman,침착맨,437") }[0]
-            .select("img")
-            .attr("src")
-
-        println("image: $image")
+//        https://m.cafe.naver.com/ArticleRead.nhn?clubid=29646865&page=1&userDisplay=10&menuid=42&boardtype=L&articleid=191222&referrerAllArticles=false
+//        https://m.cafe.naver.com/ArticleRead.nhn?clubid=29646865&page=1&userDisplay=10&boardtype=L&articleid=191271&referrerAllArticles=true
+        val url =
+            "https://m.cafe.naver.com/ArticleRead.nhn?clubid=29646865&page=1&userDisplay=10&menuid=42&boardtype=L&articleid=191222&referrerAllArticles=false"
+        val articleId = url.substringAfter("articleid=").substringBefore("&").toInt()
+        println("id: $articleId")
     }
 }
