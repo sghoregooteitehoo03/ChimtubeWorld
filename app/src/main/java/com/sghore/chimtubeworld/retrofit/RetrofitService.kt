@@ -48,9 +48,16 @@ interface RetrofitService {
 
     @Headers("Client-ID: ${Contents.CLIENT_ID}")
     @GET("videos")
-    fun getTVideos(
+    fun getTVideosFromUserId(
         @Header("Authorization") accessKey: String,
         @Query("user_id") userId: String,
         @Query("after") afterPage: String?
+    ): Call<com.sghore.chimtubeworld.retrofit.dto.twitchAPI.VideosDTO>
+
+    @Headers("Client-ID: ${Contents.CLIENT_ID}")
+    @GET("videos")
+    fun getTVideoFromVideoId(
+        @Header("Authorization") accessKey: String,
+        @Query("id") videoId: String
     ): Call<com.sghore.chimtubeworld.retrofit.dto.twitchAPI.VideosDTO>
 }

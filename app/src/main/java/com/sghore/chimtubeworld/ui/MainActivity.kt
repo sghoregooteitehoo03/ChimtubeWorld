@@ -1,5 +1,6 @@
 package com.sghore.chimtubeworld.ui
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -8,11 +9,14 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.StoreDetailPagerAdapter
 import com.sghore.chimtubeworld.databinding.ActivityMainBinding
+import com.sghore.chimtubeworld.ui.fragment.AddBookmarkFragmentDirections
 import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val globalViewModel by viewModels<GlobalViewModel>()
 
+    private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
     private lateinit var pagerAdapter: StoreDetailPagerAdapter
 
@@ -39,10 +44,13 @@ class MainActivity : AppCompatActivity() {
             lifecycle
         )
 
+        // 툴바 설정
+        setSupportActionBar(binding.mainToolbar)
+
         // Bottom Nav 설정
         val navFrag =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navFrag.navController
+        navController = navFrag.navController
         navController.let {
             binding.bottomNavView.itemIconTintList = null
             binding.bottomNavView.setupWithNavController(it)
@@ -60,19 +68,25 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         binding.toolbarText.visibility = View.GONE
+                        binding.bottomNavView.visibility = View.VISIBLE
                         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                        supportActionBar?.title = ""
+                    }
+                    R.id.addBookmarkFragment -> { // 북마크 추가 화면
+                        binding.toolbarText.visibility = View.GONE
+                        binding.bottomNavView.visibility = View.GONE
+                        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                        supportActionBar?.title = "북마크"
                     }
                     else -> {
                         binding.toolbarText.visibility = View.VISIBLE
+                        binding.bottomNavView.visibility = View.VISIBLE
                         supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                        supportActionBar?.title = ""
                     }
                 }
             }
         }
-
-        // 툴바 설정
-        setSupportActionBar(binding.mainToolbar)
-        supportActionBar?.title = ""
 
         binding.closePagerBtn.setOnClickListener {
             onBackPressed()
@@ -80,6 +94,7 @@ class MainActivity : AppCompatActivity() {
 
         setViewPager()
         setObserver()
+        onNewIntent(intent) // 인텐트로 인해 앱이 실행된것인지 확인
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -101,6 +116,12 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    // 새로운 인텐트가 들어올 때
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        moveFragment(intent)
     }
 
     // 옵저버 설정
@@ -172,5 +193,24 @@ class MainActivity : AppCompatActivity() {
                 statusBarColor = Color.BLACK
             }
         }
+    }
+
+    // fragment 이동
+    private fun moveFragment(intent: Intent?) {
+        when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                // 동영상의 url 주소
+                val url = intent.extras?.getString(Intent.EXTRA_TEXT) ?: ""
+
+                if (url.isNotEmpty()) {
+                    val direction =
+                        AddBookmarkFragmentDirections.actionGlobalAddBookmarkFragment(url)
+
+                    // 북마크 제작 화면으로 이동
+                    navController.navigate(direction)
+                }
+            }
+        }
+        setIntent(null) // 인텐트 초기화
     }
 }

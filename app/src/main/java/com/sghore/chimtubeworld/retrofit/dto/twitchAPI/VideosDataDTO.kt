@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class VideosDataDTO(
     val id: String,
+    @SerializedName("user_name") val userName: String,
     val title: String,
     @SerializedName("published_at") val publishedAt: String,
     @SerializedName("thumbnail_url") val thumbnailUrl: String,

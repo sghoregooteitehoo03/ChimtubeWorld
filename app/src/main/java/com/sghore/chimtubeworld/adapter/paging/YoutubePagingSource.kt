@@ -69,6 +69,7 @@ class YoutubePagingSource(
 
             Video(
                 id = response.id,
+                channelName = response.snippet.channelTitle,
                 title = response.snippet.title, // 제목
                 thumbnail = response.snippet.thumbnails.high.url, // 썸네일 이미지
                 uploadTime = uploadTime,

@@ -38,7 +38,7 @@ class TwitchPagingSource(
             val accessKey = document.get("AUTH") // TWITCH API AUTH KEY
                 .toString()
             // 해당 채널의 동영상들을 읽어옴
-            val videosResult = retrofitService.getTVideos(
+            val videosResult = retrofitService.getTVideosFromUserId(
                 "Bearer $accessKey",
                 channelId,
                 pageKey
@@ -77,6 +77,7 @@ class TwitchPagingSource(
 
             Video(
                 id = videoData.id, // 아이디
+                channelName = videoData.userName,
                 title = videoData.title, // 제목
                 thumbnail = thumbnailImage,
                 uploadTime = uploadTime,

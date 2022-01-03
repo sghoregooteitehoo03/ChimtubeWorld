@@ -6,25 +6,15 @@ import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import org.jsoup.Connection
 import org.jsoup.Jsoup
-import org.jsoup.select.Elements
 import org.junit.Test
 
 import org.junit.Assert.*
 import retrofit2.Retrofit
 import retrofit2.await
-import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
-import java.math.RoundingMode
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalField
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.floor
-import kotlin.time.Duration
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -143,7 +133,7 @@ class ExampleUnitTest {
                 .build()
             val retrofit = builder.create(RetrofitService::class.java)
 
-            val playlistItems = retrofit.getTVideos(
+            val playlistItems = retrofit.getTVideosFromUserId(
                 "Bearer 3u0x3d7dngj9jormp20nw4zd6b3ls0",
                 "66375105",
                 "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6MjB9fQ"
@@ -154,13 +144,22 @@ class ExampleUnitTest {
         }
     }
 
+    //    멋진 동영상이 있어! "떡볶이전사 통닭천사의 떡볶이 쿡방" https://www.twitch.tv/zilioner/v/1248557250?sr=a&t=5062s
+//    같이 Twitch에서 햇살살 (hatsalsal) 방송을 보자! https://www.twitch.tv/hatsalsal?sr=a
+//    멋진 동영상이 있어! "7시 배도라지와 쉐리님 스타1 합방" https://www.twitch.tv/zilioner/v/1246620300?sr=a&t=14923s
+//    https://youtu.be/UY6Nxh7Uz98
+//    https://www.wikitree.co.kr/articles/720911
+
     @Test
     fun test() {
-//        https://m.cafe.naver.com/ArticleRead.nhn?clubid=29646865&page=1&userDisplay=10&menuid=42&boardtype=L&articleid=191222&referrerAllArticles=false
-//        https://m.cafe.naver.com/ArticleRead.nhn?clubid=29646865&page=1&userDisplay=10&boardtype=L&articleid=191271&referrerAllArticles=true
-        val url =
-            "https://m.cafe.naver.com/ArticleRead.nhn?clubid=29646865&page=1&userDisplay=10&menuid=42&boardtype=L&articleid=191222&referrerAllArticles=false"
-        val articleId = url.substringAfter("articleid=").substringBefore("&").toInt()
-        println("id: $articleId")
+        val dateFormat = SimpleDateFormat(
+            "mm:ss",
+            Locale.KOREA
+        )
+        val uploadTime =
+            dateFormat.parse("1:30").time
+        val uploadTime2 =
+            dateFormat.parse("1:30f").time
+        println("$uploadTime, $uploadTime2")
     }
 }

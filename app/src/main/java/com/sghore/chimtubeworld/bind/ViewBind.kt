@@ -3,6 +3,7 @@ package com.sghore.chimtubeworld.bind
 import android.os.Build
 import android.os.Parcelable
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -40,13 +41,17 @@ fun setLoadingListLayout(view: ShimmerFrameLayout, isLoading: Boolean) {
     }
 }
 
-@BindingAdapter("app:setImage")
-fun setImage(view: ImageView, stringImage: String?) {
+@BindingAdapter("app:setImage", "app:setImageRes", requireAll = false)
+fun setImage(view: ImageView, stringImage: String?, imageRes: Int?) {
     view.clipToOutline = true
 
     if (stringImage != null) {
         Glide.with(view.context)
             .load(stringImage)
+            .into(view)
+    } else if (imageRes != null) {
+        Glide.with(view.context)
+            .load(imageRes)
             .into(view)
     }
 }
@@ -109,6 +114,18 @@ fun setImageBlur(view: ImageView, isBlur: Boolean) {
     }
 }
 
+@BindingAdapter("app:setButtonEnable")
+fun setButtonEnable(view: Button, isEnable: Boolean) {
+    val color = if (isEnable) {
+        view.resources.getColorStateList(R.color.item_color, null)
+    } else {
+        view.resources.getColorStateList(R.color.gray_night, null)
+    }
+
+    view.isEnabled = isEnable
+    view.backgroundTintList = color
+}
+
 @BindingAdapter("app:setCardBackgroundColor")
 fun setCardBackgroundColor(view: CardView, color: Int) {
     view.setCardBackgroundColor(color)
@@ -160,11 +177,13 @@ fun setVideoDurationText(view: TextView, duration: Long) {
 // 조회수 -> (1, 10, 100)회 (1.0)천회, (1.0, 10, 100)만회
 // 업로드 시간 -> 1초 전, (1분 전, 10분 전), 1시간 전, 1일 전, 1주일 전, 1개월 전, 1년 전
 @BindingAdapter("app:setVideoInfoText")
-fun setVideoInfoText(view: TextView, videoData: Video) {
-    val views = getViewCountText(videoData.viewCount)
-    val uploadTime = getUploadTimeText(videoData.uploadTime)
+fun setVideoInfoText(view: TextView, videoData: Video?) {
+    videoData?.let {
+        val views = getViewCountText(it.viewCount)
+        val uploadTime = getUploadTimeText(it.uploadTime)
 
-    view.text = "$views | $uploadTime"
+        view.text = "$views | $uploadTime"
+    }
 }
 
 private fun getViewCountText(viewCount: Long): String {

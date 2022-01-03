@@ -5,6 +5,9 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/youtubeFragment">
 
+    <action
+        android:id="@+id/action_global_addBookmarkFragment"
+        app:destination="@id/addBookmarkFragment" />
 
     <fragment
         android:id="@+id/youtubeFragment"
@@ -58,5 +61,15 @@
         <argument
             android:name="typeImageRes"
             app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addBookmarkFragment"
+        android:name="com.sghore.chimtubeworld.ui.fragment.AddBookmarkFragment"
+        android:label="AddBookmarkFragment"
+        tools:layout="@layout/fragment_add_bookmark">
+        <argument
+            android:name="url"
+            app:argType="string" />
     </fragment>
 </navigation>
