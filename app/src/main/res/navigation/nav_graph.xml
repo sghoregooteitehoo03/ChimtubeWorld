@@ -61,6 +61,9 @@
         <argument
             android:name="typeImageRes"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_videosFragment_to_editBookmarkFragment"
+            app:destination="@id/editBookmarkFragment" />
     </fragment>
 
     <fragment
@@ -71,5 +74,17 @@
         <argument
             android:name="url"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editBookmarkFragment"
+        android:name="com.sghore.chimtubeworld.ui.fragment.EditBookmarkFragment"
+        android:label="EditBookmarkFragment"
+        tools:layout="@layout/fragment_add_bookmark" >
+        <argument
+            android:name="typeImageRes"
+            app:argType="integer" />
+        <argument
+            android:name="bookmarkPos"
+            app:argType="integer" />
     </fragment>
 </navigation>

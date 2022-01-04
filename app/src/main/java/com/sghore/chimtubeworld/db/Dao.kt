@@ -1,8 +1,7 @@
 package com.sghore.chimtubeworld.db
 
+import androidx.room.*
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
 import com.sghore.chimtubeworld.data.Bookmark
 import com.sghore.chimtubeworld.data.ReadHistory
 
@@ -14,6 +13,15 @@ interface Dao {
     @Insert
     suspend fun insertReadData(read: ReadHistory)
 
+    @Query("SELECT * FROM Bookmark WHERE video_id = :videoId ORDER BY video_position ASC")
+    fun getBookmarks(videoId: String): List<Bookmark>
+
     @Insert
     suspend fun insertBookmark(bookmark: Bookmark)
+
+    @Update
+    suspend fun updateBookmark(bookmark: Bookmark)
+
+    @Delete
+    suspend fun deleteBookmark(bookmark: Bookmark)
 }

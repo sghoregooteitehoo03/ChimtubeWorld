@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.sghore.chimtubeworld.adapter.viewholder.VideosViewHolder
+import com.sghore.chimtubeworld.data.Bookmark
 import com.sghore.chimtubeworld.data.Video
 import com.sghore.chimtubeworld.databinding.ItemVideoBinding
 
@@ -13,10 +14,22 @@ class VideosPagingAdapter : PagingDataAdapter<Video, VideosViewHolder>(diffUtil)
 
     interface VideosItemListener {
         fun onVideoClickListener(pos: Int)
+        fun onBookmarkClickListener(videoPos: Int, bookmarkPos: Int)
     }
 
     override fun onBindViewHolder(holder: VideosViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val video = getItem(position)
+        val bookmarkAdapter = BookmarkAdapter(video?.bookmarks ?: listOf()).apply {
+            setOnItemListener(object : BookmarkAdapter.BookmarkItemListener {
+                override fun onBookmarkClickListener(pos: Int) {
+                    mListener.onBookmarkClickListener(
+                        videoPos = holder.bindingAdapterPosition,
+                        bookmarkPos = pos
+                    )
+                }
+            })
+        }
+        holder.bind(getItem(position), bookmarkAdapter)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideosViewHolder {

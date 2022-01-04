@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="com.sghore.chimtubeworld.viewmodel.videosFrag.VideosViewModel" />
@@ -97,6 +99,7 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="true"
                 android:overScrollMode="never"
+                android:visibility="@{viewmodel.isLoading() ? View.INVISIBLE : View.VISIBLE }"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/item_video" />

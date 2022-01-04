@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                         supportActionBar?.setDisplayHomeAsUpEnabled(true)
                         supportActionBar?.title = ""
                     }
-                    R.id.addBookmarkFragment -> { // 북마크 추가 화면
+                    R.id.addBookmarkFragment, R.id.editBookmarkFragment -> { // 북마크 추가 화면
                         binding.toolbarText.visibility = View.GONE
                         binding.bottomNavView.visibility = View.GONE
                         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -83,6 +83,10 @@ class MainActivity : AppCompatActivity() {
                         binding.bottomNavView.visibility = View.VISIBLE
                         supportActionBar?.setDisplayHomeAsUpEnabled(false)
                         supportActionBar?.title = ""
+
+                        if (globalViewModel.refreshList.value == true) {
+                            globalViewModel.refreshList.value = false
+                        }
                     }
                 }
             }

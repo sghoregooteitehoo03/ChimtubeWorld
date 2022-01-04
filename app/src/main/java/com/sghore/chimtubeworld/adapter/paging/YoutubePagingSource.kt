@@ -3,8 +3,12 @@ package com.sghore.chimtubeworld.adapter.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sghore.chimtubeworld.data.Video
+import com.sghore.chimtubeworld.db.Dao
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.retrofit.RetrofitService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import retrofit2.Retrofit
 import retrofit2.await
 import java.text.SimpleDateFormat
@@ -13,7 +17,8 @@ import kotlin.time.Duration
 
 class YoutubePagingSource(
     private val channelId: String,
-    private val retrofitBuilder: Retrofit.Builder
+    private val retrofitBuilder: Retrofit.Builder,
+    private val dao: Dao
 ) : PagingSource<String, Video>() {
     override fun getRefreshKey(state: PagingState<String, Video>): String? {
         return null
@@ -56,6 +61,9 @@ class YoutubePagingSource(
             .await()
 
         return videosResponse.items.map { response ->
+            val bookmarks = CoroutineScope(Dispatchers.IO).async {
+                dao.getBookmarks(response.id)
+            }.await() // 해당 영상 아이디에 해당하는 북마크를 가져옴
             val dateFormat = SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss'Z'",
                 Locale.KOREA
@@ -75,7 +83,8 @@ class YoutubePagingSource(
                 uploadTime = uploadTime,
                 viewCount = response.statistics.viewCount.toLong(), // 조회수
                 duration = duration,
-                url = "https://www.youtube.com/watch?v=${response.id}"
+                url = "https://www.youtube.com/watch?v=${response.id}",
+                bookmarks = bookmarks
             )
         }
     }

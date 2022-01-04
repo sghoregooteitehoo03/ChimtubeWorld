@@ -4,9 +4,13 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.data.Video
+import com.sghore.chimtubeworld.db.Dao
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.retrofit.RetrofitService
 import com.sghore.chimtubeworld.retrofit.dto.twitchAPI.VideosDataDTO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await
@@ -17,7 +21,8 @@ import kotlin.time.Duration
 class TwitchPagingSource(
     private val channelId: String,
     private val retrofitBuilder: Retrofit.Builder,
-    private val store: FirebaseFirestore
+    private val store: FirebaseFirestore,
+    private val dao: Dao
 ) : PagingSource<String, Video>() {
     override fun getRefreshKey(state: PagingState<String, Video>): String? {
         return null
@@ -59,8 +64,11 @@ class TwitchPagingSource(
     }
 
     // Video 데이터 포맷에 맞게 변환
-    private fun translateVideoData(videosData: List<VideosDataDTO>) =
+    private suspend fun translateVideoData(videosData: List<VideosDataDTO>) =
         videosData.map { videoData ->
+            val bookmarks = CoroutineScope(Dispatchers.IO).async {
+                dao.getBookmarks(videoData.id)
+            }.await() // 해당 영상 아이디에 해당하는 북마크를 가져옴
             val dateFormat = SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss'Z'",
                 Locale.KOREA
@@ -83,7 +91,8 @@ class TwitchPagingSource(
                 uploadTime = uploadTime,
                 viewCount = videoData.viewCount, // 조회수
                 duration = duration,
-                url = videoData.url
+                url = videoData.url,
+                bookmarks = bookmarks
             )
         }
 }

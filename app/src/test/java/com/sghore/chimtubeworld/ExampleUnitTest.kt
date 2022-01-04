@@ -153,13 +153,17 @@ class ExampleUnitTest {
     @Test
     fun test() {
         val dateFormat = SimpleDateFormat(
-            "mm:ss",
+            "hh:mm:ss",
             Locale.KOREA
         )
         val uploadTime =
-            dateFormat.parse("1:30").time
-        val uploadTime2 =
-            dateFormat.parse("1:30f").time
-        println("$uploadTime, $uploadTime2")
+            dateFormat.parse("1:00:30").time
+        println(uploadTime)
+        val time = SimpleDateFormat(
+            "hh\'h\'mm\'m\'ss\'s\'",
+            Locale.KOREA
+        ).format(uploadTime)
+
+        println(time)
     }
 }

@@ -1,17 +1,20 @@
 package com.sghore.chimtubeworld.ui.fragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.BookmarkColorAdapter
+import com.sghore.chimtubeworld.data.Bookmark
 import com.sghore.chimtubeworld.databinding.FragmentAddBookmarkBinding
 import com.sghore.chimtubeworld.ui.custom.LinearItemDecoration
 import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
@@ -19,13 +22,14 @@ import com.sghore.chimtubeworld.viewmodel.addBookemarkFrag.AddBookmarkViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddBookmarkFragment : Fragment(), BookmarkColorAdapter.BookmarkColorItemListener,
+class EditBookmarkFragment : Fragment(), BookmarkColorAdapter.BookmarkColorItemListener,
     View.OnClickListener {
     private val gViewModel by activityViewModels<GlobalViewModel>()
     private val mViewModel by viewModels<AddBookmarkViewModel>()
-    private val args by navArgs<AddBookmarkFragmentArgs>()
+    private val args by navArgs<EditBookmarkFragmentArgs>()
 
     private lateinit var bookmarkColorAdapter: BookmarkColorAdapter
+    private lateinit var bookmark: Bookmark
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,13 +39,15 @@ class AddBookmarkFragment : Fragment(), BookmarkColorAdapter.BookmarkColorItemLi
         // 인스턴스 설정
         val binding = FragmentAddBookmarkBinding.inflate(inflater)
         bookmarkColorAdapter = BookmarkColorAdapter().apply {
-            setOnItemListener(this@AddBookmarkFragment)
+            setOnItemListener(this@EditBookmarkFragment)
         }
 
         // 바인딩 설정
         with(binding) {
             this.viewmodel = mViewModel
-            this.clickListener = this@AddBookmarkFragment
+            this.clickListener = this@EditBookmarkFragment
+
+            this.addBookmarkBtn.text = "수정하기"
             with(this.bookmarkColorList) {
                 adapter = bookmarkColorAdapter
                 itemAnimator = null
@@ -61,7 +67,31 @@ class AddBookmarkFragment : Fragment(), BookmarkColorAdapter.BookmarkColorItemLi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
+
+        initViewModelValue()
         setObserver()
+    }
+
+    // 메뉴 생성
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.edit_bookmark_menu, menu)
+    }
+
+    // 메뉴 아이템 클릭
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.delete_bookmark -> { // 삭제
+                deleteDialog()
+                true
+            }
+            R.id.copy_bookmark -> { // 공유
+                clipData()
+                true
+            }
+            else -> false
+        }
     }
 
     // 북마크 아이템 클릭
@@ -75,21 +105,29 @@ class AddBookmarkFragment : Fragment(), BookmarkColorAdapter.BookmarkColorItemLi
     override fun onClick(view: View) {
         when (view.id) {
             R.id.add_bookmark_btn -> {
-                mViewModel.addOrEditBookmark()
+                mViewModel.addOrEditBookmark(bookmark.id!!)
             }
             else -> {}
         }
     }
 
+    private fun initViewModelValue() {
+        val videoData = gViewModel.videoData.value!!
+        val typeImageRes = args.typeImageRes
+        bookmark = videoData.bookmarks[args.bookmarkPos]
+        val colorIndex = bookmarkColorAdapter.getSelectedPos(bookmark.color)
+
+        mViewModel.initValue(
+            videoData = videoData,
+            bookmark = bookmark,
+            typeImageRes = typeImageRes,
+            colorIndex = colorIndex
+        )
+    }
+
     // 옵저버 설정
     private fun setObserver() {
-        // 로딩 여부
-        mViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                mViewModel.getVideoData(args.url) // 동영상 정보를 가져옴
-            }
-        }
-        // 에러 메세지
+        // 토스트 메세지
         mViewModel.toastMsg.observe(viewLifecycleOwner) { msg ->
             if (msg.isNotEmpty()) {
                 Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
@@ -128,5 +166,32 @@ class AddBookmarkFragment : Fragment(), BookmarkColorAdapter.BookmarkColorItemLi
         mViewModel.bookmarkColor.observe(viewLifecycleOwner) { color ->
             mViewModel.checkData()
         }
+    }
+
+    // 북마크 삭제 다이얼로그
+    private fun deleteDialog() {
+        with(MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)) {
+            setMessage("북마크를 삭제하시겠습니까?")
+            setPositiveButton("확인") { dialog, which ->
+                mViewModel.deleteBookmark(bookmark)
+            }
+            setNegativeButton("취소") { dialog, which ->
+                dialog.cancel()
+            }
+
+            show()
+        }
+    }
+
+    // url 클립보드에 저장
+    private fun clipData() {
+        val url = mViewModel.getVideoUrl(bookmark.videoPosition)
+        val clipBoard =
+            requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("url", url)
+        clipBoard.setPrimaryClip(clip)
+
+        Toast.makeText(requireContext(), "클립보드에 저장되었습니다.", Toast.LENGTH_SHORT)
+            .show()
     }
 }

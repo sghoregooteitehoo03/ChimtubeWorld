@@ -5,19 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.VideosPagingAdapter
+import com.sghore.chimtubeworld.data.Bookmark
 import com.sghore.chimtubeworld.data.Video
 import com.sghore.chimtubeworld.databinding.FragmentVideosBinding
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import com.sghore.chimtubeworld.viewmodel.videosFrag.VideosViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+// TODO
+//  . 렉 줄이기(각 바인드 홀더마다 아답터 생성 X)
 @AndroidEntryPoint
 class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener {
     @Inject
@@ -25,6 +31,7 @@ class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener {
     private lateinit var videosAdapter: VideosPagingAdapter
 
     private val args by navArgs<VideosFragmentArgs>()
+    private val gViewModel by activityViewModels<GlobalViewModel>()
     private val mViewModel by viewModels<VideosViewModel> {
         VideosViewModel.provideFactory(
             assistedFactory,
@@ -71,10 +78,27 @@ class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener {
         playVideo(videoData)
     }
 
+    // 북마크 아이템 클릭
+    override fun onBookmarkClickListener(videoPos: Int, bookmarkPos: Int) {
+        val directions = VideosFragmentDirections.actionVideosFragmentToEditBookmarkFragment(
+            args.typeImageRes,
+            bookmarkPos
+        )
+
+        gViewModel.videoData.value = videosAdapter.getVideoData(videoPos)
+        findNavController().navigate(directions)
+    }
+
     // 옵저버 설정
     private fun setObserver() {
         mViewModel.vidoes.observe(viewLifecycleOwner) { pagingData ->
             videosAdapter.submitData(lifecycle, pagingData)
+        }
+        gViewModel.refreshList.observe(viewLifecycleOwner) { isRefresh ->
+            if (isRefresh) {
+                videosAdapter.refresh()
+                gViewModel.refreshList.value = false
+            }
         }
     }
 

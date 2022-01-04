@@ -111,6 +111,16 @@ class AddBookmarkRepository @Inject constructor(
         dao.insertBookmark(bookmark)
     }
 
+    // 북마크 수정
+    suspend fun editBookmark(bookmark: Bookmark) {
+        dao.updateBookmark(bookmark)
+    }
+
+    // 북마크 삭제
+    suspend fun deleteBookmark(bookmark: Bookmark) {
+        dao.deleteBookmark(bookmark)
+    }
+
     private fun getRetrofit(baseUrl: String) =
         retrofitBuilder.baseUrl(baseUrl)
             .build()

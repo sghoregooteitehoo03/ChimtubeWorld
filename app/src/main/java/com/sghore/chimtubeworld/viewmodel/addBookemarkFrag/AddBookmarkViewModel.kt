@@ -1,6 +1,5 @@
 package com.sghore.chimtubeworld.viewmodel.addBookemarkFrag
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -39,7 +38,7 @@ class AddBookmarkViewModel @Inject constructor(
     val videoPosition = MutableLiveData("") // 영상 위치
     val bookmarkColor = MutableLiveData(-1) // 북마크 색
     val selectedPos = MutableLiveData(0) // 북마크 색 선택 위치
-    val errorMsg = MutableLiveData("") // 에러 메세지
+    val toastMsg = MutableLiveData("") // 토스트 메세지
 
     // 넘겨온 영상 url을 통해 영상 정보를 가져옴
     fun getVideoData(videoUrl: String) = viewModelScope.launch {
@@ -62,36 +61,59 @@ class AddBookmarkViewModel @Inject constructor(
 
             _isLoading.value = false // 로딩 끝
         } catch (e: Exception) {
+            toastMsg.value = "지원하지 않는 형식의 URL입니다."
             _isError.value = true
-            errorMsg.value = "지원하지 않는 형식의 URL입니다."
             e.printStackTrace()
         }
     }
 
-    // 북마크 추가
-    fun addBookmark() = viewModelScope.launch {
+    // 북마크 추가 및 수정
+    fun addOrEditBookmark(editBookmarkId: Int = -1) = viewModelScope.launch {
+        val videoId = videoData.value!!.id
         val title = bookmarkTitle.value!!
         val position = videoPosition.value!!
         val color = bookmarkColor.value!!
+        val isEnable = _isEnable.value!!
 
         // 데이터가 다 들어와 있을 때
-        if (title.isNotEmpty() && position.isNotEmpty() && color != -1) {
+        if (isEnable) {
             val positionTime = getTimeToLongData(position)
 
+            // 영상 범위가 정상인지
             if (checkVideoPosition(positionTime)) {
-                val bookmark =
-                    Bookmark(title = title, videoPosition = positionTime!!, color = color)
+                if (editBookmarkId == -1) { // 북마크 추가
+                    val bookmark =
+                        Bookmark(
+                            videoId = videoId,
+                            title = title,
+                            videoPosition = positionTime!!,
+                            color = color
+                        )
 
-                repository.addBookmark(bookmark)
+                    repository.addBookmark(bookmark)
+                    toastMsg.value = "북마크가 추가되었습니다"
+                } else { // 북마크 수정
+                    val bookmark =
+                        Bookmark(
+                            id = editBookmarkId,
+                            videoId = videoId,
+                            title = title,
+                            videoPosition = positionTime!!,
+                            color = color
+                        )
+
+                    repository.editBookmark(bookmark)
+                    toastMsg.value = "북마크가 수정되었습니다"
+                }
+
                 _isComplete.value = true // 작업 완료
             } else {
-                errorMsg.value = "영상 위치가 잘 못 되었습니다."
+                toastMsg.value = "영상 위치가 잘 못 되었습니다."
             }
         }
     }
 
-    private fun getBaseUrl(url: String) = url.substringAfter("https://").substringBefore("/")
-
+    // 데이터 유효성 검사
     fun checkData() {
         val title = bookmarkTitle.value!!
         val position = videoPosition.value!!
@@ -99,6 +121,40 @@ class AddBookmarkViewModel @Inject constructor(
 
         _isEnable.value = title.isNotEmpty() && position.isNotEmpty() && color != -1
     }
+
+    // 값 세팅
+    fun initValue(videoData: Video, bookmark: Bookmark, typeImageRes: Int, colorIndex: Int) {
+        _videoData.value = videoData
+        _videoTypeImage.value = typeImageRes
+
+        bookmarkTitle.value = bookmark.title
+        videoPosition.value = getTimeToStringData(bookmark.videoPosition)
+        bookmarkColor.value = bookmark.color
+        selectedPos.value = colorIndex
+
+        _isLoading.value = false
+    }
+
+    fun deleteBookmark(bookmark: Bookmark) = viewModelScope.launch {
+        repository.deleteBookmark(bookmark)
+
+        toastMsg.value = "북마크가 삭제 되었습니다."
+        _isComplete.value = true // 작업 완료
+    }
+
+    fun getVideoUrl(videoPosition: Long): String {
+        val time = getTimeToStringDataForClipBoard(videoPosition)
+
+        return if (_videoTypeImage.value == R.drawable.ic_youtube) {
+            "${_videoData.value!!.url}&t=$time"
+        } else if (_videoTypeImage.value == R.drawable.ic_twitch) {
+            "${_videoData.value!!.url}?t=$time"
+        } else {
+            ""
+        }
+    }
+
+    private fun getBaseUrl(url: String) = url.substringAfter("https://").substringBefore("/")
 
     // 영상 범위 확인
     private fun checkVideoPosition(positionTime: Long?): Boolean {
@@ -132,5 +188,39 @@ class AddBookmarkViewModel @Inject constructor(
         } catch (e: Exception) {
             return null
         }
+    }
+
+    // 시간 데이터를 시:분:초 String으로 변환하여 반환
+    private fun getTimeToStringData(videoPosition: Long): String {
+        val dateFormat = if (videoPosition >= -28800000) { // 01:00:00
+            SimpleDateFormat(
+                "hh:mm:ss",
+                Locale.KOREA
+            )
+        } else {
+            SimpleDateFormat(
+                "mm:ss",
+                Locale.KOREA
+            )
+        }
+
+        return dateFormat.format(videoPosition)
+    }
+
+    // 시간 데이터를 시h:분m:초s String으로 변환하여 반환
+    private fun getTimeToStringDataForClipBoard(videoPosition: Long): String {
+        val dateFormat = if (videoPosition >= -28800000) { // 01:00:00
+            SimpleDateFormat(
+                "hh\'h\'mm\'m\'ss\'s\'",
+                Locale.KOREA
+            )
+        } else {
+            SimpleDateFormat(
+                "mm\'m\'ss\'s\'",
+                Locale.KOREA
+            )
+        }
+
+        return dateFormat.format(videoPosition)
     }
 }

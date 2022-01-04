@@ -10,6 +10,9 @@
         <entry key="app/src/main/res/drawable/ic_cafe.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_cafe_darker.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.1555" />
+        <entry key="app/src/main/res/drawable/ic_delete.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/ic_description.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/ic_share.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_store.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_store_darker.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_twitch.xml" value="0.1235" />
@@ -46,6 +49,7 @@
         <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.18232879638671878" />
         <entry key="app/src/main/res/layout/fragment_webtoon.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_youtube.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_bookmark.xml" value="0.16" />
         <entry key="app/src/main/res/layout/item_bookmark_color.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_cafe_category.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_cafe_post.xml" value="0.24386138916015626" />
@@ -57,9 +61,10 @@
         <entry key="app/src/main/res/layout/item_goods_item.xml" value="0.36041666666666666" />
         <entry key="app/src/main/res/layout/item_loading_video.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_preview_image.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/item_video.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/item_video.xml" value="0.18" />
         <entry key="app/src/main/res/layout/item_webtoon.xml" value="0.2" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/menu/edit_bookmark_menu.xml" value="0.25" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1235" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1545" />
       </map>

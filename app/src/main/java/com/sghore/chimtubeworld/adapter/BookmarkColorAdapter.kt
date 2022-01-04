@@ -57,4 +57,7 @@ class BookmarkColorAdapter : RecyclerView.Adapter<BookmarkColorViewHolder>() {
 
     fun getItem(pos: Int) =
         colorList[pos]
+
+    fun getSelectedPos(color: Int) =
+        colorList.indexOf(color)
 }
