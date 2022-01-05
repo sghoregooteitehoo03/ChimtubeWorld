@@ -23,7 +23,7 @@ class BookmarkColorViewHolder(
         binding.colorData = data
 
         itemView.foreground = if (isSelected) {
-            itemView.resources.getDrawable(R.color.black_alpha_30, null)
+            itemView.resources.getDrawable(R.color.selected_color, null)
         } else {
             itemView.resources.getDrawable(android.R.color.transparent, null)
         }

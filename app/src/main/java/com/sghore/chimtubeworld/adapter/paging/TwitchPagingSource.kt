@@ -12,7 +12,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
-import retrofit2.Retrofit
 import retrofit2.await
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,20 +19,19 @@ import kotlin.time.Duration
 
 class TwitchPagingSource(
     private val channelId: String,
-    private val retrofitBuilder: Retrofit.Builder,
+    private val retrofitService: RetrofitService,
     private val store: FirebaseFirestore,
     private val dao: Dao
 ) : PagingSource<String, Video>() {
     override fun getRefreshKey(state: PagingState<String, Video>): String? {
-        return null
+        return state.anchorPosition?.let {
+            state.closestItemToPosition(it)?.currentPageKey
+        }
     }
 
     override suspend fun load(params: LoadParams<String>): PagingSource.LoadResult<String, Video> {
         return try {
-            val pageKey = params.key // 페이지 키
-            val retrofitService = retrofitBuilder.baseUrl(Contents.TWITCH_API_URL)
-                .build()
-                .create(RetrofitService::class.java)
+            val pageKey = params.key ?: "" // 페이지 키
 
             // 동영상 리스트
             val document = store.collection(Contents.COLLECTION_TWITCH_LINK)
@@ -50,11 +48,26 @@ class TwitchPagingSource(
             ).await()
 
             val nextKey = videosResult.pagination.cursor // 다음 페이지
-            val videoList = translateVideoData(videosResult.data) // 영상 리스트
+            val prevKey = if (pageKey.isNotEmpty()) { // 이전 페이지
+                try {
+                    retrofitService.getTVideosFromUserIdBefore(
+                        "Bearer $accessKey",
+                        channelId,
+                        pageKey
+                    ).await()
+                        .pagination
+                        .cursor
+                } catch (e: Exception) {
+                    ""
+                }
+            } else {
+                null
+            }
+            val videoList = translateVideoData(videosResult.data, pageKey) // 영상 리스트
 
             return LoadResult.Page(
                 data = videoList,
-                prevKey = null,
+                prevKey = prevKey,
                 nextKey = nextKey
             )
         } catch (e: Exception) {
@@ -64,7 +77,7 @@ class TwitchPagingSource(
     }
 
     // Video 데이터 포맷에 맞게 변환
-    private suspend fun translateVideoData(videosData: List<VideosDataDTO>) =
+    private suspend fun translateVideoData(videosData: List<VideosDataDTO>, currentPage: String) =
         videosData.map { videoData ->
             val bookmarks = CoroutineScope(Dispatchers.IO).async {
                 dao.getBookmarks(videoData.id)
@@ -93,6 +106,8 @@ class TwitchPagingSource(
                 duration = duration,
                 url = videoData.url,
                 bookmarks = bookmarks
-            )
+            ).apply {
+                this.currentPageKey = currentPage
+            }
         }
 }

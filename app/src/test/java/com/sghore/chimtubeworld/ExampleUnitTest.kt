@@ -144,26 +144,15 @@ class ExampleUnitTest {
         }
     }
 
-    //    멋진 동영상이 있어! "떡볶이전사 통닭천사의 떡볶이 쿡방" https://www.twitch.tv/zilioner/v/1248557250?sr=a&t=5062s
-//    같이 Twitch에서 햇살살 (hatsalsal) 방송을 보자! https://www.twitch.tv/hatsalsal?sr=a
-//    멋진 동영상이 있어! "7시 배도라지와 쉐리님 스타1 합방" https://www.twitch.tv/zilioner/v/1246620300?sr=a&t=14923s
-//    https://youtu.be/UY6Nxh7Uz98
-//    https://www.wikitree.co.kr/articles/720911
-
+    //    -32399000 -> 00:01
     @Test
     fun test() {
         val dateFormat = SimpleDateFormat(
             "hh:mm:ss",
             Locale.KOREA
-        )
-        val uploadTime =
-            dateFormat.parse("1:00:30").time
-        println(uploadTime)
-        val time = SimpleDateFormat(
-            "hh\'h\'mm\'m\'ss\'s\'",
-            Locale.KOREA
-        ).format(uploadTime)
+        ).format(5215000 - 32400000)
+        val value = (-32399000 + 32400000) / 1000
 
-        println(time)
+        println("$dateFormat, $value")
     }
 }

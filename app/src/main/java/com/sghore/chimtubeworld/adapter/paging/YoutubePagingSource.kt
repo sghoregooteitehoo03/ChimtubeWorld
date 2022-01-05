@@ -4,12 +4,10 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sghore.chimtubeworld.data.Video
 import com.sghore.chimtubeworld.db.Dao
-import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.retrofit.RetrofitService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import retrofit2.Retrofit
 import retrofit2.await
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,19 +15,18 @@ import kotlin.time.Duration
 
 class YoutubePagingSource(
     private val channelId: String,
-    private val retrofitBuilder: Retrofit.Builder,
+    private val retrofitService: RetrofitService,
     private val dao: Dao
 ) : PagingSource<String, Video>() {
     override fun getRefreshKey(state: PagingState<String, Video>): String? {
-        return null
+        return state.anchorPosition?.let {
+            state.closestItemToPosition(it)?.currentPageKey
+        }
     }
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Video> {
         return try {
             val pageKey = params.key // 페이지 키
-            val retrofitService = retrofitBuilder.baseUrl(Contents.YOUTUBE_API_URL)
-                .build()
-                .create(RetrofitService::class.java)
 
             val playlistItems = retrofitService.getYPlaylistItems(
                 channelId,
@@ -39,11 +36,16 @@ class YoutubePagingSource(
                 .toTypedArray() // 동영상 아이디 배열
 
             val nextKey = playlistItems.nextPageToken // 다음 페이지
-            val videoList = getYoutubeVideos(retrofitService, videoIdArray) // 동영상 리스트
+            val prevKey = playlistItems.prevPageToken
+            val videoList = getYoutubeVideos(
+                retrofitService = retrofitService,
+                videoIdArray = videoIdArray,
+                currentPageKey = pageKey
+            ) // 동영상 리스트
 
             return LoadResult.Page(
                 data = videoList,
-                prevKey = null,
+                prevKey = prevKey,
                 nextKey = nextKey
             )
         } catch (e: Exception) {
@@ -55,7 +57,8 @@ class YoutubePagingSource(
     // 유튜브 영상 정보 가져오기
     private suspend fun getYoutubeVideos(
         retrofitService: RetrofitService,
-        videoIdArray: Array<String>
+        videoIdArray: Array<String>,
+        currentPageKey: String?
     ): List<Video> {
         val videosResponse = retrofitService.getYVideos(videoIdArray)
             .await()
@@ -85,7 +88,9 @@ class YoutubePagingSource(
                 duration = duration,
                 url = "https://www.youtube.com/watch?v=${response.id}",
                 bookmarks = bookmarks
-            )
+            ).apply {
+                this.currentPageKey = currentPageKey
+            }
         }
     }
 }

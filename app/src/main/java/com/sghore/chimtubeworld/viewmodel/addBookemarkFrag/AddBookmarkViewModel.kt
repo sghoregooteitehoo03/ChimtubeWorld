@@ -1,5 +1,6 @@
 package com.sghore.chimtubeworld.viewmodel.addBookemarkFrag
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -44,12 +45,15 @@ class AddBookmarkViewModel @Inject constructor(
     fun getVideoData(videoUrl: String) = viewModelScope.launch {
         try {
             val baseUrl = getBaseUrl(videoUrl)
+            Log.i("Check", "url: $videoUrl")
 
             _videoData.value = if (baseUrl == baseYoutubeUrl) { // 유튜브에서 넘어온 링크일 경우
                 _videoTypeImage.value = R.drawable.ic_youtube
                 repository.getVideoFromYoutube(url = videoUrl, baseUrl = baseUrl)
             } else if (baseUrl == baseTwitchUrl) { // 트위치에서 넘어온 링크일 경우
                 _videoTypeImage.value = R.drawable.ic_twitch
+                videoPosition.value = getTimeFromUrl(videoUrl)
+
                 repository.getVideoFromTwitch(url = videoUrl, baseUrl = baseUrl)
             } else {
                 null
@@ -77,7 +81,7 @@ class AddBookmarkViewModel @Inject constructor(
 
         // 데이터가 다 들어와 있을 때
         if (isEnable) {
-            val positionTime = getTimeToLongData(position)
+            val positionTime = getDateFromPosition(position)
 
             // 영상 범위가 정상인지
             if (checkVideoPosition(positionTime)) {
@@ -128,7 +132,7 @@ class AddBookmarkViewModel @Inject constructor(
         _videoTypeImage.value = typeImageRes
 
         bookmarkTitle.value = bookmark.title
-        videoPosition.value = getTimeToStringData(bookmark.videoPosition)
+        videoPosition.value = getDateStrFromPosition(bookmark.videoPosition)
         bookmarkColor.value = bookmark.color
         selectedPos.value = colorIndex
 
@@ -143,7 +147,7 @@ class AddBookmarkViewModel @Inject constructor(
     }
 
     fun getVideoUrl(videoPosition: Long): String {
-        val time = getTimeToStringDataForClipBoard(videoPosition)
+        val time = getSecondsFromPosition(videoPosition)
 
         return if (_videoTypeImage.value == R.drawable.ic_youtube) {
             "${_videoData.value!!.url}&t=$time"
@@ -167,7 +171,7 @@ class AddBookmarkViewModel @Inject constructor(
     }
 
     // 입력한 시간을 시:분:초 데이터로 파싱하여 Long 데이터로 반환
-    private fun getTimeToLongData(videoPosition: String): Long? {
+    private fun getDateFromPosition(videoPosition: String): Long? {
         val splitSize = videoPosition.split(":").size
         val dateFormat = if (splitSize == 3) {
             SimpleDateFormat(
@@ -191,7 +195,7 @@ class AddBookmarkViewModel @Inject constructor(
     }
 
     // 시간 데이터를 시:분:초 String으로 변환하여 반환
-    private fun getTimeToStringData(videoPosition: Long): String {
+    private fun getDateStrFromPosition(videoPosition: Long): String {
         val dateFormat = if (videoPosition >= -28800000) { // 01:00:00
             SimpleDateFormat(
                 "hh:mm:ss",
@@ -207,20 +211,20 @@ class AddBookmarkViewModel @Inject constructor(
         return dateFormat.format(videoPosition)
     }
 
-    // 시간 데이터를 시h:분m:초s String으로 변환하여 반환
-    private fun getTimeToStringDataForClipBoard(videoPosition: Long): String {
-        val dateFormat = if (videoPosition >= -28800000) { // 01:00:00
-            SimpleDateFormat(
-                "hh\'h\'mm\'m\'ss\'s\'",
-                Locale.KOREA
-            )
-        } else {
-            SimpleDateFormat(
-                "mm\'m\'ss\'s\'",
-                Locale.KOREA
-            )
-        }
+    // 시간 데이터를 초로 변환
+    private fun getSecondsFromPosition(videoPosition: Long) =
+        "${(videoPosition + 32400000) / 1000}s"
 
-        return dateFormat.format(videoPosition)
+    // url에서 시간을 가져옴
+    private fun getTimeFromUrl(url: String): String {
+        val time = url.substringAfter("t=")
+            .substringBefore("s")
+            .toInt() * 1000 // milliSecons와 단위를 맞춤
+
+        return if (time >= 3600000) { // 1시간 이상 일 경우
+            SimpleDateFormat("hh:mm:ss", Locale.KOREA)
+        } else { // 1시간 이하일 경우
+            SimpleDateFormat("mm:ss", Locale.KOREA)
+        }.format(time - 32400000)
     }
 }

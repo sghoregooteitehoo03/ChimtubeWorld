@@ -7,9 +7,10 @@ import com.sghore.chimtubeworld.adapter.viewholder.BookmarkViewHolder
 import com.sghore.chimtubeworld.data.Bookmark
 import com.sghore.chimtubeworld.databinding.ItemBookmarkBinding
 
-class BookmarkAdapter(private val bookmarks: List<Bookmark>) :
+class BookmarkAdapter() :
     RecyclerView.Adapter<BookmarkViewHolder>() {
     private lateinit var itemListener: BookmarkItemListener
+    private var bookmarks = listOf<Bookmark>()
 
     interface BookmarkItemListener {
         fun onBookmarkClickListener(pos: Int)
@@ -33,4 +34,9 @@ class BookmarkAdapter(private val bookmarks: List<Bookmark>) :
 
     fun getItem(pos: Int) =
         bookmarks[pos]
+
+    fun syncData(_bookmarks: List<Bookmark>) {
+        bookmarks = _bookmarks
+        notifyDataSetChanged()
+    }
 }

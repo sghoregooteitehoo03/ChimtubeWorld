@@ -12,6 +12,16 @@ class VideosViewHolder(
     private val binding: ItemVideoBinding,
     private val itemListener: VideosPagingAdapter.VideosItemListener
 ) : RecyclerView.ViewHolder(binding.root) {
+    private val bookmarkAdapter = BookmarkAdapter().apply {
+        setOnItemListener(object : BookmarkAdapter.BookmarkItemListener {
+            override fun onBookmarkClickListener(pos: Int) {
+                itemListener.onBookmarkClickListener(
+                    videoPos = bindingAdapterPosition,
+                    bookmarkPos = pos
+                )
+            }
+        })
+    }
 
     init {
         itemView.setOnClickListener {
@@ -19,11 +29,13 @@ class VideosViewHolder(
         }
     }
 
-    fun bind(data: Video?, adapter: BookmarkAdapter) {
+    fun bind(data: Video?) {
         binding.videoData = data
         with(binding.bookmarkList) {
-            if (adapter.itemCount != 0) {
-                this.adapter = adapter
+            if (data?.bookmarks?.size != 0) {
+                this.adapter = bookmarkAdapter.apply {
+                    syncData(data?.bookmarks ?: listOf())
+                }
                 this.visibility = View.VISIBLE
             } else {
                 this.adapter = null

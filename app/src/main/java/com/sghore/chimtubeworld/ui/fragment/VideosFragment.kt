@@ -1,6 +1,8 @@
 package com.sghore.chimtubeworld.ui.fragment
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,22 +14,22 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.VideosPagingAdapter
-import com.sghore.chimtubeworld.data.Bookmark
 import com.sghore.chimtubeworld.data.Video
 import com.sghore.chimtubeworld.databinding.FragmentVideosBinding
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import com.sghore.chimtubeworld.viewmodel.videosFrag.VideosViewModel
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-// TODO
-//  . 렉 줄이기(각 바인드 홀더마다 아답터 생성 X)
 @AndroidEntryPoint
-class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener {
+class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener, View.OnClickListener {
     @Inject
     lateinit var assistedFactory: VideosViewModel.AssistedFactory
+    private lateinit var binding: FragmentVideosBinding
     private lateinit var videosAdapter: VideosPagingAdapter
 
     private val args by navArgs<VideosFragmentArgs>()
@@ -46,7 +48,7 @@ class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener {
         savedInstanceState: Bundle?
     ): View {
         // 인스턴스 설정
-        val binding = FragmentVideosBinding.inflate(inflater)
+        binding = FragmentVideosBinding.inflate(inflater)
         videosAdapter = VideosPagingAdapter().apply {
             setOnItemListener(this@VideosFragment)
             addLoadStateListener { loadState ->
@@ -57,6 +59,8 @@ class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener {
         // 바인딩 설정
         with(binding) {
             this.viewmodel = mViewModel
+            this.clickListener = this@VideosFragment
+
             this.subtitleMainText.text = args.channelName
             this.videoTypeImage.setImageResource(args.typeImageRes)
             this.videoList.adapter = videosAdapter
@@ -87,6 +91,29 @@ class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener {
 
         gViewModel.videoData.value = videosAdapter.getVideoData(videoPos)
         findNavController().navigate(directions)
+    }
+
+    // 뷰 클릭 이벤트
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.help_btn -> {
+                val tooltip = Balloon.Builder(requireContext())
+                    .setPaddingLeft(10)
+                    .setPaddingRight(10)
+                    .setPaddingTop(6)
+                    .setPaddingBottom(6)
+                    .setCornerRadius(8f)
+                    .setTextSize(14f)
+                    .setTextGravity(Gravity.START)
+                    .setBackgroundColor(Color.parseColor("#588CE1"))
+                    .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                    .setText(getString(R.string.video_tip))
+                    .build()
+
+                tooltip.showAlignBottom(binding.helpBtn)
+            }
+            else -> {}
+        }
     }
 
     // 옵저버 설정

@@ -36,7 +36,8 @@
                     android:scaleType="centerCrop"
                     app:layout_constraintDimensionRatio="H,16:9"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:setImage="@{viewmodel.videoData.thumbnail}" />
+                    app:setImage="@{viewmodel.videoData.thumbnail}"
+                    tools:src="@drawable/test" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -129,11 +130,11 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/input_bookmark_title_layout"
+                        style="@style/TextInputLayoutTheme"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        app:boxBackgroundColor="@color/default_background_color"
-                        app:boxStrokeColor="@color/item_color"
+                        android:theme="@style/TextInputLayoutTheme"
                         app:hintEnabled="false"
                         app:layout_constraintEnd_toStartOf="@id/guideline_end"
                         app:layout_constraintStart_toEndOf="@id/guideline_start"
@@ -145,16 +146,17 @@
                             android:hint="북마크 제목"
                             android:inputType="text"
                             android:maxLength="10"
-                            android:text="@={viewmodel.bookmarkTitle}" />
+                            android:text="@={viewmodel.bookmarkTitle}"
+                            android:textCursorDrawable="@null" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/input_video_position_layout"
+                        style="@style/TextInputLayoutTheme"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        app:boxBackgroundColor="@color/default_background_color"
-                        app:boxStrokeColor="@color/item_color"
+                        android:theme="@style/TextInputLayoutTheme"
                         app:hintEnabled="false"
                         app:layout_constraintEnd_toStartOf="@id/guideline_end"
                         app:layout_constraintStart_toEndOf="@id/guideline_start"
@@ -167,7 +169,8 @@
                             android:hint="영상 위치 (00:00)"
                             android:inputType="text"
                             android:maxLength="8"
-                            android:text="@={viewmodel.videoPosition}" />
+                            android:text="@={viewmodel.videoPosition}"
+                            android:textCursorDrawable="@null" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <androidx.recyclerview.widget.RecyclerView

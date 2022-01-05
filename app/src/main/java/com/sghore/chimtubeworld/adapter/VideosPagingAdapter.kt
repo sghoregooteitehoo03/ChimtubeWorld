@@ -18,18 +18,7 @@ class VideosPagingAdapter : PagingDataAdapter<Video, VideosViewHolder>(diffUtil)
     }
 
     override fun onBindViewHolder(holder: VideosViewHolder, position: Int) {
-        val video = getItem(position)
-        val bookmarkAdapter = BookmarkAdapter(video?.bookmarks ?: listOf()).apply {
-            setOnItemListener(object : BookmarkAdapter.BookmarkItemListener {
-                override fun onBookmarkClickListener(pos: Int) {
-                    mListener.onBookmarkClickListener(
-                        videoPos = holder.bindingAdapterPosition,
-                        bookmarkPos = pos
-                    )
-                }
-            })
-        }
-        holder.bind(getItem(position), bookmarkAdapter)
+        holder.bind(getItem(position))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideosViewHolder {

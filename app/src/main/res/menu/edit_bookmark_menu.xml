@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/copy_bookmark"
-        android:icon="@drawable/ic_description"
+        android:icon="@drawable/ic_assignment"
         android:title="복사"
         app:showAsAction="always" />
 

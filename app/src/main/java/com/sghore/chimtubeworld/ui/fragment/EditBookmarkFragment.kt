@@ -191,7 +191,7 @@ class EditBookmarkFragment : Fragment(), BookmarkColorAdapter.BookmarkColorItemL
         val clip = ClipData.newPlainText("url", url)
         clipBoard.setPrimaryClip(clip)
 
-        Toast.makeText(requireContext(), "클립보드에 저장되었습니다.", Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), "URL이 복사되었습니다.", Toast.LENGTH_SHORT)
             .show()
     }
 }

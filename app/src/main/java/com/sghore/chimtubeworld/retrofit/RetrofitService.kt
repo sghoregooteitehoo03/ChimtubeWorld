@@ -51,7 +51,15 @@ interface RetrofitService {
     fun getTVideosFromUserId(
         @Header("Authorization") accessKey: String,
         @Query("user_id") userId: String,
-        @Query("after") afterPage: String?
+        @Query("after") afterPage: String
+    ): Call<com.sghore.chimtubeworld.retrofit.dto.twitchAPI.VideosDTO>
+
+    @Headers("Client-ID: ${Contents.CLIENT_ID}")
+    @GET("videos")
+    fun getTVideosFromUserIdBefore(
+        @Header("Authorization") accessKey: String,
+        @Query("user_id") userId: String,
+        @Query("before") beforePage: String,
     ): Call<com.sghore.chimtubeworld.retrofit.dto.twitchAPI.VideosDTO>
 
     @Headers("Client-ID: ${Contents.CLIENT_ID}")

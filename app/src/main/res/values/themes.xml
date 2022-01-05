@@ -33,4 +33,13 @@
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/item_color</item>
     </style>
+
+    <style name="TextInputLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="colorPrimary">@color/item_color</item>
+        <item name="colorControlNormal">@color/gray_night</item>
+        <item name="colorControlActivated">@color/item_color</item>
+
+        <item name="android:textCursorDrawable">@color/item_color</item>
+        <item name="boxBackgroundColor">@color/default_background_color</item>
+    </style>
 </resources>
