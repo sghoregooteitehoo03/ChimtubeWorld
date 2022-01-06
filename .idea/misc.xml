@@ -67,7 +67,7 @@
         <entry key="app/src/main/res/layout/item_goods_item.xml" value="0.36041666666666666" />
         <entry key="app/src/main/res/layout/item_loading_video.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_preview_image.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/item_video.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_video.xml" value="0.2" />
         <entry key="app/src/main/res/layout/item_video_position.xml" value="0.22187347412109373" />
         <entry key="app/src/main/res/layout/item_webtoon.xml" value="0.2" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.36041666666666666" />
@@ -83,5 +83,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.22" />
+      </ProjectState>
+    </option>
   </component>
 </project>

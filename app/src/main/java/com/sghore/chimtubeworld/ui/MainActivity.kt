@@ -10,7 +10,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.sghore.chimtubeworld.R
@@ -21,7 +20,7 @@ import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 // TODO:
-//  . StoreDetailFragment 재구성 버그 수정
+//  . StoreDetailFragment 재구성 버그 수정 ㅁ
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val globalViewModel by viewModels<GlobalViewModel>()
@@ -115,8 +114,7 @@ class MainActivity : AppCompatActivity() {
         // 페이저 레이아웃이 보이고 있을 때
         if (globalViewModel.showGoodsList.value != null) {
             // 레이아웃에서 벗어남
-            globalViewModel.showGoodsList.value = null
-            globalViewModel.selectedGoodsPos.value = -1
+            clearGoodsData()
         } else {
             super.onBackPressed()
         }
@@ -143,7 +141,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 pagerAdapter.notifyChangeInPosition(1)
-                pagerAdapter.syncData(listOf())
+                pagerAdapter.syncData(listOf(null))
             }
         }
         // 아이템이 선택된 위치
@@ -160,6 +158,9 @@ class MainActivity : AppCompatActivity() {
         val pagerWidth = resources.getDimensionPixelOffset(R.dimen.pagerWidth)
         val screenWidth = resources.displayMetrics.widthPixels
         val offsetPx = screenWidth - pageMarginPx - pagerWidth
+
+        // 값 초기화
+        clearGoodsData()
 
         binding.detailViewpager.adapter = pagerAdapter
         binding.detailViewpager.offscreenPageLimit = 3
@@ -216,5 +217,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
         setIntent(null) // 인텐트 초기화
+    }
+
+    private fun clearGoodsData() {
+        globalViewModel.showGoodsList.value = null
+        globalViewModel.selectedGoodsPos.value = -1
     }
 }

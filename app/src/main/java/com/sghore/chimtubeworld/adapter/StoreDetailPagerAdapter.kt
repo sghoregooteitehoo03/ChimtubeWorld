@@ -11,7 +11,7 @@ class StoreDetailPagerAdapter(
     fm: FragmentManager,
     lifecycle: Lifecycle
 ) : FragmentStateAdapter(fm, lifecycle) {
-    private var goodsList = listOf<Goods>()
+    private var goodsList = listOf<Goods?>()
     private var baseId: Long = 0
 
     override fun getItemCount() =
@@ -34,7 +34,7 @@ class StoreDetailPagerAdapter(
         baseId += itemCount + n
     }
 
-    fun syncData(_goodsList: List<Goods>) {
+    fun syncData(_goodsList: List<Goods?>) {
         goodsList = _goodsList
         notifyDataSetChanged()
     }

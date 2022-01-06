@@ -12,6 +12,7 @@ import com.sghore.chimtubeworld.adapter.GoodsAdapter
 import com.sghore.chimtubeworld.adapter.GoodsCategoryAdapter
 import com.sghore.chimtubeworld.databinding.FragmentStoreBinding
 import com.sghore.chimtubeworld.ui.custom.GridItemDecoration
+import com.sghore.chimtubeworld.ui.custom.LinearItemDecoration
 import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import com.sghore.chimtubeworld.viewmodel.storeFrag.StoreViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,6 +49,7 @@ class StoreFragment : Fragment(),
             with(this.goodsCategoryList) {
                 adapter = categoryAdapter
                 itemAnimator = null
+                addItemDecoration(LinearItemDecoration(requireContext(), 12))
             }
             with(this.goodsList) {
                 adapter = goodsAdapter

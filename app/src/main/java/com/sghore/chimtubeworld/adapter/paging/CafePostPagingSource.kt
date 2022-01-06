@@ -1,6 +1,5 @@
 package com.sghore.chimtubeworld.adapter.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sghore.chimtubeworld.data.Post

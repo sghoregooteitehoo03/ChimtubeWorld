@@ -9,7 +9,6 @@ import com.sghore.chimtubeworld.retrofit.RetrofitService
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await
-import retrofit2.awaitResponse
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject

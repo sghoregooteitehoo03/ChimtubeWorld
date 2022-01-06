@@ -2,7 +2,6 @@ package com.sghore.chimtubeworld.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.db.AppDatabase
 import dagger.Module

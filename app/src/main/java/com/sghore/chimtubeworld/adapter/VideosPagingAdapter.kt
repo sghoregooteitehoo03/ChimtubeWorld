@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.sghore.chimtubeworld.adapter.viewholder.VideosViewHolder
-import com.sghore.chimtubeworld.data.Bookmark
 import com.sghore.chimtubeworld.data.Video
 import com.sghore.chimtubeworld.databinding.ItemVideoBinding
 

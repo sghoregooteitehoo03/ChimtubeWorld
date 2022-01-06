@@ -36,6 +36,9 @@ class VideosViewHolder(
                 this.adapter = bookmarkAdapter.apply {
                     syncData(data?.bookmarks ?: listOf())
                 }
+                if (this.itemDecorationCount == 0) { // 한번만 추가되게
+                    this.addItemDecoration(LinearItemDecoration(itemView.context, 8))
+                }
                 this.visibility = View.VISIBLE
             } else {
                 this.adapter = null

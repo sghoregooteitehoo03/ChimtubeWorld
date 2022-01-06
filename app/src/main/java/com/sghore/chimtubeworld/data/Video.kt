@@ -1,7 +1,5 @@
 package com.sghore.chimtubeworld.data
 
-import java.time.Duration
-
 data class Video(
     val id: String,
     val channelName: String,

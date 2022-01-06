@@ -12,6 +12,7 @@ import com.sghore.chimtubeworld.data.Video
 import com.sghore.chimtubeworld.databinding.DialogSelectPositionBinding
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.ui.custom.LinearItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,7 +44,16 @@ class SelectPositionDialog(
 
         // 바인딩 설정
         with(binding) {
-            this.videoPositionList.adapter = videoPositionAdapter
+            with(this.videoPositionList) {
+                adapter = videoPositionAdapter
+                addItemDecoration(
+                    LinearItemDecoration(
+                        requireContext(),
+                        12,
+                        false
+                    )
+                )
+            }
             lifecycleOwner = viewLifecycleOwner
         }
 

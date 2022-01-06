@@ -15,7 +15,7 @@ import com.sghore.chimtubeworld.viewmodel.storeDetailFrag.StoreDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class StoreDetailFragment(private val goods: Goods) : Fragment(),
+class StoreDetailFragment(private val goods: Goods? = null) : Fragment(),
     View.OnClickListener,
     PreviewImageAdapter.PreviewImageItemListener {
     private val mViewModel by viewModels<StoreDetailViewModel>()
@@ -25,7 +25,11 @@ class StoreDetailFragment(private val goods: Goods) : Fragment(),
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
+        if(goods == null) {
+            return null
+        }
+
         // 인스턴스 설정
         val binding = FragmentStoreDetailBinding.inflate(inflater)
         previewImageAdapter = PreviewImageAdapter().apply {
@@ -59,7 +63,7 @@ class StoreDetailFragment(private val goods: Goods) : Fragment(),
             R.id.open_text -> { // 보러 가기 텍스트
                 OpenOtherApp(requireContext())
                     .openCustomTabs(
-                        goods.url
+                        goods!!.url
                     )
             }
         }
@@ -81,7 +85,7 @@ class StoreDetailFragment(private val goods: Goods) : Fragment(),
                 previewImageAdapter.syncData(images)
                 mViewModel.selectedPos.value = 0
             } else {
-                mViewModel.getStoreDetail(goods)
+                mViewModel.getStoreDetail(goods!!)
             }
         }
         // 선택된 위치

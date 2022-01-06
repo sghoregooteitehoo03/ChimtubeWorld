@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class LinearItemDecoration(
     context: Context,
-    marginSize: Int
+    marginSize: Int,
+    private val isLeft: Boolean = true
 ) : RecyclerView.ItemDecoration() {
     private val fullSize = dpToPx(context, marginSize)
     private val halfSize = dpToPx(context, marginSize / 2)
@@ -24,7 +25,11 @@ class LinearItemDecoration(
 
         // 리스트에 맨 앞에만 margin 값 부여
         if (parent.getChildAdapterPosition(view) == 0) {
-            outRect.left += fullSize
+            if (isLeft) {
+                outRect.left += fullSize
+            } else {
+                outRect.top += fullSize
+            }
         }
     }
 
