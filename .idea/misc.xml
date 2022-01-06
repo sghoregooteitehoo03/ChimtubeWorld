@@ -6,6 +6,7 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/drawable-small/splash.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable-v24/shape_corner_rec_large.xml" value="0.122" />
+        <entry key="app/src/main/res/drawable-xxxhdpi/shape_rounded_dialog.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_assignment.xml" value="0.124" />
         <entry key="app/src/main/res/drawable/ic_back.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable/ic_cafe.xml" value="0.154" />
@@ -41,8 +42,10 @@
         <entry key="app/src/main/res/drawable/shape_rectangle_12.xml" value="0.148" />
         <entry key="app/src/main/res/drawable/shape_round.xml" value="0.147" />
         <entry key="app/src/main/res/drawable/shape_round_border.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/shape_rounded_dialog.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/shape_sideded_rounded_rec.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/dialog_select_position.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_add_bookmark.xml" value="0.16854858398437503" />
         <entry key="app/src/main/res/layout/fragment_cafe.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_store.xml" value="0.25" />
@@ -64,7 +67,8 @@
         <entry key="app/src/main/res/layout/item_goods_item.xml" value="0.36041666666666666" />
         <entry key="app/src/main/res/layout/item_loading_video.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_preview_image.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/item_video.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/item_video.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_video_position.xml" value="0.22187347412109373" />
         <entry key="app/src/main/res/layout/item_webtoon.xml" value="0.2" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.36041666666666666" />
         <entry key="app/src/main/res/menu/edit_bookmark_menu.xml" value="0.15209503173828126" />

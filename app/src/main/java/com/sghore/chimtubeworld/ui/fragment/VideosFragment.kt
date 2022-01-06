@@ -18,6 +18,7 @@ import com.sghore.chimtubeworld.data.Video
 import com.sghore.chimtubeworld.databinding.FragmentVideosBinding
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.ui.dialog.SelectPositionDialog
 import com.sghore.chimtubeworld.viewmodel.GlobalViewModel
 import com.sghore.chimtubeworld.viewmodel.videosFrag.VideosViewModel
 import com.skydoves.balloon.ArrowPositionRules
@@ -131,22 +132,33 @@ class VideosFragment : Fragment(), VideosPagingAdapter.VideosItemListener, View.
 
     // 영상을 실행시킴
     private fun playVideo(video: Video) {
-        if (args.typeImageRes == R.drawable.ic_youtube) {
-            val packageName = Contents.YOUTUBE_PACKAGE_NAME // Youtube 패키지
+        val packageName = if (args.typeImageRes == R.drawable.ic_youtube) {
+            // Youtube 패키지
+            val youtubePackage = Contents.YOUTUBE_PACKAGE_NAME
+            if (video.bookmarks.isEmpty()) {
+                // 북마크가 없으면 바로 실행
+                OpenOtherApp(requireContext())
+                    .openYoutube(youtubePackage, video.url)
+            }
 
-            // 유튜브 앱이나 웹으로 이동
-            OpenOtherApp(requireContext()).openYoutube(
-                packageName = packageName,
-                url = video.url
-            )
+            youtubePackage
         } else {
             // Twitch Video 패키지
-            val packageName = Contents.TWITCH_VIDEO_PACKAGE_NAME + video.id
+            val twitchPackage = Contents.TWITCH_VIDEO_PACKAGE_NAME + video.id
+            if (video.bookmarks.isEmpty()) {
+                // 북마크가 없으면 바로 실행
+                OpenOtherApp(requireContext())
+                    .openTwitch(twitchPackage, video.url)
+            }
 
-            // 트위치 앱이나 웹으로 이동
-            OpenOtherApp(requireContext()).openTwitch(
-                packageName = packageName,
-                url = video.url,
+            twitchPackage
+        }
+
+        if (video.bookmarks.isNotEmpty()) {
+            // 북마크가 존재하면 선택 화면 표시
+            SelectPositionDialog(packageName, video).show(
+                requireActivity().supportFragmentManager,
+                "SelectPositionDialog"
             )
         }
     }
