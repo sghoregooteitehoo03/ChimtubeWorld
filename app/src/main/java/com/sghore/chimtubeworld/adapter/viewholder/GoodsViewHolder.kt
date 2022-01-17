@@ -2,7 +2,7 @@ package com.sghore.chimtubeworld.adapter.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.GoodsAdapter
-import com.sghore.chimtubeworld.data.Goods
+import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.databinding.ItemGoodsInfoBinding
 
 

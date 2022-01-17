@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="com.sghore.chimtubeworld.viewmodel.twitchFrag.TwitchViewModel" />
+            type="com.sghore.chimtubeworld.presentation.twitchScreen.TwitchViewModel" />
 
         <variable
             name="clickListener"

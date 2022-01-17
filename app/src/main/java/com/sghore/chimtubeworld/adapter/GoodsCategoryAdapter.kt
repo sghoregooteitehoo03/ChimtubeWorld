@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.viewholder.GoodsCategoryViewHolder
-import com.sghore.chimtubeworld.data.Channel
+import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.databinding.ItemGoodsCategoryBinding
 
 class GoodsCategoryAdapter : RecyclerView.Adapter<GoodsCategoryViewHolder>() {

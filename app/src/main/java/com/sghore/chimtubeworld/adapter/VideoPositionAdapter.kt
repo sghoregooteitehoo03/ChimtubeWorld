@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.viewholder.VideoPositionViewHolder
-import com.sghore.chimtubeworld.data.Bookmark
+import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.databinding.ItemVideoPositionBinding
 
 class VideoPositionAdapter(

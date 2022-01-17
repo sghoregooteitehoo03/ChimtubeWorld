@@ -4,9 +4,9 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.BookmarkAdapter
 import com.sghore.chimtubeworld.adapter.VideosPagingAdapter
-import com.sghore.chimtubeworld.data.Video
+import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.databinding.ItemVideoBinding
-import com.sghore.chimtubeworld.ui.custom.LinearItemDecoration
+import com.sghore.chimtubeworld.presentation.ui.custom.LinearItemDecoration
 
 class VideosViewHolder(
     private val binding: ItemVideoBinding,

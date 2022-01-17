@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.sghore.chimtubeworld.adapter.viewholder.CafePostViewHolder
-import com.sghore.chimtubeworld.data.Post
+import com.sghore.chimtubeworld.data.model.Post
 import com.sghore.chimtubeworld.databinding.ItemCafePostBinding
 
 class CafePostPagingAdapter : PagingDataAdapter<Post, CafePostViewHolder>(diffUtil) {

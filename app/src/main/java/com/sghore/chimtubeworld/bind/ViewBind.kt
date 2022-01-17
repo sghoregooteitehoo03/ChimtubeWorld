@@ -16,9 +16,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.Channel
-import com.sghore.chimtubeworld.data.Post
-import com.sghore.chimtubeworld.data.Video
+import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.data.model.Post
+import com.sghore.chimtubeworld.data.model.Video
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

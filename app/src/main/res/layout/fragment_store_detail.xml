@@ -9,11 +9,11 @@
 
         <variable
             name="viewmodel"
-            type="com.sghore.chimtubeworld.viewmodel.storeDetailFrag.StoreDetailViewModel" />
+            type="com.sghore.chimtubeworld.presentation.storeDetailScreen.StoreDetailViewModel" />
 
         <variable
             name="goodsData"
-            type="com.sghore.chimtubeworld.data.Goods" />
+            type="com.sghore.chimtubeworld.data.model.Goods" />
 
         <variable
             name="clickListener"

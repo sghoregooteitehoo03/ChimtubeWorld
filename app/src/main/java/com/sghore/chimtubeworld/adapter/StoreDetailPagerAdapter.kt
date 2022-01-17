@@ -4,8 +4,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.sghore.chimtubeworld.data.Goods
-import com.sghore.chimtubeworld.ui.fragment.StoreDetailFragment
+import com.sghore.chimtubeworld.data.model.Goods
+import com.sghore.chimtubeworld.presentation.storeDetailScreen.StoreDetailFragment
 
 class StoreDetailPagerAdapter(
     fm: FragmentManager,

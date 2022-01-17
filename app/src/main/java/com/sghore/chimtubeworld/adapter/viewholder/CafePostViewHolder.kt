@@ -3,7 +3,7 @@ package com.sghore.chimtubeworld.adapter.viewholder
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.CafePostPagingAdapter
-import com.sghore.chimtubeworld.data.Post
+import com.sghore.chimtubeworld.data.model.Post
 import com.sghore.chimtubeworld.databinding.ItemCafePostBinding
 
 class CafePostViewHolder(

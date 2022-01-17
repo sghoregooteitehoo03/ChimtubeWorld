@@ -2,7 +2,7 @@ package com.sghore.chimtubeworld.adapter.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.BookmarkAdapter
-import com.sghore.chimtubeworld.data.Bookmark
+import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.databinding.ItemBookmarkBinding
 
 class BookmarkViewHolder(

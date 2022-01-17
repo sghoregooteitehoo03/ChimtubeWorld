@@ -3,7 +3,7 @@ package com.sghore.chimtubeworld.di
 import android.content.Context
 import androidx.room.Room
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sghore.chimtubeworld.db.AppDatabase
+import com.sghore.chimtubeworld.data.db.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

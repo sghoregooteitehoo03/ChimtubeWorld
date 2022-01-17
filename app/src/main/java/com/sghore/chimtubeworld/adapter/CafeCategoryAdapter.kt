@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.viewholder.CafeCategoryViewHolder
-import com.sghore.chimtubeworld.data.CafeCategory
+import com.sghore.chimtubeworld.data.model.CafeCategory
 import com.sghore.chimtubeworld.databinding.ItemCafeCategoryBinding
 
 class CafeCategoryAdapter : RecyclerView.Adapter<CafeCategoryViewHolder>() {

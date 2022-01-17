@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.sghore.chimtubeworld.adapter.viewholder.VideosViewHolder
-import com.sghore.chimtubeworld.data.Video
+import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.databinding.ItemVideoBinding
 
 class VideosPagingAdapter : PagingDataAdapter<Video, VideosViewHolder>(diffUtil) {

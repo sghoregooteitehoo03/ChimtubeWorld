@@ -7,7 +7,7 @@
 
         <variable
             name="videoData"
-            type="com.sghore.chimtubeworld.data.Video" />
+            type="com.sghore.chimtubeworld.data.model.Video" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

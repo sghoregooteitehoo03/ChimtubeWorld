@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="com.sghore.chimtubeworld.viewmodel.videosFrag.VideosViewModel" />
+            type="com.sghore.chimtubeworld.presentation.videosScreen.VideosViewModel" />
 
         <variable
             name="clickListener"
@@ -84,7 +84,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <com.facebook.shimmer.ShimmerFrameLayout
@@ -111,7 +111,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/video_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:nestedScrollingEnabled="true"
                 android:overScrollMode="never"
                 android:visibility="@{viewmodel.isLoading() ? View.INVISIBLE : View.VISIBLE }"

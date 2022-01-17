@@ -4,7 +4,7 @@ import android.content.res.ColorStateList
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.VideoPositionAdapter
-import com.sghore.chimtubeworld.data.Bookmark
+import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.databinding.ItemVideoPositionBinding
 import java.text.SimpleDateFormat
 import java.util.*

@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="com.sghore.chimtubeworld.viewmodel.cafeFrag.CafeViewModel" />
+            type="com.sghore.chimtubeworld.presentation.cafeScreen.CafeViewModel" />
 
         <variable
             name="clickListener"

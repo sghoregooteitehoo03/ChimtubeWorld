@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.viewholder.TwitchUserViewHolder
-import com.sghore.chimtubeworld.data.Channel
+import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.databinding.ItemCrewBinding
 
 class TwitchUserAdapter() : RecyclerView.Adapter<TwitchUserViewHolder>() {

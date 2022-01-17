@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="com.sghore.chimtubeworld.viewmodel.webToonFrag.WebToonViewModel" />
+            type="com.sghore.chimtubeworld.presentation.webToonScreen.WebToonViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

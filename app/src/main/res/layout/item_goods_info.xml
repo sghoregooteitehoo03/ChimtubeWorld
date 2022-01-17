@@ -7,7 +7,7 @@
 
         <variable
             name="goodsData"
-            type="com.sghore.chimtubeworld.data.Goods" />
+            type="com.sghore.chimtubeworld.data.model.Goods" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

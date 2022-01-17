@@ -2,7 +2,7 @@ package com.sghore.chimtubeworld.adapter.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.sghore.chimtubeworld.adapter.CafeCategoryAdapter
-import com.sghore.chimtubeworld.data.CafeCategory
+import com.sghore.chimtubeworld.data.model.CafeCategory
 import com.sghore.chimtubeworld.databinding.ItemCafeCategoryBinding
 
 class CafeCategoryViewHolder(

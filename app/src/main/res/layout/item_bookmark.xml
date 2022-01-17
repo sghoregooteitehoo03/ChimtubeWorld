@@ -7,7 +7,7 @@
 
         <variable
             name="bookmarkData"
-            type="com.sghore.chimtubeworld.data.Bookmark" />
+            type="com.sghore.chimtubeworld.data.model.Bookmark" />
     </data>
 
     <androidx.cardview.widget.CardView
