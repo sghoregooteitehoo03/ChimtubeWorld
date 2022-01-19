@@ -42,7 +42,6 @@ class TwitchRepository @Inject constructor(
 
         // Twitch API를 통해 채널의 정보를 가져옴
         val result = retrofitService.getTUserInfo(accessKey, channelIdArr)
-            .await()
 
         result.data.forEach { userData ->
             // 채널들을 배열순서에 맞쳐 리스트에 집어넣기 위한 인덱스 값
@@ -91,10 +90,8 @@ class TwitchRepository @Inject constructor(
         linkInfo: LinkInfo
     ): Channel {
         val channelData = CoroutineScope(Dispatchers.IO).async {
-            val followData = retrofitService.getTUserFollows(accessKey, userInfo.id)
-                .await() // 팔로우 수
-            val streamData = retrofitService.getTUserStream(accessKey, userInfo.login)
-                .await() // 방송 데이터
+            val followData = retrofitService.getTUserFollows(accessKey, userInfo.id) // 팔로우 수
+            val streamData = retrofitService.getTUserStream(accessKey, userInfo.login) // 방송 데이터
             val isOnline: Boolean // 방송 여부
 
             // 썸네일

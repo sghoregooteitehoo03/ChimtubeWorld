@@ -34,7 +34,6 @@ class YoutubeRepository @Inject constructor(
 
         // API를 통해 채널들의 정보를 가져옴
         val result = retrofitService.getYChannelInfo(channelIdArr)
-            .await()
 
         result.items.forEach { channelInfo ->
             // 채널들을 배열순서에 맞쳐 리스트에 집어넣기 위한 인덱스 값

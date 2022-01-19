@@ -13,7 +13,7 @@ import retrofit2.http.*
 interface RetrofitService {
     // Youtube
     @GET("channels?key=${Contents.API_KEY}&part=snippet")
-    fun getYChannelInfo(@Query("id") channelId: Array<String>): Call<ChannelDTO>
+    suspend fun getYChannelInfo(@Query("id") channelId: Array<String>): ChannelDTO
 
     @GET("playlistItems?key=${Contents.API_KEY}&part=contentDetails&maxResults=20")
     fun getYPlaylistItems(
@@ -27,24 +27,24 @@ interface RetrofitService {
     // Twitch
     @Headers("Client-ID: ${Contents.CLIENT_ID}")
     @GET("users")
-    fun getTUserInfo(
+    suspend fun getTUserInfo(
         @Header("Authorization") accessKey: String,
         @Query("login") loginId: Array<String>
-    ): Call<UserDTO>
+    ): UserDTO
 
     @Headers("Client-ID: ${Contents.CLIENT_ID}")
     @GET("users/follows?first=1")
-    fun getTUserFollows(
+    suspend fun getTUserFollows(
         @Header("Authorization") accessKey: String,
         @Query("to_id") id: String,
-    ): Call<UserFollowsDTO>
+    ): UserFollowsDTO
 
     @Headers("Client-ID: ${Contents.CLIENT_ID}")
     @GET("streams")
-    fun getTUserStream(
+    suspend fun getTUserStream(
         @Header("Authorization") accessKey: String,
         @Query("user_login") loginId: String,
-    ): Call<StreamDTO>
+    ): StreamDTO
 
     @Headers("Client-ID: ${Contents.CLIENT_ID}")
     @GET("videos")

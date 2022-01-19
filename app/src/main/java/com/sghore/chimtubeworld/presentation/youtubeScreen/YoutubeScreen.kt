@@ -1,17 +1,10 @@
 package com.sghore.chimtubeworld.presentation.youtubeScreen
 
-import android.util.Log
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -21,28 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
-import com.google.accompanist.flowlayout.FlowColumn
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
 
@@ -57,10 +35,11 @@ fun YoutubeScreen(
     val mainChannelList = state.channels?.filter { it?.type == 0 } ?: listOf()
     val subChannelList = state.channels?.filter { it?.type == 1 } ?: listOf()
 
-    val itemCount = if (subChannelList.size % 2 == 0) {
-        subChannelList.size / 2
+    val spanCount = 2
+    val itemCount = if (subChannelList.size % spanCount == 0) {
+        subChannelList.size / spanCount
     } else {
-        subChannelList.size / 2 + 1
+        subChannelList.size / spanCount + 1
     }
 
     Box(
@@ -75,16 +54,15 @@ fun YoutubeScreen(
                 color = colorResource(id = R.color.item_color)
             )
         } else {
-            Column {
+            Column(modifier = Modifier.padding(12.dp)) {
                 TitleTextWithExplain(
                     title = "Youtube",
-                    explain = "침튜브 채널",
-                    modifier = Modifier.padding(top = 12.dp, start = 12.dp)
+                    explain = "침튜브 채널"
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
                 mainChannelList.forEach { channel ->
-                    Column(modifier = Modifier.padding(start = 12.dp, end = 12.dp)) {
+                    Column {
                         MainYoutubeChannelItem(
                             channel = channel,
                             modifier = Modifier
@@ -99,8 +77,7 @@ fun YoutubeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 TitleTextWithExplain(
                     title = "Sub Contents",
-                    explain = "침착맨 외부 방송",
-                    modifier = Modifier.padding(start = 12.dp)
+                    explain = "침착맨 외부 방송"
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -108,54 +85,11 @@ fun YoutubeScreen(
                     SubYoutubeChannelRow(
                         rowIndex = index,
                         channels = subChannelList,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 12.dp, end = 12.dp),
+                        spanCount = spanCount,
                         onClick = onClick
                     )
                 }
             }
-//            LazyColumn {
-//                item {
-//                    TitleTextWithExplain(
-//                        title = "Youtube",
-//                        explain = "침튜브 채널",
-//                        modifier = Modifier.padding(top = 12.dp, start = 12.dp)
-//                    )
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                }
-//                items(mainChannelList) { channel ->
-//                    Column(modifier = Modifier.padding(start = 12.dp, end = 12.dp)) {
-//                        MainYoutubeChannelItem(
-//                            channel = channel,
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(16.dp),
-//                            onClick = onClick
-//                        )
-//                        Spacer(modifier = Modifier.height(16.dp))
-//                    }
-//                }
-//                item {
-//                    Spacer(modifier = Modifier.height(8.dp))
-//                    TitleTextWithExplain(
-//                        title = "Sub Contents",
-//                        explain = "침착맨 외부 방송",
-//                        modifier = Modifier.padding(start = 12.dp)
-//                    )
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                }
-//                items(itemCount) { index ->
-//                    SubYoutubeChannelRow(
-//                        rowIndex = index,
-//                        channels = subChannelList,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(start = 12.dp, end = 12.dp),
-//                        onClick = onClick
-//                    )
-//                }
-//            }
         }
     }
 }
@@ -163,11 +97,9 @@ fun YoutubeScreen(
 @Composable
 fun TitleTextWithExplain(
     title: String,
-    explain: String,
-    modifier: Modifier = Modifier
+    explain: String
 ) {
     Row(
-        modifier = modifier,
         verticalAlignment = Alignment.Bottom
     ) {
         Text(
@@ -241,25 +173,25 @@ fun MainYoutubeChannelItem(
 fun SubYoutubeChannelRow(
     rowIndex: Int,
     channels: List<Channel?>,
-    modifier: Modifier = Modifier,
+    spanCount: Int,
     onClick: (Channel?) -> Unit
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row {
-            SubYoutubeChannelItem(
-                channel = channels[rowIndex * 2],
-                modifier = Modifier.weight(1f),
-                onClick = onClick
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            if (channels.size >= rowIndex * 2 + 2) {
-                SubYoutubeChannelItem(
-                    channel = channels[rowIndex * 2 + 1],
-                    modifier = Modifier.weight(1f),
-                    onClick = onClick
-                )
-            } else {
-                Spacer(modifier = Modifier.weight(1f))
+            for (index in 0 until spanCount) {
+                if (channels.size >= rowIndex * spanCount + (index + 1)) {
+                    SubYoutubeChannelItem(
+                        channel = channels[rowIndex * 2 + index],
+                        modifier = Modifier.weight(1f),
+                        onClick = onClick
+                    )
+
+                    if (index != spanCount - 1) {
+                        Spacer(modifier = Modifier.width(12.dp))
+                    }
+                } else {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
         Spacer(modifier = Modifier.height(12.dp))

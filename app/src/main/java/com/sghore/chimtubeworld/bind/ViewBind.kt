@@ -13,10 +13,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Post
 import com.sghore.chimtubeworld.data.model.Video
 import de.hdodenhof.circleimageview.CircleImageView
@@ -28,7 +26,6 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.floor
 
 @BindingAdapter("app:setLoadingListLayout")
 fun setLoadingListLayout(view: ShimmerFrameLayout, isLoading: Boolean) {
@@ -65,15 +62,6 @@ fun setCircleImage(view: CircleImageView, stringImage: String?) {
     }
 }
 
-@BindingAdapter("app:setTwitchOnlineLayout")
-fun setTwitchOnlineLayout(view: ConstraintLayout, isOnline: Boolean) {
-    view.background = if (isOnline) {
-        view.resources.getDrawable(R.drawable.shape_online_layout, null)
-    } else {
-        view.resources.getDrawable(R.drawable.shape_offline_layout, null)
-    }
-}
-
 @BindingAdapter("app:setScrollPosition")
 fun setScrollPosition(view: RecyclerView, pos: Int) {
     view.scrollToPosition(pos)
@@ -84,23 +72,6 @@ fun restoreListState(view: RecyclerView, saveState: Parcelable?) {
     CoroutineScope(Dispatchers.Main).launch {
         delay(10)
         view.layoutManager?.onRestoreInstanceState(saveState)
-    }
-}
-
-@BindingAdapter("app:setTwitchBroadcastImage")
-fun setTwitchBroadcastImage(view: ImageView, channelData: Channel?) {
-    view.clipToOutline = true
-
-    if (channelData != null) {
-        Glide.with(view.context)
-            .load(channelData.thumbnailImage)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true)
-            .into(view)
-
-        if (channelData.isOnline != true) {
-            view.setColorFilter(ContextCompat.getColor(view.context, R.color.black_blur))
-        }
     }
 }
 
@@ -134,18 +105,6 @@ fun setCardBackgroundColor(view: CardView, color: Int) {
 @BindingAdapter("app:setCafePostDate")
 fun setCafePostDate(view: TextView, postData: Post?) {
     view.text = "${postData?.userName}  |  ${postData?.postDate}"
-}
-
-@BindingAdapter("app:setFollowCount")
-fun setFollowCount(view: TextView, follows: String?) {
-    if (follows != null) {
-        view.text = if (follows.toInt() / 10000 > 0) {
-            val result = follows.toDouble() / 10000
-            "팔로워 ${floor(result * 10) / 10f}만명"
-        } else {
-            "팔로워 ${DecimalFormat("#,###").format(follows)}명"
-        }
-    }
 }
 
 @RequiresApi(Build.VERSION_CODES.M)
