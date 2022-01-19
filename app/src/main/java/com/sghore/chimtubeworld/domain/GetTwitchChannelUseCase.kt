@@ -17,6 +17,7 @@ class GetTwitchChannelUseCase @Inject constructor(
             val channels = repository.getTwitchUserInfo()
             emit(Resource.Success<List<Channel?>>(channels))
         } catch (e: Exception) {
+            e.printStackTrace()
             emit(Resource.Error<List<Channel?>>("데이터를 불러오는데 오류가 발생하였습니다."))
         }
     }

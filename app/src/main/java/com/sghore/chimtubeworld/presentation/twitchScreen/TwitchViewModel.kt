@@ -29,7 +29,7 @@ class TwitchViewModel @Inject constructor(
         getTwitchUserInfo()
     }
 
-    fun getTwitchUserInfo() = viewModelScope.launch {
+    fun getTwitchUserInfo() {
         getTwitchChannelUseCase().onEach { resource ->
             when (resource) {
                 is Resource.Success -> {

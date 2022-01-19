@@ -245,7 +245,6 @@ fun TwitchCrewChannelItem(
 ) {
     Box(
         modifier
-            .fillMaxWidth()
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(bounded = true)

@@ -4,22 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import com.sghore.chimtubeworld.adapter.WebToonAdapter
 import com.sghore.chimtubeworld.databinding.FragmentWebtoonBinding
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
-import com.sghore.chimtubeworld.presentation.ui.custom.GridItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class WebToonFragment : Fragment(), WebToonAdapter.WebToonItemListener {
+class WebToonFragment : Fragment() {
     private val mViewModel by viewModels<WebToonViewModel>()
-    private val spanCount = 2
-
-    private lateinit var webToonAdapter: WebToonAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,48 +23,27 @@ class WebToonFragment : Fragment(), WebToonAdapter.WebToonItemListener {
     ): View {
         // 인스턴스 설정
         val binding = FragmentWebtoonBinding.inflate(inflater)
-        webToonAdapter = WebToonAdapter().apply {
-            setOnItemListener(this@WebToonFragment)
-        }
 
         // 바인딩 설정
         with(binding) {
-            this.viewmodel = mViewModel
-            with(this.webtoonList) {
-                adapter = webToonAdapter
-                layoutManager = GridLayoutManager(requireContext(), spanCount)
-                addItemDecoration(GridItemDecoration(context, spanCount, 12))
-                setHasFixedSize(true)
+            this.composeView.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    WebToonScreen(
+                        viewModel = mViewModel,
+                        onWebToonClick = {
+                            OpenOtherApp(requireContext()).openNaverWebToon(
+                                Contents.NAVER_WEBTOON_PACKAGE_NAME + it.id,
+                                it.url
+                            )
+                        }
+                    )
+                }
             }
 
             lifecycleOwner = viewLifecycleOwner
         }
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setObserver()
-    }
-
-    // 웹툰 클릭 시
-    override fun onItemClickListener(pos: Int) {
-        val webToonData = webToonAdapter.getItem(pos)
-        OpenOtherApp(requireContext()).openNaverWebToon(
-            Contents.NAVER_WEBTOON_PACKAGE_NAME + webToonData.id,
-            webToonData.url
-        )
-    }
-
-    // 옵저버 설정
-    private fun setObserver() {
-        mViewModel.webToonList.observe(viewLifecycleOwner) { toonList ->
-            if (toonList != null) {
-                webToonAdapter.syncData(toonList)
-            } else {
-                mViewModel.getWebToonList()
-            }
-        }
     }
 }

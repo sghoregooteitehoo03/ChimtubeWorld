@@ -9,7 +9,7 @@ class WebToonRepository @Inject constructor(
 
 ) {
 
-    fun getWebToonList(): MutableList<Channel> {
+    fun getWebToonList(): List<Channel> {
         val webToonList = mutableListOf<Channel>()
         val colorList = listOf(
             Color.parseColor("#C3B9A0"),
@@ -65,6 +65,6 @@ class WebToonRepository @Inject constructor(
             webToonList.add(webToon)
         }
 
-        return webToonList
+        return webToonList.toList()
     }
 }
