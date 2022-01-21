@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 
 @Composable
 fun YoutubeScreen(
@@ -95,28 +96,6 @@ fun YoutubeScreen(
 }
 
 @Composable
-fun TitleTextWithExplain(
-    title: String,
-    explain: String
-) {
-    Row(
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Text(
-            text = title,
-            color = colorResource(id = R.color.item_color),
-            fontSize = 22.sp
-        )
-        Spacer(Modifier.width(6.dp))
-        Text(
-            text = explain,
-            color = colorResource(id = R.color.default_text_color),
-            fontSize = 16.sp
-        )
-    }
-}
-
-@Composable
 fun MainYoutubeChannelItem(
     channel: Channel?,
     modifier: Modifier = Modifier,
@@ -181,7 +160,7 @@ fun SubYoutubeChannelRow(
             for (index in 0 until spanCount) {
                 if (channels.size >= rowIndex * spanCount + (index + 1)) {
                     SubYoutubeChannelItem(
-                        channel = channels[rowIndex * 2 + index],
+                        channel = channels[rowIndex * spanCount + index],
                         modifier = Modifier.weight(1f),
                         onClick = onClick
                     )
@@ -202,7 +181,7 @@ fun SubYoutubeChannelRow(
 fun SubYoutubeChannelItem(
     channel: Channel?,
     modifier: Modifier = Modifier,
-    onClick: (Channel?) -> Unit
+    onClick: (Channel?) -> Unit = {}
 ) {
     Box(
         modifier = modifier

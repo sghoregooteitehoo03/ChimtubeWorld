@@ -29,6 +29,7 @@ import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.CafeCategory
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Post
+import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -144,30 +145,6 @@ fun CafeScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun TitleTextWithExplain(
-    title: String,
-    explain: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Text(
-            text = title,
-            color = colorResource(id = R.color.item_color),
-            fontSize = 22.sp
-        )
-        Spacer(Modifier.width(6.dp))
-        Text(
-            text = explain,
-            color = colorResource(id = R.color.default_text_color),
-            fontSize = 16.sp
-        )
     }
 }
 

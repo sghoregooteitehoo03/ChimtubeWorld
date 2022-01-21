@@ -49,9 +49,5 @@ class WebToonViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-//        _webToonList.value = CoroutineScope(Dispatchers.IO).async {
-//            repository.getWebToonList()
-//        }.await()
-//        _isLoading.value = false // 로딩 끝
     }
 }

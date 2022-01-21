@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 
 @Composable
 fun WebToonScreen(
@@ -69,28 +70,6 @@ fun WebToonScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun TitleTextWithExplain(
-    title: String,
-    explain: String
-) {
-    Row(
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Text(
-            text = title,
-            color = colorResource(id = R.color.item_color),
-            fontSize = 22.sp
-        )
-        Spacer(Modifier.width(6.dp))
-        Text(
-            text = explain,
-            color = colorResource(id = R.color.default_text_color),
-            fontSize = 16.sp
-        )
     }
 }
 

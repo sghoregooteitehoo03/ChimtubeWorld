@@ -1,6 +1,7 @@
 package com.sghore.chimtubeworld.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.LinkInfo
@@ -14,25 +15,30 @@ class StoreRepository @Inject constructor(
     private val store: FirebaseFirestore
 ) {
 
-    // 스토어의 이미지를 가져옴
-    suspend fun getStoreInfo(): List<Channel> {
-        val storeInfoList = mutableListOf<Channel>()
-        val documents = store.collection(Contents.COLLECTION_GOODS_LINK)
+    // firebase에 저장된 굿즈 스토어에 링크를 가져옴
+    suspend fun getStoreLinkData() =
+        store.collection(Contents.COLLECTION_GOODS_LINK)
             .get()
             .await()
+            .map {
+                LinkInfo(
+                    id = it["id"] as String,
+                    url = it["url"] as String,
+                    explain = it["explain"] as String
+                )
+            }
 
-        // 스토어의 링크를 가져옴
-        documents.forEach { document ->
-            val linkInfo = LinkInfo(
-                id = document["id"] as String,
-                url = document["url"] as String,
-                explain = document["explain"] as String
-            )
+    // 굿즈 스토어의 링크를 통해 이미지와 이름을 가져옴
+    fun getStoreInfo(storeLinkList: List<LinkInfo>): List<Channel> {
+        // 데이터의 형식을 바꿈
+        return storeLinkList.map { linkInfo ->
+            // 스토어의 이미지를 가져옴
             val image = getStoreImage(
                 linkInfo.id.split("|")[0], // 이미지를 읽어올 url
                 linkInfo.id.split("|")[1] // 이미지의 ID
             )
-            val storeInfo = Channel(
+
+            Channel(
                 id = "",
                 name = linkInfo.explain,
                 explains = arrayOf(),
@@ -40,11 +46,7 @@ class StoreRepository @Inject constructor(
                 image = image,
                 type = 0
             )
-
-            storeInfoList.add(storeInfo)
         }
-
-        return storeInfoList.toList()
     }
 
     fun getGoodsList(url: String): List<Goods> {
