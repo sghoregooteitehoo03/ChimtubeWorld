@@ -5,4 +5,9 @@ data class CafeCategory(
     val categoryId: Int
 ) {
     var isSelected = false
+
+    override fun equals(other: Any?): Boolean {
+        other as CafeCategory
+        return categoryId == other.categoryId
+    }
 }

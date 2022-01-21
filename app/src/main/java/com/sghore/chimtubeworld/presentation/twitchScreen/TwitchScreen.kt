@@ -288,11 +288,9 @@ fun TwitchCrewChannelItem(
 @Composable
 fun TitleTextWithExplain(
     title: String,
-    explain: String,
-    modifier: Modifier = Modifier
+    explain: String
 ) {
     Row(
-        modifier = modifier,
         verticalAlignment = Alignment.Bottom
     ) {
         Text(

@@ -15,9 +15,9 @@ import javax.inject.Inject
 class CafeRepository @Inject constructor(
     private val dao: Dao
 ) {
-    fun getCafePosts(categoryId: LiveData<Int>) =
+    fun getCafePosts(categoryId: Int) =
         Pager(PagingConfig(10)) {
-            CafePostPagingSource(categoryId.value ?: -1, dao)
+            CafePostPagingSource(categoryId, dao)
         }.flow
 
     // 침착맨 팬카페의 정보를 가져옴

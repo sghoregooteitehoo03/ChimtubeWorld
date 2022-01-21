@@ -7,8 +7,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -95,16 +93,6 @@ fun setButtonEnable(view: Button, isEnable: Boolean) {
 
     view.isEnabled = isEnable
     view.backgroundTintList = color
-}
-
-@BindingAdapter("app:setCardBackgroundColor")
-fun setCardBackgroundColor(view: CardView, color: Int) {
-    view.setCardBackgroundColor(color)
-}
-
-@BindingAdapter("app:setCafePostDate")
-fun setCafePostDate(view: TextView, postData: Post?) {
-    view.text = "${postData?.userName}  |  ${postData?.postDate}"
 }
 
 @RequiresApi(Build.VERSION_CODES.M)
