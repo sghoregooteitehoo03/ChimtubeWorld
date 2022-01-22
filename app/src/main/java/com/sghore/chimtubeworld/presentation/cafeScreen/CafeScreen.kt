@@ -36,6 +36,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 // Todo:
 //  . Collapsing 시 렉 걸리는 버그 고치기
+//  . 카페 글을 본 후 네비게이션 한 다음 다시 돌아오면 히스토리가 적용 안되는 버그 수정
 
 @Composable
 fun CafeScreen(

@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.LinkInfo
+import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserDataDTO
@@ -13,31 +14,52 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.time.Duration
 
 class TwitchRepository @Inject constructor(
     private val store: FirebaseFirestore,
     private val retrofitBuilder: Retrofit.Builder
 ) {
 
-    // 트위치 채널의 정보를 가져옴
-    suspend fun getTwitchUserInfo(): List<Channel?> {
-        val retrofitService = retrofitBuilder.baseUrl(Contents.TWITCH_API_URL)
-            .build()
-            .create(RetrofitService::class.java)
-        // Twitch Id 및 설명을 가져옴
-        val documents = store.collection(Contents.COLLECTION_TWITCH_LINK)
+    // Twitch Id 및 설명을 가져옴
+    suspend fun getChannelLinkData() =
+        store.collection(Contents.COLLECTION_TWITCH_LINK)
             .get()
             .await()
             .documents
-        val accessKey = "Bearer ${documents[0].get("AUTH").toString()}" // API 액세스 키
+            .map { document ->
+                LinkInfo(
+                    id = document["id"] as String,
+                    url = document["url"]?.toString() ?: "",
+                    explain = document["explain"]?.toString() ?: "",
+                    type = (document["type"] as Long).toInt()
+                )
+            }
+
+    // Api 키를 가져옴
+    suspend fun getTwitchAccessKey() =
+        "Bearer " + store.collection(Contents.COLLECTION_TWITCH_LINK) // API 요청 키
+            .document("-1")
+            .get()
+            .await()["AUTH"]
+            .toString()
+
+    // 트위치 채널의 정보를 가져옴
+    suspend fun getTwitchUserInfo(
+        channelLinkList: List<LinkInfo>,
+        accessKey: String
+    ): List<Channel?> {
+        val retrofitService = getRetrofit()
 
         // 채널 리스트
-        val channelList = arrayOfNulls<Channel>(documents.size - 1) // AccessKey 제외
+        val channelList = arrayOfNulls<Channel>(channelLinkList.size - 1) // AccessKey 제외
             .toMutableList()
         // 채널 아이디 배열
-        val channelIdArr = documents.filter { (it["type"] as Long).toInt() != -1 }.map {
-            (it["id"] as String)
+        val channelIdArr = channelLinkList.filter { it.type != -1 }.map {
+            it.id
         }.toTypedArray()
 
         // Twitch API를 통해 채널의 정보를 가져옴
@@ -46,17 +68,9 @@ class TwitchRepository @Inject constructor(
         result.data.forEach { userData ->
             // 채널들을 배열순서에 맞쳐 리스트에 집어넣기 위한 인덱스 값
             val index = channelIdArr.indexOf(userData.login)
-            val document = documents[index + 1]
-            val type = (document["type"] as Long).toInt()
+            val linkInfo = channelLinkList[index + 1]
 
-            val linkInfo = LinkInfo(
-                id = document["id"] as String,
-                url = document["url"] as String,
-                explain = document["explain"] as String,
-                type = type
-            )
-
-            val channelData = if (type == 0) { // 침착맨 채널의 정보일 때
+            val channelData = if (linkInfo.type == 0) { // 침착맨 채널의 정보일 때
                 getTwitchUserState(
                     retrofitService,
                     accessKey,
@@ -80,6 +94,54 @@ class TwitchRepository @Inject constructor(
         }
 
         return channelList.toList()
+    }
+
+    // 트위치에서 영상 정보를 가져옴
+    suspend fun getVideo(
+        url: String,
+        baseUrl: String,
+        accessKey: String
+    ): Video {
+        val videoId = url.substringAfter("https://${baseUrl}/")
+            .substringAfter("/v/", "")
+            .substringBefore("?sr")
+
+        if (videoId.isEmpty()) { // 오류 발생 시
+            throw NullPointerException()
+        }
+
+        val retrofit = getRetrofit()
+        val videoData = retrofit.getTVideoFromVideoId(
+            accessKey = accessKey,
+            videoId = videoId
+        ).await()
+
+        return videoData.data[0].let { response ->
+            val dateFormat = SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                Locale.KOREA
+            )
+            // 업로드 시간
+            val uploadTime =
+                dateFormat.parse(response.publishedAt).time + 32400000 // (+9 Hours) UTC -> KOREA
+            // 영상 길이
+            val duration = Duration.parse(response.duration)
+                .inWholeMilliseconds - 32400000 // (-9 Hours) KOREA -> UTC
+            val thumbnailImage = response.thumbnailUrl // 썸네일 이미지
+                .replace("%{width}", "1920")
+                .replace("%{height}", "1080")
+
+            Video(
+                id = response.id, // 아이디
+                channelName = response.userName,
+                title = response.title, // 제목
+                thumbnail = thumbnailImage,
+                uploadTime = uploadTime,
+                viewCount = response.viewCount, // 조회수
+                duration = duration,
+                url = response.url
+            )
+        }
     }
 
     // 침착맨의 팔로워 방송여부 등을 가져옴
@@ -122,4 +184,9 @@ class TwitchRepository @Inject constructor(
         Log.i("Check", "data: $channelData")
         return channelData
     }
+
+    private fun getRetrofit() =
+        retrofitBuilder.baseUrl(Contents.TWITCH_API_URL)
+            .build()
+            .create(RetrofitService::class.java)
 }

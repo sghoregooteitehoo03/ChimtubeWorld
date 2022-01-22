@@ -15,11 +15,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.adapter.StoreDetailPagerAdapter
 import com.sghore.chimtubeworld.databinding.ActivityMainBinding
-import com.sghore.chimtubeworld.presentation.addBookmarkScreen.AddBookmarkFragmentDirections
+import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 // TODO:
 //  . StoreDetailFragment 재구성 버그 수정 ㅁ
+//  . Compose 부분적 마이그레이션 ㅁ
+//  . 다크모드 clickable 애니메이션 안보이는 버그 수정
+//  . repository 기능별 분리
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val globalViewModel by viewModels<GlobalViewModel>()

@@ -68,7 +68,7 @@
 
     <fragment
         android:id="@+id/addBookmarkFragment"
-        android:name="com.sghore.chimtubeworld.presentation.addBookmarkScreen.AddBookmarkFragment"
+        android:name="com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkFragment"
         android:label="AddBookmarkFragment"
         tools:layout="@layout/fragment_add_bookmark">
         <argument
@@ -77,7 +77,7 @@
     </fragment>
     <fragment
         android:id="@+id/editBookmarkFragment"
-        android:name="com.sghore.chimtubeworld.presentation.editBookmarkScreen.EditBookmarkFragment"
+        android:name="com.sghore.chimtubeworld.presentation.bookmarkScreen.EditBookmarkFragment"
         android:label="EditBookmarkFragment"
         tools:layout="@layout/fragment_add_bookmark" >
         <argument
