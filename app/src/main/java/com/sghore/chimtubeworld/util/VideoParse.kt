@@ -90,3 +90,20 @@ fun parseUploadTimeText(uploadTime: Long): String {
         }
     }
 }
+
+// 시간 데이터를 시:분:초 String으로 변환하여 반환
+fun parseDateTextFromPosition(videoPosition: Long): String {
+    val dateFormat = if (videoPosition >= -28800000) { // 01:00:00
+        SimpleDateFormat(
+            "hh:mm:ss",
+            Locale.KOREA
+        )
+    } else {
+        SimpleDateFormat(
+            "mm:ss",
+            Locale.KOREA
+        )
+    }
+
+    return dateFormat.format(videoPosition)
+}

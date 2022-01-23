@@ -44,6 +44,7 @@
         <entry key="../../../../layout/compose-model-1642825600836.xml" value="0.25" />
         <entry key="../../../../layout/compose-model-1642828664970.xml" value="0.25" />
         <entry key="../../../../layout/compose-model-1642828664976.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642935381411.xml" value="0.20092592592592592" />
         <entry key="../../../../layout/custom_preview.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/drawable-small/splash.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable-v24/shape_corner_rec_large.xml" value="0.122" />
@@ -87,6 +88,7 @@
         <entry key="app/src/main/res/drawable/shape_rounded_dialog.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/shape_sideded_rounded_rec.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/dialog_select_bookmark.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_select_position.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_add_bookmark.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_cafe.xml" value="0.25" />

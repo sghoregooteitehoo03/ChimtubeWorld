@@ -6,21 +6,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.DialogFragment
-import com.sghore.chimtubeworld.adapter.VideoPositionAdapter
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.databinding.DialogSelectBookmarkBinding
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
-import com.sghore.chimtubeworld.presentation.ui.custom.LinearItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SelectBookmarkDialog(
     private val packageName: String? = null,
     private val videoData: Video? = null
-) : DialogFragment(), VideoPositionAdapter.VideoPositionItemListener {
-    private lateinit var videoPositionAdapter: VideoPositionAdapter
+) : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,24 +33,17 @@ class SelectBookmarkDialog(
 
         // 인스턴스 설정
         val binding = DialogSelectBookmarkBinding.inflate(inflater)
-        videoPositionAdapter = VideoPositionAdapter(
-            videoData.bookmarks
-                .toMutableList()
-        ).apply {
-            setOnItemListener(this@SelectBookmarkDialog)
-        }
 
         // 바인딩 설정
         with(binding) {
-            with(this.videoPositionList) {
-                adapter = videoPositionAdapter
-                addItemDecoration(
-                    LinearItemDecoration(
-                        requireContext(),
-                        12,
-                        false
+            this.composeView.apply {
+                setContent {
+                    setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                    SelectBookmarkScreen(
+                        bookmarkList = videoData.bookmarks,
+                        onBookmarkClick = ::clickBookmark
                     )
-                )
+                }
             }
             lifecycleOwner = viewLifecycleOwner
         }
@@ -65,10 +56,9 @@ class SelectBookmarkDialog(
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    // 아이템 클릭 이벤트
-    override fun onItemClickListener(pos: Int) {
-        val bookmark = videoPositionAdapter.getItem(pos)
-        val seconds = getSecondsFromPosition(bookmark?.videoPosition ?: -32400000)
+    // 북마크 클릭 이벤트
+    private fun clickBookmark(videoPosition: Long) {
+        val seconds = getSecondsFromPosition(videoPosition)
         val url = getUrlWithSeconds(seconds)
 
         openApplication(url)

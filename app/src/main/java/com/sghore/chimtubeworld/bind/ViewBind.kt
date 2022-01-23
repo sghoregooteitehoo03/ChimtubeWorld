@@ -1,25 +1,14 @@
 package com.sghore.chimtubeworld.bind
 
-import android.os.Build
-import android.os.Parcelable
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Post
 import com.sghore.chimtubeworld.data.model.Video
-import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -51,28 +40,6 @@ fun setImage(view: ImageView, stringImage: String?, imageRes: Int?) {
     }
 }
 
-@BindingAdapter("app:setCircleImage")
-fun setCircleImage(view: CircleImageView, stringImage: String?) {
-    if (stringImage != null) {
-        Glide.with(view.context)
-            .load(stringImage)
-            .into(view)
-    }
-}
-
-@BindingAdapter("app:setScrollPosition")
-fun setScrollPosition(view: RecyclerView, pos: Int) {
-    view.scrollToPosition(pos)
-}
-
-@BindingAdapter("app:restoreListState")
-fun restoreListState(view: RecyclerView, saveState: Parcelable?) {
-    CoroutineScope(Dispatchers.Main).launch {
-        delay(10)
-        view.layoutManager?.onRestoreInstanceState(saveState)
-    }
-}
-
 @BindingAdapter("app:setImageBlur")
 fun setImageBlur(view: ImageView, isBlur: Boolean) {
 
@@ -81,29 +48,6 @@ fun setImageBlur(view: ImageView, isBlur: Boolean) {
     } else {
         view.setColorFilter(ContextCompat.getColor(view.context, R.color.black_alpha_50))
     }
-}
-
-@BindingAdapter("app:setButtonEnable")
-fun setButtonEnable(view: Button, isEnable: Boolean) {
-    val color = if (isEnable) {
-        view.resources.getColorStateList(R.color.item_color, null)
-    } else {
-        view.resources.getColorStateList(R.color.gray_night, null)
-    }
-
-    view.isEnabled = isEnable
-    view.backgroundTintList = color
-}
-
-@RequiresApi(Build.VERSION_CODES.M)
-@BindingAdapter("app:setSelectedText")
-fun setSelectedText(view: TextView, isSelected: Boolean) {
-    val color = if (isSelected) {
-        view.resources.getColor(R.color.item_color, null)
-    } else {
-        view.resources.getColor(android.R.color.tab_indicator_text, null)
-    }
-    view.setTextColor(color)
 }
 
 @BindingAdapter("app:setVideoDurationText")
