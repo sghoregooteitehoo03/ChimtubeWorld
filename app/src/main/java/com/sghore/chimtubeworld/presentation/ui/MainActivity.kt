@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 //  . Compose 부분적 마이그레이션 ㅁ
 //  . 다크모드 clickable 애니메이션 안보이는 버그 수정
 //  . repository 기능별 분리
+//  . 앱 아이콘, 아이콘, 스플래쉬 화면 이미지 변경
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val globalViewModel by viewModels<GlobalViewModel>()
