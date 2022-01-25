@@ -48,26 +48,11 @@ class TwitchPagingSource(
             ).await()
 
             val nextKey = videosResult.pagination.cursor // 다음 페이지
-            val prevKey = if (pageKey.isNotEmpty()) { // 이전 페이지
-                try {
-                    retrofitService.getTVideosFromUserIdBefore(
-                        "Bearer $accessKey",
-                        channelId,
-                        pageKey
-                    ).await()
-                        .pagination
-                        .cursor
-                } catch (e: Exception) {
-                    ""
-                }
-            } else {
-                null
-            }
             val videoList = translateVideoData(videosResult.data, pageKey) // 영상 리스트
 
             return LoadResult.Page(
                 data = videoList,
-                prevKey = prevKey,
+                prevKey = null,
                 nextKey = nextKey
             )
         } catch (e: Exception) {
@@ -79,9 +64,7 @@ class TwitchPagingSource(
     // Video 데이터 포맷에 맞게 변환
     private suspend fun translateVideoData(videosData: List<VideosDataDTO>, currentPage: String) =
         videosData.map { videoData ->
-            val bookmarks = CoroutineScope(Dispatchers.IO).async {
-                dao.getBookmarks(videoData.id)
-            }.await() // 해당 영상 아이디에 해당하는 북마크를 가져옴
+            val bookmarks = dao.getBookmarks(videoData.id) // 해당 영상 아이디에 해당하는 북마크를 가져옴
             val dateFormat = SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss'Z'",
                 Locale.KOREA

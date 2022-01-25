@@ -44,6 +44,7 @@ class EditBookmarkFragment : Fragment() {
                 setContent {
                     EditBookmarkScreen(
                         viewModel = mViewModel,
+                        gViewModel = gViewModel,
                         navController = findNavController(),
                         video = videoData,
                         bookmark = bookmark,
@@ -89,6 +90,7 @@ class EditBookmarkFragment : Fragment() {
         with(MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)) {
             setMessage("북마크를 삭제하시겠습니까?")
             setPositiveButton("확인") { dialog, which ->
+                dialog.dismiss()
                 mViewModel.deleteBookmark(bookmark)
             }
             setNegativeButton("취소") { dialog, which ->

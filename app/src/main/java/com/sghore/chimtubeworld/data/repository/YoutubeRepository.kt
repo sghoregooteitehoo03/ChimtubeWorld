@@ -1,9 +1,13 @@
 package com.sghore.chimtubeworld.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sghore.chimtubeworld.data.db.Dao
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.LinkInfo
 import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.data.repository.dataSource.YoutubePagingSource
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import kotlinx.coroutines.tasks.await
@@ -16,8 +20,20 @@ import kotlin.time.Duration
 
 class YoutubeRepository @Inject constructor(
     private val store: FirebaseFirestore,
-    private val retrofitBuilder: Retrofit.Builder
+    private val retrofitBuilder: Retrofit.Builder,
+    private val dao: Dao
 ) {
+
+    // 유튜브 영상을 페이징하여 가져옴
+    fun getVideos(channelId: String) =
+        Pager(PagingConfig(20)) {
+            val retrofitService = getRetrofit()
+            YoutubePagingSource(
+                channelId = channelId,
+                retrofitService = retrofitService,
+                dao = dao
+            )
+        }.flow
 
     // 채널의 Id 및 API에서 가져오지 못하는 부가설명을 가져옴
     suspend fun getChannelLinkData() =

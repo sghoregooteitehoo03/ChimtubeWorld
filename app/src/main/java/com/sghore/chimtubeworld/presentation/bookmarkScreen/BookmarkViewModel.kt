@@ -115,9 +115,11 @@ class BookmarkViewModel @Inject constructor(
                     )
 
                     repository.addBookmark(bookmark)
+
+                    val id = repository.getItemId(bookmark)
                     state = state.copy(
                         errorMsg = "북마크가 추가되었습니다.",
-                        isComplete = true
+                        completeBookmark = bookmark.copy(id = id)
                     )
                 } else { // 북마크 수정
                     val bookmark =
@@ -132,7 +134,7 @@ class BookmarkViewModel @Inject constructor(
                     repository.editBookmark(bookmark)
                     state = state.copy(
                         errorMsg = "북마크가 수정되었습니다",
-                        isComplete = true
+                        completeBookmark = bookmark
                     )
                 }
             } else {
@@ -159,10 +161,9 @@ class BookmarkViewModel @Inject constructor(
 
     fun deleteBookmark(bookmark: Bookmark) = viewModelScope.launch {
         repository.deleteBookmark(bookmark)
-
-        state = BookmarkScreenState(
+        state = state.copy(
             errorMsg = "북마크가 삭제 되었습니다.",
-            isComplete = true
+            completeBookmark = bookmark.copy(title = "", videoPosition = 0)
         )
     }
 

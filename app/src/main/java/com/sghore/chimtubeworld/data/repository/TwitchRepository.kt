@@ -1,10 +1,15 @@
 package com.sghore.chimtubeworld.data.repository
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sghore.chimtubeworld.data.db.Dao
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.LinkInfo
 import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.data.repository.dataSource.TwitchPagingSource
+import com.sghore.chimtubeworld.data.repository.dataSource.YoutubePagingSource
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserDataDTO
@@ -21,8 +26,21 @@ import kotlin.time.Duration
 
 class TwitchRepository @Inject constructor(
     private val store: FirebaseFirestore,
-    private val retrofitBuilder: Retrofit.Builder
+    private val retrofitBuilder: Retrofit.Builder,
+    private val dao: Dao
 ) {
+
+    // 트위치 영상을 페이징하여 가져옴
+    fun getVideos(channelId: String) =
+        Pager(PagingConfig(20)) {
+            val retrofitService = getRetrofit()
+            TwitchPagingSource(
+                channelId = channelId,
+                retrofitService = retrofitService,
+                dao = dao,
+                store = store
+            )
+        }.flow
 
     // Twitch Id 및 설명을 가져옴
     suspend fun getChannelLinkData() =

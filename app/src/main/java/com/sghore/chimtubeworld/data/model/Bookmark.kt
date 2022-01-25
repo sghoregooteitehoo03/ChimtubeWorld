@@ -11,4 +11,9 @@ data class Bookmark(
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "video_position") val videoPosition: Long,
     @ColumnInfo(name = "color") val color: Int
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        other as Bookmark?
+        return other?.id == id
+    }
+}

@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.adapter
+package com.sghore.chimtubeworld.presentation.ui.adapter
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle

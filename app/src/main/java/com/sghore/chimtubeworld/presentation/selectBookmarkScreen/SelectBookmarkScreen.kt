@@ -32,7 +32,10 @@ fun SelectBookmarkScreen(
     onBookmarkClick: (Long) -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(color = colorResource(id = R.color.default_background_color)),
         contentAlignment = Alignment.TopCenter
     ) {
         Column {

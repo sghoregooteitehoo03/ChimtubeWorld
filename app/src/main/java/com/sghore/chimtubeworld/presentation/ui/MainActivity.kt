@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.adapter.StoreDetailPagerAdapter
+import com.sghore.chimtubeworld.presentation.ui.adapter.StoreDetailPagerAdapter
 import com.sghore.chimtubeworld.databinding.ActivityMainBinding
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,8 +86,8 @@ class MainActivity : AppCompatActivity() {
                         supportActionBar?.setDisplayHomeAsUpEnabled(false)
                         supportActionBar?.title = ""
 
-                        if (globalViewModel.refreshList.value == true) {
-                            globalViewModel.refreshList.value = false
+                        if (globalViewModel.bookmarkData.value != null) {
+                            globalViewModel.bookmarkData.value = null
                         }
                     }
                 }

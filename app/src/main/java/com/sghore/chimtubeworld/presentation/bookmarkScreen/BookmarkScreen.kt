@@ -27,6 +27,7 @@ import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import com.sghore.chimtubeworld.util.parseUploadTimeText
 import com.sghore.chimtubeworld.util.parseVideoDurationText
 import com.sghore.chimtubeworld.util.parseViewCountText
@@ -37,6 +38,7 @@ import kotlin.time.Duration
 @Composable
 fun BookmarkScreen(
     viewModel: BookmarkViewModel,
+    gViewModel: GlobalViewModel,
     navController: NavController,
     buttonText: String,
     onButtonClick: () -> Unit = {}
@@ -61,7 +63,8 @@ fun BookmarkScreen(
                 .show()
             viewModel.clearMsg()
         }
-        if (viewModel.state.isComplete) {
+        viewModel.state.completeBookmark?.let {
+            gViewModel.bookmarkData.value = it
             navController.navigateUp()
         }
     }
@@ -172,6 +175,7 @@ fun BookmarkScreen(
 @Composable
 fun AddBookmarkScreen(
     viewModel: BookmarkViewModel,
+    gViewModel: GlobalViewModel,
     navController: NavController,
     videoUrl: String
 ) {
@@ -179,6 +183,7 @@ fun AddBookmarkScreen(
 
     BookmarkScreen(
         viewModel = viewModel,
+        gViewModel = gViewModel,
         navController = navController,
         buttonText = "만들기",
         onButtonClick = {
@@ -190,6 +195,7 @@ fun AddBookmarkScreen(
 @Composable
 fun EditBookmarkScreen(
     viewModel: BookmarkViewModel,
+    gViewModel: GlobalViewModel,
     navController: NavController,
     video: Video,
     bookmark: Bookmark,
@@ -203,6 +209,7 @@ fun EditBookmarkScreen(
 
     BookmarkScreen(
         viewModel = viewModel,
+        gViewModel = gViewModel,
         navController = navController,
         buttonText = "수정하기",
         onButtonClick = {

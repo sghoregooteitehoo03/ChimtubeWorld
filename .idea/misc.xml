@@ -45,6 +45,9 @@
         <entry key="../../../../layout/compose-model-1642828664970.xml" value="0.25" />
         <entry key="../../../../layout/compose-model-1642828664976.xml" value="0.25" />
         <entry key="../../../../layout/compose-model-1642935381411.xml" value="0.20092592592592592" />
+        <entry key="../../../../layout/compose-model-1642993422457.xml" value="0.19722222222222222" />
+        <entry key="../../../../layout/compose-model-1642997690612.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642997732640.xml" value="0.22" />
         <entry key="../../../../layout/custom_preview.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/drawable-small/splash.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable-v24/shape_corner_rec_large.xml" value="0.122" />
@@ -96,10 +99,10 @@
         <entry key="app/src/main/res/layout/fragment_store_detail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_video.xml" value="0.28229166666666666" />
-        <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.11" />
+        <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_webtoon.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_youtube.xml" value="0.18" />
-        <entry key="app/src/main/res/layout/item_bookmark.xml" value="0.16" />
+        <entry key="app/src/main/res/layout/item_bookmark.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_bookmark_color.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_cafe_category.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_cafe_post.xml" value="0.19" />

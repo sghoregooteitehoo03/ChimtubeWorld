@@ -36,7 +36,6 @@ class YoutubePagingSource(
                 .toTypedArray() // 동영상 아이디 배열
 
             val nextKey = playlistItems.nextPageToken // 다음 페이지
-            val prevKey = playlistItems.prevPageToken
             val videoList = getYoutubeVideos(
                 retrofitService = retrofitService,
                 videoIdArray = videoIdArray,
@@ -45,7 +44,7 @@ class YoutubePagingSource(
 
             return LoadResult.Page(
                 data = videoList,
-                prevKey = prevKey,
+                prevKey = null,
                 nextKey = nextKey
             )
         } catch (e: Exception) {
@@ -64,9 +63,7 @@ class YoutubePagingSource(
             .await()
 
         return videosResponse.items.map { response ->
-            val bookmarks = CoroutineScope(Dispatchers.IO).async {
-                dao.getBookmarks(response.id)
-            }.await() // 해당 영상 아이디에 해당하는 북마크를 가져옴
+            val bookmarks = dao.getBookmarks(response.id) // 해당 영상 아이디에 해당하는 북마크를 가져옴
             val dateFormat = SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss'Z'",
                 Locale.KOREA

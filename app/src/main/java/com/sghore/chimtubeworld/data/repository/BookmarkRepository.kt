@@ -31,4 +31,14 @@ class BookmarkRepository @Inject constructor(
     suspend fun deleteBookmark(bookmark: Bookmark) {
         dao.deleteBookmark(bookmark)
     }
+
+    // 북마크의 아이디를 조회함
+    suspend fun getItemId(bookmark: Bookmark) =
+        dao.getBookmarkItemId(
+            videoId = bookmark.videoId,
+            title = bookmark.title,
+            videoPosition = bookmark.videoPosition,
+            color = bookmark.color
+        )
+
 }
