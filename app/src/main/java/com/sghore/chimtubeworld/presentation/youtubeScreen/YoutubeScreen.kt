@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,11 +31,10 @@ fun YoutubeScreen(
     viewModel: YoutubeViewModel,
     onClick: (Channel?) -> Unit
 ) {
-    val state = viewModel.state.value
     val scrollState = rememberScrollState()
 
-    val mainChannelList = state.channels?.filter { it?.type == 0 } ?: listOf()
-    val subChannelList = state.channels?.filter { it?.type == 1 } ?: listOf()
+    val mainChannelList = viewModel.state.channels?.filter { it?.type == 0 } ?: listOf()
+    val subChannelList = viewModel.state.channels?.filter { it?.type == 1 } ?: listOf()
 
     val spanCount = 2
     val itemCount = if (subChannelList.size % spanCount == 0) {
@@ -48,14 +48,9 @@ fun YoutubeScreen(
             .fillMaxWidth()
             .verticalScroll(scrollState)
     ) {
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
-            )
-        } else {
-            Column(modifier = Modifier.padding(12.dp)) {
+
+        Column(modifier = Modifier.padding(12.dp)) {
+            if (!viewModel.state.isLoading) {
                 TitleTextWithExplain(
                     title = "Youtube",
                     explain = "침튜브 채널"
@@ -92,6 +87,14 @@ fun YoutubeScreen(
                 }
             }
         }
+
+        if (viewModel.state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
+            )
+        }
     }
 }
 
@@ -107,7 +110,10 @@ fun MainYoutubeChannelItem(
             .background(colorResource(id = R.color.gray_bright_night))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true)
+                indication = rememberRipple(
+                    bounded = true,
+                    color = colorResource(id = R.color.item_color)
+                )
             ) {
                 onClick(channel)
             }
@@ -187,7 +193,10 @@ fun SubYoutubeChannelItem(
         modifier = modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true)
+                indication = rememberRipple(
+                    bounded = true,
+                    color = colorResource(id = R.color.item_color)
+                )
             ) {
                 onClick(channel)
             }

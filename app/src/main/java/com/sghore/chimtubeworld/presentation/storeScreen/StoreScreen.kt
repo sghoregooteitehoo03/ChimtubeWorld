@@ -37,12 +37,9 @@ fun StoreScreen(
     onCategoryClick: (String) -> Unit,
     onGoodsClick: (List<Goods>, Int) -> Unit
 ) {
-    val state = viewModel.state.value
-
-    val storeInfoList = state.storeInfoList
     var goodsList by remember { mutableStateOf(listOf<Goods>()) }
-    LaunchedEffect(key1 = state.goodsList) {
-        state.goodsList?.collect {
+    LaunchedEffect(key1 = viewModel.state.goodsList) {
+        viewModel.state.goodsList?.collect {
             goodsList = it
         }
     }
@@ -57,14 +54,9 @@ fun StoreScreen(
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
-            )
-        } else {
-            LazyColumn() {
+
+        LazyColumn() {
+            if (!viewModel.state.isLoading) {
                 item {
                     TitleTextWithExplain(
                         title = "Goods",
@@ -74,8 +66,8 @@ fun StoreScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     StoreInfoCategoryList(
-                        storeInfoList = storeInfoList,
-                        state.selectedStoreUrl,
+                        storeInfoList = viewModel.state.storeInfoList,
+                        selectedStoreUrl = viewModel.state.selectedStoreUrl,
                         onClick = onCategoryClick
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -92,6 +84,14 @@ fun StoreScreen(
                     )
                 }
             }
+        }
+
+        if (viewModel.state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
+            )
         }
     }
 }

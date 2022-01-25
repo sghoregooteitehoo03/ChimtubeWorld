@@ -34,8 +34,7 @@ fun WebToonScreen(
     viewModel: WebToonViewModel,
     onWebToonClick: (Channel) -> Unit
 ) {
-    val state = viewModel.state.value
-    val webToonList = state.webtoos ?: emptyList()
+    val webToonList = viewModel.state.webtoos ?: emptyList()
 
     val spanCount = 2
     val itemCount = if (webToonList.size % spanCount == 0) {
@@ -45,14 +44,8 @@ fun WebToonScreen(
     }
 
     Box(modifier = Modifier.fillMaxWidth()) {
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
-            )
-        } else {
-            LazyColumn(contentPadding = PaddingValues(12.dp)) {
+        LazyColumn(contentPadding = PaddingValues(12.dp)) {
+            if (!viewModel.state.isLoading) {
                 item {
                     TitleTextWithExplain(
                         title = "WebToon",
@@ -60,6 +53,7 @@ fun WebToonScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
+
                 items(itemCount) { index ->
                     WebToonRow(
                         rowIndex = index,
@@ -69,6 +63,14 @@ fun WebToonScreen(
                     )
                 }
             }
+        }
+
+        if (viewModel.state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
+            )
         }
     }
 }

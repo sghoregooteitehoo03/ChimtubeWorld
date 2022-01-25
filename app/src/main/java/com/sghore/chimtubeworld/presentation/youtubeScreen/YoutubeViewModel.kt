@@ -1,12 +1,10 @@
 package com.sghore.chimtubeworld.presentation.youtubeScreen
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.domain.GetYoutubeChannelUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +17,8 @@ import javax.inject.Inject
 class YoutubeViewModel @Inject constructor(
     private val getYoutubeChannelUseCase: GetYoutubeChannelUseCase
 ) : ViewModel() {
-    private val _state = mutableStateOf(YoutubeScreenState())
-    val state: State<YoutubeScreenState> = _state
+    var state by mutableStateOf(YoutubeScreenState())
+        private set
 
     init {
         getChannelInfo()
@@ -28,15 +26,15 @@ class YoutubeViewModel @Inject constructor(
 
     fun getChannelInfo() = viewModelScope.launch {
         getYoutubeChannelUseCase().onEach { resource ->
-            when (resource) {
+            state = when (resource) {
                 is Resource.Success -> {
-                    _state.value = YoutubeScreenState(channels = resource.data)
+                    YoutubeScreenState(channels = resource.data)
                 }
                 is Resource.Loading -> {
-                    _state.value = YoutubeScreenState(isLoading = true)
+                    YoutubeScreenState(isLoading = true)
                 }
                 is Resource.Error -> {
-                    _state.value = YoutubeScreenState(errorMsg = resource.errorMsg ?: "오류")
+                    YoutubeScreenState(errorMsg = resource.errorMsg ?: "오류")
                 }
             }
         }.launchIn(viewModelScope)

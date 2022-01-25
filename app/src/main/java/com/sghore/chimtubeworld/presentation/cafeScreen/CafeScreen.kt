@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,9 +46,7 @@ fun CafeScreen(
     onCafeCategoryClick: (CafeCategory) -> Unit,
     onCafePostClick: (Post?) -> Unit
 ) {
-    val state = viewModel.state.value // 뷰 상태
     val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
-    val scrollState = rememberScrollState() // collapsing 스크롤 상태
     val readState = remember { mutableStateMapOf<Int, Boolean>() } // 게시글 아이템 읽음 여부
 
     // 카테고리 리스트
@@ -64,7 +63,7 @@ fun CafeScreen(
         CafeCategory("찾아주세요", 56)
     )
     // 게시글 리스트
-    val postList: LazyPagingItems<Post>? = state.cafePosts?.collectAsLazyPagingItems()
+    val postList: LazyPagingItems<Post>? = viewModel.state.cafePosts?.collectAsLazyPagingItems()
 
     CollapsingToolbarScaffold(
         modifier = Modifier
@@ -73,7 +72,7 @@ fun CafeScreen(
         scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
         toolbarModifier = Modifier
             .verticalScroll(
-                state = scrollState,
+                state = rememberScrollState(),
                 enabled = collapsingState.toolbarState.progress != 0f
             )
             .background(
@@ -101,7 +100,7 @@ fun CafeScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 CafeInfoBanner(
-                    cafeInfo = state.cafeInfo,
+                    cafeInfo = viewModel.state.cafeInfo,
                     modifier = Modifier.padding(start = 12.dp, end = 12.dp),
                     onClick = onCafeBannerClick
                 )
@@ -115,7 +114,7 @@ fun CafeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 CafeCategoryList(
                     categoryList = categoryList,
-                    selectedCategoryId = state.cafeCategoryId,
+                    selectedCategoryId = viewModel.state.cafeCategoryId,
                     onClick = {
                         readState.clear()
                         onCafeCategoryClick(it)
@@ -168,7 +167,7 @@ fun CafeInfoBanner(
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true)
+                indication = rememberRipple()
             ) {
                 onClick(cafeInfo)
             },
@@ -178,7 +177,7 @@ fun CafeInfoBanner(
             modifier = Modifier
                 .size(168.dp)
                 .background(
-                    color = colorResource(id = R.color.item_reverse_color),
+                    color = Color.White,
                     shape = CircleShape
                 )
                 .clip(CircleShape),
@@ -196,7 +195,7 @@ fun CafeInfoBanner(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = cafeInfo?.name ?: "",
-                color = colorResource(id = R.color.item_color),
+                color = Color.Black,
                 fontSize = 18.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -204,7 +203,7 @@ fun CafeInfoBanner(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = cafeInfo?.explains?.get(0) ?: "",
-                color = colorResource(id = R.color.default_text_color),
+                color = colorResource(id = R.color.gray_darker),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -251,7 +250,10 @@ fun CafeCategoryList(
                     .clip(RoundedCornerShape(22.dp))
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = true)
+                        indication = rememberRipple(
+                            bounded = true,
+                            color = colorResource(id = R.color.item_color)
+                        )
                     ) {
                         onClick(category)
                     }
@@ -285,7 +287,10 @@ fun CafePostItem(
         modifier = Modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true)
+                indication = rememberRipple(
+                    bounded = true,
+                    color = colorResource(id = R.color.item_color)
+                )
             ) {
                 onClick(post)
             }

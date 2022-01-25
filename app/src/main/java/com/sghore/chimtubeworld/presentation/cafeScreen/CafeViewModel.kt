@@ -1,7 +1,9 @@
 package com.sghore.chimtubeworld.presentation.cafeScreen
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.sghore.chimtubeworld.data.model.Resource
@@ -21,8 +23,8 @@ class CafeViewModel @Inject constructor(
     private val getCafePostsUseCase: GetCafePostsUseCase,
     private val insertCafeHistoryUseCase: InsertCafeHistoryUseCase
 ) : ViewModel() {
-    private val _state = mutableStateOf(CafeScreenState())
-    val state: State<CafeScreenState> = _state
+    var state by mutableStateOf(CafeScreenState())
+        private set
 
     init {
         getCafeInfo()
@@ -33,7 +35,7 @@ class CafeViewModel @Inject constructor(
         getCafeInfoUseCase().onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
-                    _state.value = CafeScreenState(
+                    state = CafeScreenState(
                         cafeInfo = resource.data,
                         cafePosts = getCafePostsUseCase(cafeCategoryId = -1)
                             .cachedIn(viewModelScope)
@@ -41,16 +43,16 @@ class CafeViewModel @Inject constructor(
                 }
                 is Resource.Loading -> {}
                 is Resource.Error -> {
-                    _state.value = CafeScreenState(
+                    state = CafeScreenState(
                         errorMsg = resource.errorMsg ?: "오류"
                     )
                 }
             }
-        }.launchIn(CoroutineScope(Dispatchers.IO))
+        }.launchIn(viewModelScope)
     }
 
     fun changeCategory(categoryId: Int) {
-        _state.value = _state.value.copy(
+        state = state.copy(
             cafeCategoryId = categoryId,
             cafePosts = getCafePostsUseCase(cafeCategoryId = categoryId)
                 .cachedIn(viewModelScope)
@@ -64,7 +66,7 @@ class CafeViewModel @Inject constructor(
                 is Resource.Success -> {}
                 is Resource.Loading -> {}
                 is Resource.Error -> {
-                    _state.value = _state.value.copy(
+                    state = state.copy(
                         errorMsg = resource.errorMsg ?: ""
                     )
                 }

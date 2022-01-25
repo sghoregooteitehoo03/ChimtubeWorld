@@ -44,7 +44,6 @@ fun BookmarkScreen(
     onButtonClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val scrollState = rememberScrollState()
     val colorList = listOf(
         android.graphics.Color.parseColor("#FF0000"),
         android.graphics.Color.parseColor("#FF6200"),
@@ -72,7 +71,9 @@ fun BookmarkScreen(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(scrollState)
+            .verticalScroll(
+                state = rememberScrollState()
+            )
     ) {
         if (viewModel.state.isLoading) {
             CircularProgressIndicator(

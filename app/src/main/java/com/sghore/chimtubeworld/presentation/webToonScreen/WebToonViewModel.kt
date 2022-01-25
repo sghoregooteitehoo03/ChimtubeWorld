@@ -1,7 +1,9 @@
 package com.sghore.chimtubeworld.presentation.webToonScreen
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,8 +24,8 @@ import javax.inject.Inject
 class WebToonViewModel @Inject constructor(
     private val getWebToonListUseCase: GetWebToonListUseCase
 ) : ViewModel() {
-    private val _state = mutableStateOf(WebToonScreenState())
-    val state: State<WebToonScreenState> = _state
+    var state by mutableStateOf(WebToonScreenState())
+        private set
 
     init {
         getWebToonList()
@@ -31,19 +33,19 @@ class WebToonViewModel @Inject constructor(
 
     fun getWebToonList() {
         getWebToonListUseCase().onEach { resource ->
-            when (resource) {
+            state = when (resource) {
                 is Resource.Success -> {
-                    _state.value = WebToonScreenState(
+                    WebToonScreenState(
                         webtoos = resource.data
                     )
                 }
                 is Resource.Loading -> {
-                    _state.value = WebToonScreenState(
+                    WebToonScreenState(
                         isLoading = true
                     )
                 }
                 is Resource.Error -> {
-                    _state.value = WebToonScreenState(
+                    WebToonScreenState(
                         errorMsg = resource.errorMsg ?: "오류"
                     )
                 }

@@ -20,8 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 // TODO:
 //  . StoreDetailFragment 재구성 버그 수정 ㅁ
-//  . Compose 부분적 마이그레이션 ㅁ
-//  . 다크모드 clickable 애니메이션 안보이는 버그 수정
+//  . Compose 부분적 마이그레이션 O
+//  . 다크모드 clickable 애니메이션 안보이는 버그 수정 O
+//  . state 형식 변경 O
 //  . repository 기능별 분리
 //  . 앱 아이콘, 아이콘, 스플래쉬 화면 이미지 변경
 @AndroidEntryPoint

@@ -41,8 +41,7 @@ fun TwitchScreen(
     onMainChannelClick: (Channel?) -> Unit,
     onTwitchCrewChannelClick: (Channel?) -> Unit
 ) {
-    val state = viewModel.state.value
-    val crewChannelList = state.channels ?: emptyList()
+    val crewChannelList = viewModel.state.channels ?: emptyList()
 
     val spanCount = 4
     val itemCount = if (crewChannelList.size % spanCount == 0) {
@@ -52,16 +51,10 @@ fun TwitchScreen(
     }
 
     Box(modifier = Modifier.fillMaxWidth()) {
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
-            )
-        } else {
-            LazyColumn(
-                contentPadding = PaddingValues(12.dp)
-            ) {
+        LazyColumn(
+            contentPadding = PaddingValues(12.dp)
+        ) {
+            if (!viewModel.state.isLoading) {
                 item {
                     TitleTextWithExplain(
                         title = "Twitch Live",
@@ -69,7 +62,7 @@ fun TwitchScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     MainChannelInfo(
-                        mainChannel = state.mainChannelInfo,
+                        mainChannel = viewModel.state.mainChannelInfo,
                         onClick = onMainChannelClick
                     )
                     Spacer(modifier = Modifier.height(20.dp))
@@ -88,6 +81,14 @@ fun TwitchScreen(
                     )
                 }
             }
+        }
+
+        if (viewModel.state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
+            )
         }
     }
 }
@@ -111,7 +112,10 @@ fun MainChannelInfo(
             .fillMaxWidth()
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true)
+                indication = rememberRipple(
+                    bounded = true,
+                    color = colorResource(id = R.color.item_color)
+                )
             ) {
                 onClick(mainChannel)
             }
@@ -248,7 +252,10 @@ fun TwitchCrewChannelItem(
         modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true)
+                indication = rememberRipple(
+                    bounded = true,
+                    color = colorResource(id = R.color.item_color)
+                )
             ) {
                 onClick(channel)
             },

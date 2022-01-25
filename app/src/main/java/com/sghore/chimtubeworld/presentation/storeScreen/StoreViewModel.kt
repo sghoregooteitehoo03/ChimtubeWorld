@@ -1,7 +1,9 @@
 package com.sghore.chimtubeworld.presentation.storeScreen
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sghore.chimtubeworld.data.model.Resource
@@ -19,19 +21,8 @@ class StoreViewModel @Inject constructor(
     private val getStoreInfoListUseCase: GetStoreInfoListUseCase,
     private val getGoodsListUseCase: GetGoodsListUseCase
 ) : ViewModel() {
-    private val _state = mutableStateOf(StoreScreenState())
-    val state: State<StoreScreenState> = _state
-
-//    private val _isLoading = MutableLiveData(true) // 로딩 여부
-//    private val _storeImages = MutableLiveData<List<Channel>>(listOf()) // 스토어 정보
-//    private val _goodsList = MutableLiveData<List<Goods>?>(null) // 선택된 스토어에 제공하고 있는 상품리스트
-//
-//    val isLoading: LiveData<Boolean> = _isLoading
-//    val storeImages: LiveData<List<Channel>> = _storeImages
-//    val goodsList: LiveData<List<Goods>?> = _goodsList
-//
-//    val selectedPos = MutableLiveData(0) // 선택된 스토어에 위치
-//    val currentUrl = MutableLiveData("") // 선택된 스토어에 url
+    var state by mutableStateOf(StoreScreenState())
+        private set
 
     init {
         getStoreInfo()
@@ -40,36 +31,32 @@ class StoreViewModel @Inject constructor(
     // 스토어의 정보를 가져옴
     fun getStoreInfo() {
         getStoreInfoListUseCase().onEach { resource ->
-            when (resource) {
+            state = when (resource) {
                 is Resource.Success -> {
                     val storeInfoList = resource.data ?: emptyList()
 
-                    _state.value = StoreScreenState(
+                    StoreScreenState(
                         storeInfoList = storeInfoList,
                         goodsList = getGoodsListUseCase(storeInfoList[0].url),
                         selectedStoreUrl = storeInfoList[0].url
                     )
                 }
                 is Resource.Loading -> {
-                    _state.value = StoreScreenState(
+                    StoreScreenState(
                         isLoading = true
                     )
                 }
                 is Resource.Error -> {
-                    _state.value = StoreScreenState(
+                    StoreScreenState(
                         errorMsg = resource.errorMsg ?: ""
                     )
                 }
             }
         }.launchIn(viewModelScope)
-//        _storeImages.value = CoroutineScope(Dispatchers.IO).async {
-//            repository.getStoreInfo()
-//        }.await()!!
-//        _isLoading.value = false // 로딩 끝
     }
 
     fun changeCategory(url: String) {
-        _state.value = _state.value.copy(
+        state = state.copy(
             selectedStoreUrl = url,
             goodsList = getGoodsListUseCase(url)
         )

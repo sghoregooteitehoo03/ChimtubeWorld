@@ -91,7 +91,9 @@ fun BookmarkItem(
             .background(color = colorResource(id = R.color.gray_bright_night))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple()
+                indication = rememberRipple(
+                    color = colorResource(id = R.color.item_color)
+                )
             ) {
                 onClick(bookmark?.videoPosition ?: -32400000) // 0[s]
             }
