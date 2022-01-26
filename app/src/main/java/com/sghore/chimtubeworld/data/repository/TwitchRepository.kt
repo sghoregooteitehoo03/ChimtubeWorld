@@ -45,6 +45,7 @@ class TwitchRepository @Inject constructor(
     // Twitch Id 및 설명을 가져옴
     suspend fun getChannelLinkData() =
         store.collection(Contents.COLLECTION_TWITCH_LINK)
+            .whereNotEqualTo("explain", "")
             .get()
             .await()
             .documents
@@ -73,12 +74,9 @@ class TwitchRepository @Inject constructor(
         val retrofitService = getRetrofit()
 
         // 채널 리스트
-        val channelList = arrayOfNulls<Channel>(channelLinkList.size - 1) // AccessKey 제외
-            .toMutableList()
-        // 채널 아이디 배열
-        val channelIdArr = channelLinkList.filter { it.type != -1 }.map {
-            it.id
-        }.toTypedArray()
+        val channelList = arrayOfNulls<Channel>(channelLinkList.size).toMutableList()
+        val channelIdArr = channelLinkList.map { it.id }
+            .toTypedArray()
 
         // Twitch API를 통해 채널의 정보를 가져옴
         val result = retrofitService.getTUserInfo(accessKey, channelIdArr)
@@ -86,7 +84,7 @@ class TwitchRepository @Inject constructor(
         result.data.forEach { userData ->
             // 채널들을 배열순서에 맞쳐 리스트에 집어넣기 위한 인덱스 값
             val index = channelIdArr.indexOf(userData.login)
-            val linkInfo = channelLinkList[index + 1]
+            val linkInfo = channelLinkList[index]
 
             val channelData = if (linkInfo.type == 0) { // 침착맨 채널의 정보일 때
                 getTwitchUserState(

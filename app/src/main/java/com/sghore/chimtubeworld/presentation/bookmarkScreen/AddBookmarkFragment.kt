@@ -13,11 +13,20 @@ import androidx.navigation.fragment.navArgs
 import com.sghore.chimtubeworld.databinding.FragmentAddBookmarkBinding
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddBookmarkFragment : Fragment() {
+    @Inject
+    lateinit var assistedFactory: BookmarkViewModel.AssistedFactory
+
     private val gViewModel by activityViewModels<GlobalViewModel>()
-    private val mViewModel by viewModels<BookmarkViewModel>()
+    private val mViewModel by viewModels<BookmarkViewModel> {
+        BookmarkViewModel.provideFactory(
+            assistedFactory = assistedFactory,
+            url = args.url
+        )
+    }
     private val args by navArgs<AddBookmarkFragmentArgs>()
 
     override fun onCreateView(
@@ -36,8 +45,7 @@ class AddBookmarkFragment : Fragment() {
                     AddBookmarkScreen(
                         viewModel = mViewModel,
                         gViewModel = gViewModel,
-                        navController = findNavController(),
-                        videoUrl = args.url
+                        navController = findNavController()
                     )
                 }
             }

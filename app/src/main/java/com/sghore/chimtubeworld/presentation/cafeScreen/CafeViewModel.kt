@@ -1,6 +1,5 @@
 package com.sghore.chimtubeworld.presentation.cafeScreen
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,8 +10,6 @@ import com.sghore.chimtubeworld.domain.GetCafeInfoUseCase
 import com.sghore.chimtubeworld.domain.GetCafePostsUseCase
 import com.sghore.chimtubeworld.domain.InsertCafeHistoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -71,6 +68,6 @@ class CafeViewModel @Inject constructor(
                     )
                 }
             }
-        }.launchIn(CoroutineScope(Dispatchers.IO))
+        }.launchIn(viewModelScope)
     }
 }

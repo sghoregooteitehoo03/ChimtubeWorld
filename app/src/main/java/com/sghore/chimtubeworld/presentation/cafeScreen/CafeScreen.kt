@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
@@ -36,8 +37,8 @@ import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 // Todo:
-//  . Collapsing 시 렉 걸리는 버그 고치기
-//  . 카페 글을 본 후 네비게이션 한 다음 다시 돌아오면 히스토리가 적용 안되는 버그 수정
+//  . Collapsing 시 렉 걸리는 버그 고치기 ㅁ
+//  . 카페 글을 본 후 네비게이션 한 다음 다시 돌아오면 히스토리가 적용 안되는 버그 수정 X
 
 @Composable
 fun CafeScreen(
@@ -47,8 +48,58 @@ fun CafeScreen(
     onCafePostClick: (Post?) -> Unit
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
-    val readState = remember { mutableStateMapOf<Int, Boolean>() } // 게시글 아이템 읽음 여부
+    val scrollState = rememberScrollState()
 
+    Surface {
+        CollapsingToolbarScaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            state = collapsingState,
+            toolbarModifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(
+                    state = scrollState,
+                    enabled = collapsingState.toolbarState.progress != 0f
+                )
+                .background(
+                    color = if (collapsingState.toolbarState.progress != 0f) {
+                        colorResource(id = R.color.default_background_color)
+                    } else {
+                        colorResource(id = R.color.gray_bright_night)
+                    }
+                ),
+            scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+            toolbar = {
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                )
+                CafeTopItem(
+                    viewModel = viewModel,
+                    modifier = Modifier
+                        .parallax(1f)
+                        .fillMaxWidth(),
+                    onCafeBannerClick = onCafeBannerClick,
+                    onCafeCategoryClick = onCafeCategoryClick
+                )
+            }
+        ) {
+            CafePostList(
+                viewModel = viewModel,
+                onCafePostClick = onCafePostClick
+            )
+        }
+    }
+}
+
+@Composable
+fun CafeTopItem(
+    viewModel: CafeViewModel,
+    modifier: Modifier = Modifier,
+    onCafeBannerClick: (Channel?) -> Unit,
+    onCafeCategoryClick: (CafeCategory) -> Unit
+) {
     // 카테고리 리스트
     val categoryList = listOf(
         CafeCategory("전체", -1),
@@ -62,89 +113,37 @@ fun CafeScreen(
         CafeCategory("해줘요", 4),
         CafeCategory("찾아주세요", 56)
     )
-    // 게시글 리스트
-    val postList: LazyPagingItems<Post>? = viewModel.state.cafePosts?.collectAsLazyPagingItems()
 
-    CollapsingToolbarScaffold(
-        modifier = Modifier
-            .fillMaxSize(),
-        state = collapsingState,
-        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
-        toolbarModifier = Modifier
-            .verticalScroll(
-                state = rememberScrollState(),
-                enabled = collapsingState.toolbarState.progress != 0f
-            )
-            .background(
-                color = if (collapsingState.toolbarState.progress != 0f) {
-                    colorResource(id = R.color.default_background_color)
-                } else {
-                    colorResource(id = R.color.gray_bright_night)
-                }
-            ),
-        toolbar = {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-            )
-            Column(
-                modifier = Modifier
-                    .parallax(1f)
-                    .fillMaxWidth()
-            ) {
-                TitleTextWithExplain(
-                    title = "Community",
-                    explain = "침착맨 팬카페",
-                    modifier = Modifier.padding(top = 12.dp, start = 12.dp, end = 12.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                CafeInfoBanner(
-                    cafeInfo = viewModel.state.cafeInfo,
-                    modifier = Modifier.padding(start = 12.dp, end = 12.dp),
-                    onClick = onCafeBannerClick
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-                TitleTextWithExplain(
-                    title = "게시글",
-                    explain = "",
-                    modifier = Modifier.padding(start = 12.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                CafeCategoryList(
-                    categoryList = categoryList,
-                    selectedCategoryId = viewModel.state.cafeCategoryId,
-                    onClick = {
-                        readState.clear()
-                        onCafeCategoryClick(it)
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-        }
+    Column(
+        modifier = modifier
     ) {
-        LazyColumn {
-            postList?.let {
-                items(items = it) { post ->
-                    val isRead = (post?.isRead ?: false) || (readState[post?.id] ?: false)
-                    CafePostItem(
-                        post = post,
-                        isRead = isRead,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 12.dp, end = 12.dp),
-                        onClick = { clickPost ->
-                            if (!isRead) {
-                                readState[clickPost!!.id] = true
-                            }
-                            onCafePostClick(clickPost)
-                        }
-                    )
-                }
+        TitleTextWithExplain(
+            title = "Community",
+            explain = "침착맨 팬카페",
+            modifier = Modifier.padding(top = 12.dp, start = 12.dp, end = 12.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        CafeInfoBanner(
+            cafeInfo = viewModel.state.cafeInfo,
+            modifier = Modifier.padding(start = 12.dp, end = 12.dp),
+            onClick = onCafeBannerClick
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+        TitleTextWithExplain(
+            title = "게시글",
+            explain = "",
+            modifier = Modifier.padding(start = 12.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        CafeCategoryList(
+            categoryList = categoryList,
+            selectedCategoryId = viewModel.state.cafeCategoryId,
+            onClick = {
+                onCafeCategoryClick(it)
             }
-        }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
@@ -266,6 +265,38 @@ fun CafeCategoryList(
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
+        }
+    }
+}
+
+@Composable
+fun CafePostList(
+    viewModel: CafeViewModel,
+    onCafePostClick: (Post?) -> Unit
+) {
+    // 게시글 리스트
+    val postList: LazyPagingItems<Post>? =
+        viewModel.state.cafePosts?.collectAsLazyPagingItems()
+    val readState = remember { mutableStateMapOf<Int, Boolean>() } // 게시글 아이템 읽음 여부
+
+    LazyColumn {
+        postList?.let {
+            items(items = it) { post ->
+                val isRead = (post?.isRead ?: false) || (readState[post?.id] ?: false)
+                CafePostItem(
+                    post = post,
+                    isRead = isRead,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp, end = 12.dp),
+                    onClick = { clickPost ->
+                        if (!isRead) {
+                            readState[clickPost!!.id] = true
+                        }
+                        onCafePostClick(clickPost)
+                    }
+                )
+            }
         }
     }
 }

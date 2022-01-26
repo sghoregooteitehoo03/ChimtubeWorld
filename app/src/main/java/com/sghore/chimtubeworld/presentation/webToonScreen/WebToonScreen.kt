@@ -28,49 +28,70 @@ import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
+import com.sghore.chimtubeworld.presentation.twitchScreen.TwitchViewModel
 
 @Composable
 fun WebToonScreen(
     viewModel: WebToonViewModel,
     onWebToonClick: (Channel) -> Unit
 ) {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        WebToonList(
+            viewModel = viewModel,
+            onWebToonClick = onWebToonClick
+        )
+        LoadingView(
+            viewModel = viewModel,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
+
+@Composable
+fun LoadingView(
+    viewModel: WebToonViewModel,
+    modifier: Modifier = Modifier
+) {
+    if (viewModel.state.isLoading) {
+        CircularProgressIndicator(
+            modifier = modifier,
+            color = colorResource(id = R.color.item_color)
+        )
+    }
+}
+
+@Composable
+fun WebToonList(
+    viewModel: WebToonViewModel,
+    onWebToonClick: (Channel) -> Unit
+) {
     val webToonList = viewModel.state.webtoos ?: emptyList()
 
-    val spanCount = 2
-    val itemCount = if (webToonList.size % spanCount == 0) {
-        webToonList.size / spanCount
-    } else {
-        webToonList.size / spanCount + 1
-    }
-
-    Box(modifier = Modifier.fillMaxWidth()) {
-        LazyColumn(contentPadding = PaddingValues(12.dp)) {
-            if (!viewModel.state.isLoading) {
-                item {
-                    TitleTextWithExplain(
-                        title = "WebToon",
-                        explain = "이말년 시절 작품활동"
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-
-                items(itemCount) { index ->
-                    WebToonRow(
-                        rowIndex = index,
-                        webtoonsList = webToonList,
-                        spanCount = spanCount,
-                        onClick = onWebToonClick
-                    )
-                }
+    LazyColumn(contentPadding = PaddingValues(12.dp)) {
+        if (!viewModel.state.isLoading) {
+            val spanCount = 2
+            val itemCount = if (webToonList.size % spanCount == 0) {
+                webToonList.size / spanCount
+            } else {
+                webToonList.size / spanCount + 1
             }
-        }
 
-        if (viewModel.state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
-            )
+            item {
+                TitleTextWithExplain(
+                    title = "WebToon",
+                    explain = "이말년 시절 작품활동"
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            items(itemCount) { index ->
+                WebToonRow(
+                    rowIndex = index,
+                    webtoonsList = webToonList,
+                    spanCount = spanCount,
+                    onClick = onWebToonClick
+                )
+            }
         }
     }
 }

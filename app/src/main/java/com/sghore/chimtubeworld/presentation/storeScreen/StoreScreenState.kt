@@ -6,7 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 data class StoreScreenState(
     val storeInfoList: List<Channel> = emptyList(),
-    val goodsList: Flow<List<Goods>>? = null,
+    val goodsListFlow: Flow<List<Goods>>? = null,
+    val goodsList: List<Goods> = emptyList(),
     val selectedStoreUrl: String = "",
     val isLoading: Boolean = false,
     val errorMsg: String = ""

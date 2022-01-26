@@ -1,6 +1,5 @@
 package com.sghore.chimtubeworld.data.repository
 
-import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.sghore.chimtubeworld.data.repository.dataSource.CafePostPagingSource

@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
@@ -31,69 +32,60 @@ fun YoutubeScreen(
     viewModel: YoutubeViewModel,
     onClick: (Channel?) -> Unit
 ) {
-    val scrollState = rememberScrollState()
+    Surface {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+        ) {
 
-    val mainChannelList = viewModel.state.channels?.filter { it?.type == 0 } ?: listOf()
-    val subChannelList = viewModel.state.channels?.filter { it?.type == 1 } ?: listOf()
-
-    val spanCount = 2
-    val itemCount = if (subChannelList.size % spanCount == 0) {
-        subChannelList.size / spanCount
-    } else {
-        subChannelList.size / spanCount + 1
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState)
-    ) {
-
-        Column(modifier = Modifier.padding(12.dp)) {
-            if (!viewModel.state.isLoading) {
-                TitleTextWithExplain(
-                    title = "Youtube",
-                    explain = "침튜브 채널"
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                mainChannelList.forEach { channel ->
-                    Column {
-                        MainYoutubeChannelItem(
-                            channel = channel,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            onClick = onClick
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-                TitleTextWithExplain(
-                    title = "Sub Contents",
-                    explain = "침착맨 외부 방송"
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                for (index in 0 until itemCount) {
-                    SubYoutubeChannelRow(
-                        rowIndex = index,
-                        channels = subChannelList,
-                        spanCount = spanCount,
-                        onClick = onClick
+            Column(modifier = Modifier.padding(12.dp)) {
+                if (!viewModel.state.isLoading) {
+                    TitleTextWithExplain(
+                        title = "Youtube",
+                        explain = "침튜브 채널"
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    MainYoutubeChannelList(viewModel = viewModel, onClick = onClick)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TitleTextWithExplain(
+                        title = "Sub Contents",
+                        explain = "침착맨 외부 방송"
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SubYoutubeChannelList(viewModel = viewModel, onClick = onClick)
                 }
             }
-        }
 
-        if (viewModel.state.isLoading) {
-            CircularProgressIndicator(
+            if (viewModel.state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    color = colorResource(id = R.color.item_color)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MainYoutubeChannelList(
+    viewModel: YoutubeViewModel,
+    onClick: (Channel?) -> Unit = {}
+) {
+    val mainChannelList = viewModel.state.channels?.filter { it?.type == 0 } ?: listOf()
+
+    mainChannelList.forEach { channel ->
+        Column {
+            MainYoutubeChannelItem(
+                channel = channel,
                 modifier = Modifier
-                    .align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                onClick = onClick
             )
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -151,6 +143,31 @@ fun MainYoutubeChannelItem(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun SubYoutubeChannelList(
+    viewModel: YoutubeViewModel,
+    onClick: (Channel?) -> Unit = {}
+) {
+    val subChannelList =
+        viewModel.state.channels?.filter { it?.type == 1 } ?: listOf()
+
+    val spanCount = 2
+    val itemCount = if (subChannelList.size % spanCount == 0) {
+        subChannelList.size / spanCount
+    } else {
+        subChannelList.size / spanCount + 1
+    }
+
+    for (index in 0 until itemCount) {
+        SubYoutubeChannelRow(
+            rowIndex = index,
+            channels = subChannelList,
+            spanCount = spanCount,
+            onClick = onClick
+        )
     }
 }
 

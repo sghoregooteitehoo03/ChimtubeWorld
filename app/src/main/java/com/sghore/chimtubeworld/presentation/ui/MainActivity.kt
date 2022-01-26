@@ -23,7 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint
 //  . Compose 부분적 마이그레이션 O
 //  . 다크모드 clickable 애니메이션 안보이는 버그 수정 O
 //  . state 형식 변경 O
-//  . repository 기능별 분리
+//  . repository 기능별 분리 O
+//  . 쓸데없는 재구성 지우기 O
 //  . 앱 아이콘, 아이콘, 스플래쉬 화면 이미지 변경
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

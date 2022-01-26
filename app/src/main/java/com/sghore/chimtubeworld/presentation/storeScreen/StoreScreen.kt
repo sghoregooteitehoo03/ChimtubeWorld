@@ -29,6 +29,7 @@ import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
+import com.sghore.chimtubeworld.presentation.twitchScreen.TwitchViewModel
 import kotlinx.coroutines.flow.collect
 
 @Composable
@@ -37,61 +38,81 @@ fun StoreScreen(
     onCategoryClick: (String) -> Unit,
     onGoodsClick: (List<Goods>, Int) -> Unit
 ) {
-    var goodsList by remember { mutableStateOf(listOf<Goods>()) }
-    LaunchedEffect(key1 = viewModel.state.goodsList) {
-        viewModel.state.goodsList?.collect {
-            goodsList = it
-        }
-    }
-
-    val spanCount = 3
-    val itemCount = if (goodsList.size % spanCount == 0) {
-        goodsList.size / 2
-    } else {
-        goodsList.size / 2 + 1
-    }
-
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
+        StoreList(
+            viewModel = viewModel,
+            onCategoryClick = onCategoryClick,
+            onGoodsClick = onGoodsClick
+        )
+        LoadingView(
+            viewModel = viewModel,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
 
-        LazyColumn() {
-            if (!viewModel.state.isLoading) {
-                item {
-                    TitleTextWithExplain(
-                        title = "Goods",
-                        explain = "",
-                        modifier = Modifier
-                            .padding(top = 12.dp, start = 12.dp, end = 12.dp)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    StoreInfoCategoryList(
-                        storeInfoList = viewModel.state.storeInfoList,
-                        selectedStoreUrl = viewModel.state.selectedStoreUrl,
-                        onClick = onCategoryClick
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-                items(itemCount) { index ->
-                    GoodsRow(
-                        rowIndex = index,
-                        goodsList = goodsList,
-                        spanCount = spanCount,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 12.dp, end = 12.dp),
-                        onClick = onGoodsClick
-                    )
-                }
-            }
+@Composable
+fun LoadingView(
+    viewModel: StoreViewModel,
+    modifier: Modifier = Modifier
+) {
+    if (viewModel.state.isLoading) {
+        CircularProgressIndicator(
+            modifier = modifier,
+            color = colorResource(id = R.color.item_color)
+        )
+    }
+}
+
+@Composable
+fun StoreList(
+    viewModel: StoreViewModel,
+    onCategoryClick: (String) -> Unit,
+    onGoodsClick: (List<Goods>, Int) -> Unit
+) {
+    LaunchedEffect(key1 = viewModel.state.goodsListFlow) {
+        viewModel.state.goodsListFlow?.collect {
+            viewModel.setGoodsList(it)
         }
+    }
 
-        if (viewModel.state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
-            )
+    LazyColumn {
+        if (!viewModel.state.isLoading) {
+            val spanCount = 3
+            val itemCount = if (viewModel.state.goodsList.size % spanCount == 0) {
+                viewModel.state.goodsList.size / spanCount
+            } else {
+                viewModel.state.goodsList.size / spanCount + 1
+            }
+
+            item {
+                TitleTextWithExplain(
+                    title = "Goods",
+                    explain = "",
+                    modifier = Modifier
+                        .padding(top = 12.dp, start = 12.dp, end = 12.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                StoreInfoCategoryList(
+                    storeInfoList = viewModel.state.storeInfoList,
+                    selectedStoreUrl = viewModel.state.selectedStoreUrl,
+                    onClick = onCategoryClick
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            items(itemCount) { index ->
+                GoodsRow(
+                    rowIndex = index,
+                    goodsList = viewModel.state.goodsList,
+                    spanCount = spanCount,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp, end = 12.dp),
+                    onClick = onGoodsClick
+                )
+            }
         }
     }
 }

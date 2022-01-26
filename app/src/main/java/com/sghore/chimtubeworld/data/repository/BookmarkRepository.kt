@@ -1,18 +1,8 @@
 package com.sghore.chimtubeworld.data.repository
 
-import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.data.model.Bookmark
-import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.db.Dao
-import com.sghore.chimtubeworld.other.Contents
-import com.sghore.chimtubeworld.data.retrofit.RetrofitService
-import kotlinx.coroutines.tasks.await
-import retrofit2.Retrofit
-import retrofit2.await
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
-import kotlin.time.Duration
 
 class BookmarkRepository @Inject constructor(
     private val dao: Dao

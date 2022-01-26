@@ -1,19 +1,17 @@
 package com.sghore.chimtubeworld.presentation.storeScreen
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.domain.GetGoodsListUseCase
 import com.sghore.chimtubeworld.domain.GetStoreInfoListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,7 +35,7 @@ class StoreViewModel @Inject constructor(
 
                     StoreScreenState(
                         storeInfoList = storeInfoList,
-                        goodsList = getGoodsListUseCase(storeInfoList[0].url),
+                        goodsListFlow = getGoodsListUseCase(storeInfoList[0].url),
                         selectedStoreUrl = storeInfoList[0].url
                     )
                 }
@@ -55,10 +53,19 @@ class StoreViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    // 스토어의 카테고리를 변경함
     fun changeCategory(url: String) {
         state = state.copy(
             selectedStoreUrl = url,
-            goodsList = getGoodsListUseCase(url)
+            goodsListFlow = getGoodsListUseCase(url),
+            goodsList = emptyList()
+        )
+    }
+
+    // 플로우를 통해 수집한 리스트를 적용함
+    fun setGoodsList(list: List<Goods>) {
+        state = state.copy(
+            goodsList = list
         )
     }
 }

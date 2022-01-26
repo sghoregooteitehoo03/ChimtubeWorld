@@ -6,11 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
+import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.BookmarkRepository
 import com.sghore.chimtubeworld.domain.GetTwitchVideoUseCase
 import com.sghore.chimtubeworld.domain.GetYoutubeVideoUseCase
+import com.sghore.chimtubeworld.presentation.storeDetailScreen.StoreDetailViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,17 +23,53 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-@HiltViewModel
-class BookmarkViewModel @Inject constructor(
+class BookmarkViewModel @AssistedInject constructor(
     private val getYoutubeVideoUseCase: GetYoutubeVideoUseCase,
     private val getTwitchVideoUseCase: GetTwitchVideoUseCase,
-    private val repository: BookmarkRepository
+    private val repository: BookmarkRepository,
+    @Assisted videoData: Video?,
+    @Assisted val selectedBookmark: Bookmark?,
+    @Assisted typeImageRes: Int,
+    @Assisted videoUrl: String?
 ) : ViewModel() {
     private val baseYoutubeUrl = "youtu.be"
     private val baseTwitchUrl = "www.twitch.tv"
 
     var state by mutableStateOf(BookmarkScreenState())
         private set
+
+    init {
+        if (videoData != null && selectedBookmark != null && typeImageRes != -1) {
+            initValue(videoData, selectedBookmark, typeImageRes)
+        } else if (videoUrl != null) {
+            getVideoData(videoUrl)
+        }
+    }
+
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(
+            videoData: Video?,
+            bookmark: Bookmark?,
+            typeImageRes: Int,
+            url: String?
+        ): BookmarkViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            assistedFactory: BookmarkViewModel.AssistedFactory,
+            videoData: Video? = null,
+            bookmark: Bookmark? = null,
+            typeImageRes: Int = -1,
+            url: String? = null
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(videoData, bookmark, typeImageRes, url) as T
+            }
+        }
+    }
 
     // 넘겨온 영상 url을 통해 영상 정보를 가져옴
     fun getVideoData(videoUrl: String) {

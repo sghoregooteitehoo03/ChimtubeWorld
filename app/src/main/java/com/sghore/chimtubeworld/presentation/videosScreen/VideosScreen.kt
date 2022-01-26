@@ -54,23 +54,6 @@ fun VideosScreen(
     onBookmarkClick: (Video, Int) -> Unit,
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
-    val videoList: LazyPagingItems<Video>? = viewModel.state.videos?.collectAsLazyPagingItems()
-    val videoLoading = videoList?.loadState?.refresh is LoadState.Loading
-    val context: Context = LocalContext.current
-
-    gViewModel.bookmarkData.value?.let {
-        viewModel.changeVideoBookmarks(it)
-        gViewModel.bookmarkData.value = null
-    }
-
-    LaunchedEffect(key1 = viewModel.state.toastMsg) {
-        val msg = viewModel.state.toastMsg
-        if (msg.isNotEmpty()) {
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT)
-                .show()
-            viewModel.setMessage("")
-        }
-    }
 
     CollapsingToolbarScaffold(
         modifier = Modifier.fillMaxSize(),
@@ -95,25 +78,12 @@ fun VideosScreen(
             )
         }
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            LazyColumn {
-                videoList?.let {
-                    if (!videoLoading) {
-                        items(items = it) { video ->
-                            VideoItem(
-                                video = video,
-                                onVideoClick = onVideoClick,
-                                onBookmarkClick = onBookmarkClick
-                            )
-                        }
-                    } else {
-                        items(3) {
-                            VideoShimmerItem()
-                        }
-                    }
-                }
-            }
-        }
+        VideoList(
+            viewModel = viewModel,
+            gViewModel = gViewModel,
+            onVideoClick = onVideoClick,
+            onBookmarkClick = onBookmarkClick
+        )
     }
 }
 
@@ -152,6 +122,50 @@ fun VideosTopItem(
                     onHelpClick()
                 }
         )
+    }
+}
+
+@Composable
+fun VideoList(
+    viewModel: VideosViewModel,
+    gViewModel: GlobalViewModel,
+    onVideoClick: (Video) -> Unit,
+    onBookmarkClick: (Video, Int) -> Unit
+) {
+    val context: Context = LocalContext.current
+    val videoList: LazyPagingItems<Video>? = viewModel.state.videos?.collectAsLazyPagingItems()
+    val videoLoading = videoList?.loadState?.refresh is LoadState.Loading
+
+    gViewModel.bookmarkData.value?.let {
+        viewModel.changeVideoBookmarks(it)
+        gViewModel.bookmarkData.value = null
+    }
+
+    LaunchedEffect(key1 = viewModel.state.toastMsg) {
+        val msg = viewModel.state.toastMsg
+        if (msg.isNotEmpty()) {
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT)
+                .show()
+            viewModel.setMessage("")
+        }
+    }
+
+    LazyColumn {
+        videoList?.let {
+            if (!videoLoading) {
+                items(items = it) { video ->
+                    VideoItem(
+                        video = video,
+                        onVideoClick = onVideoClick,
+                        onBookmarkClick = onBookmarkClick
+                    )
+                }
+            } else {
+                items(3) {
+                    VideoShimmerItem()
+                }
+            }
+        }
     }
 }
 

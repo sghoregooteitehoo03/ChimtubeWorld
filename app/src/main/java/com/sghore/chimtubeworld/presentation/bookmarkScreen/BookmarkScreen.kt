@@ -40,34 +40,10 @@ fun BookmarkScreen(
     viewModel: BookmarkViewModel,
     gViewModel: GlobalViewModel,
     navController: NavController,
+    colorList: List<Int>,
     buttonText: String,
     onButtonClick: () -> Unit = {}
 ) {
-    val context = LocalContext.current
-    val colorList = listOf(
-        android.graphics.Color.parseColor("#FF0000"),
-        android.graphics.Color.parseColor("#FF6200"),
-        android.graphics.Color.parseColor("#FFEB00"),
-        android.graphics.Color.parseColor("#76FF00"),
-        android.graphics.Color.parseColor("#0014FF"),
-        android.graphics.Color.parseColor("#C400FF"),
-        android.graphics.Color.parseColor("#767676"),
-        android.graphics.Color.parseColor("#000000")
-    )
-
-    LaunchedEffect(key1 = viewModel.state.errorMsg) {
-        val msg = viewModel.state.errorMsg
-        if (msg.isNotEmpty()) {
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT)
-                .show()
-            viewModel.clearMsg()
-        }
-        viewModel.state.completeBookmark?.let {
-            gViewModel.bookmarkData.value = it
-            navController.navigateUp()
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,12 +51,18 @@ fun BookmarkScreen(
                 state = rememberScrollState()
             )
     ) {
-        if (viewModel.state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
-            )
+        val context = LocalContext.current
+        LaunchedEffect(key1 = viewModel.state.errorMsg) {
+            val msg = viewModel.state.errorMsg
+            if (msg.isNotEmpty()) {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT)
+                    .show()
+                viewModel.clearMsg()
+            }
+            viewModel.state.completeBookmark?.let {
+                gViewModel.bookmarkData.value = it
+                navController.navigateUp()
+            }
         }
 
         viewModel.state.videoData?.let {
@@ -170,6 +152,13 @@ fun BookmarkScreen(
                 }
             }
         }
+
+        if (viewModel.state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
+            )
+        }
     }
 }
 
@@ -177,15 +166,24 @@ fun BookmarkScreen(
 fun AddBookmarkScreen(
     viewModel: BookmarkViewModel,
     gViewModel: GlobalViewModel,
-    navController: NavController,
-    videoUrl: String
+    navController: NavController
 ) {
-    viewModel.getVideoData(videoUrl)
+    val colorList = listOf(
+        android.graphics.Color.parseColor("#FF0000"),
+        android.graphics.Color.parseColor("#FF6200"),
+        android.graphics.Color.parseColor("#FFEB00"),
+        android.graphics.Color.parseColor("#76FF00"),
+        android.graphics.Color.parseColor("#0014FF"),
+        android.graphics.Color.parseColor("#C400FF"),
+        android.graphics.Color.parseColor("#767676"),
+        android.graphics.Color.parseColor("#000000")
+    )
 
     BookmarkScreen(
         viewModel = viewModel,
         gViewModel = gViewModel,
         navController = navController,
+        colorList = colorList,
         buttonText = "만들기",
         onButtonClick = {
             viewModel.addOrEditBookmark()
@@ -198,23 +196,26 @@ fun EditBookmarkScreen(
     viewModel: BookmarkViewModel,
     gViewModel: GlobalViewModel,
     navController: NavController,
-    video: Video,
-    bookmark: Bookmark,
-    typeImageRes: Int
 ) {
-    viewModel.initValue(
-        videoData = video,
-        bookmark = bookmark,
-        typeImageRes = typeImageRes
+    val colorList = listOf(
+        android.graphics.Color.parseColor("#FF0000"),
+        android.graphics.Color.parseColor("#FF6200"),
+        android.graphics.Color.parseColor("#FFEB00"),
+        android.graphics.Color.parseColor("#76FF00"),
+        android.graphics.Color.parseColor("#0014FF"),
+        android.graphics.Color.parseColor("#C400FF"),
+        android.graphics.Color.parseColor("#767676"),
+        android.graphics.Color.parseColor("#000000")
     )
 
     BookmarkScreen(
         viewModel = viewModel,
         gViewModel = gViewModel,
         navController = navController,
+        colorList = colorList,
         buttonText = "수정하기",
         onButtonClick = {
-            viewModel.addOrEditBookmark(bookmark.id!!)
+            viewModel.addOrEditBookmark(viewModel.selectedBookmark?.id!!)
         }
     )
 }

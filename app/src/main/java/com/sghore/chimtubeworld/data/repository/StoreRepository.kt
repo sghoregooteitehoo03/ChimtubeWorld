@@ -1,7 +1,6 @@
 package com.sghore.chimtubeworld.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.LinkInfo
