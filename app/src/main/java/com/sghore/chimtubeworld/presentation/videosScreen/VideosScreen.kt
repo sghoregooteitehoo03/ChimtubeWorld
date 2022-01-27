@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -104,7 +105,7 @@ fun VideosTopItem(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Image(
-                imageVector = ImageVector.vectorResource(id = videoTypeImage),
+                painter = painterResource(id = videoTypeImage),
                 contentDescription = null,
                 modifier = Modifier
                     .size(22.dp)
@@ -334,7 +335,7 @@ fun VideosTopItemPreview() {
     MaterialTheme {
         VideosTopItem(
             channelName = "침착맨",
-            videoTypeImage = R.drawable.ic_youtube,
+            videoTypeImage = R.drawable.youtube,
             modifier = Modifier.padding(12.dp)
         )
     }

@@ -8,7 +8,7 @@ data class BookmarkScreenState(
     val bookmarkTitle: String = "",
     val videoPosition: String = "",
     val videoData: Video? = null,
-    val videoTypeImage: Int = R.drawable.ic_youtube,
+    val videoTypeImage: Int = R.drawable.youtube,
     val selectedColor: Int = android.graphics.Color.parseColor("#FF0000"),
     val isEnable: Boolean = false,
     val isLoading: Boolean = false,

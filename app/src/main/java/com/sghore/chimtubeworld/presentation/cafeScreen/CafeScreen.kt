@@ -50,7 +50,9 @@ fun CafeScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
     val scrollState = rememberScrollState()
 
-    Surface {
+    Surface(
+        color = colorResource(id = R.color.default_background_color)
+    ) {
         CollapsingToolbarScaffold(
             modifier = Modifier
                 .fillMaxSize(),

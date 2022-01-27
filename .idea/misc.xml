@@ -54,6 +54,7 @@
         <entry key="../../../../layout/compose-model-1643090577163.xml" value="0.9307359307359307" />
         <entry key="../../../../layout/compose-model-1643103819080.xml" value="0.19907407407407407" />
         <entry key="../../../../layout/compose-model-1643168962139.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1643244182522.xml" value="0.19907407407407407" />
         <entry key="../../../../layout/custom_preview.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/drawable-small/splash.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable-v24/shape_corner_rec_large.xml" value="0.122" />
@@ -78,11 +79,11 @@
         <entry key="app/src/main/res/drawable/ic_webtoon_darker.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_youtube.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_youtube_darker.xml" value="0.154" />
-        <entry key="app/src/main/res/drawable/selector_cafe.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/selector_cafe.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/selector_store.xml" value="0.154" />
-        <entry key="app/src/main/res/drawable/selector_twitch.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/selector_twitch.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/selector_webtoon.xml" value="0.154" />
-        <entry key="app/src/main/res/drawable/selector_youtube.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/selector_youtube.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/shape_corner_rec_large.xml" value="0.122" />
         <entry key="app/src/main/res/drawable/shape_corner_rec_normal.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/shape_corner_rec_small.xml" value="0.1235" />

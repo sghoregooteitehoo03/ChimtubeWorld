@@ -64,7 +64,7 @@ class TwitchFragment : Fragment() {
             .actionTwitchFragmentToVideosFragment(
                 channelName = channelData.name,
                 channelId = channelData.id,
-                typeImageRes = R.drawable.ic_twitch
+                typeImageRes = R.drawable.twitch
             )
         findNavController().navigate(directions)
     }

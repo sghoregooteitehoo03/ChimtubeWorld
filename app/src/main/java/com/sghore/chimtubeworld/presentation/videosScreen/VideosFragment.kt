@@ -68,7 +68,7 @@ class VideosFragment : Fragment() {
 
     // 영상을 실행시킴
     private fun playVideo(video: Video) {
-        val packageName = if (args.typeImageRes == R.drawable.ic_youtube) {
+        val packageName = if (args.typeImageRes == R.drawable.youtube) {
             // Youtube 패키지
             val youtubePackage = Contents.YOUTUBE_PACKAGE_NAME
             if (video.bookmarks.isEmpty()) {

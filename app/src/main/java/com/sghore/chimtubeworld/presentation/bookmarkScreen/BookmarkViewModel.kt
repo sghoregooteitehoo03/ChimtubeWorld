@@ -78,10 +78,10 @@ class BookmarkViewModel @AssistedInject constructor(
             var videoTypeImage = -1
 
             val videoFlow = if (baseUrl == baseYoutubeUrl) {
-                videoTypeImage = R.drawable.ic_youtube
+                videoTypeImage = R.drawable.youtube
                 getYoutubeVideoUseCase(videoUrl, baseUrl)
             } else {
-                videoTypeImage = R.drawable.ic_twitch
+                videoTypeImage = R.drawable.twitch
                 getTwitchVideoUseCase(videoUrl, baseUrl)
             }
 
@@ -210,9 +210,9 @@ class BookmarkViewModel @AssistedInject constructor(
     fun getVideoUrl(videoPosition: Long): String {
         val time = getSecondsFromPosition(videoPosition)
 
-        return if (state.videoTypeImage == R.drawable.ic_youtube) {
+        return if (state.videoTypeImage == R.drawable.youtube) {
             "${state.videoData!!.url}&t=$time"
-        } else if (state.videoTypeImage == R.drawable.ic_twitch) {
+        } else if (state.videoTypeImage == R.drawable.twitch) {
             "$${state.videoData!!.url}?t=$time"
         } else {
             ""

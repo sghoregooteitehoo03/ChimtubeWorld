@@ -53,7 +53,7 @@ class YoutubeFragment : Fragment() {
             .actionYoutubeFragmentToVideosFragment(
                 channelName = channelData.name,
                 channelId = channelData.id.split("|")[1],
-                typeImageRes = R.drawable.ic_youtube
+                typeImageRes = R.drawable.youtube
             )
         findNavController().navigate(directions)
     }

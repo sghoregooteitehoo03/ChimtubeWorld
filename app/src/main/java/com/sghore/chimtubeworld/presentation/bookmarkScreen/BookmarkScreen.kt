@@ -7,18 +7,28 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +45,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.Duration
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun BookmarkScreen(
     viewModel: BookmarkViewModel,
@@ -52,6 +63,9 @@ fun BookmarkScreen(
             )
     ) {
         val context = LocalContext.current
+        val focusRequester = remember { FocusRequester() }
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         LaunchedEffect(key1 = viewModel.state.errorMsg) {
             val msg = viewModel.state.errorMsg
             if (msg.isNotEmpty()) {
@@ -94,6 +108,12 @@ fun BookmarkScreen(
                             unfocusedIndicatorColor = colorResource(id = R.color.gray_night),
                             cursorColor = colorResource(id = R.color.item_color)
                         ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequester.requestFocus() }
+                        ),
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -114,7 +134,15 @@ fun BookmarkScreen(
                             unfocusedIndicatorColor = colorResource(id = R.color.gray_night),
                             cursorColor = colorResource(id = R.color.item_color)
                         ),
-                        modifier = Modifier.fillMaxWidth()
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { keyboardController?.hide() }
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester)
                     )
                 }
 
@@ -266,7 +294,7 @@ fun VideoInfo(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Image(
-                    imageVector = ImageVector.vectorResource(id = typeImage),
+                    painter = painterResource(id = typeImage),
                     contentDescription = "typeImage"
                 )
             }
@@ -381,7 +409,7 @@ fun VideoInfoPreview() {
                 duration = duration,
                 url = ""
             ),
-            typeImage = R.drawable.ic_youtube
+            typeImage = R.drawable.youtube
         )
     }
 }

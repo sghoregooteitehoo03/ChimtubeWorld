@@ -7,7 +7,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
@@ -15,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,50 +30,72 @@ fun YoutubeScreen(
     viewModel: YoutubeViewModel,
     onClick: (Channel?) -> Unit
 ) {
-    Surface {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-        ) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        YoutubeChannelList(
+            viewModel = viewModel,
+            onClick = onClick
+        )
 
-            Column(modifier = Modifier.padding(12.dp)) {
-                if (!viewModel.state.isLoading) {
-                    TitleTextWithExplain(
-                        title = "Youtube",
-                        explain = "침튜브 채널"
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
+        LoadingView(
+            viewModel = viewModel,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
 
-                    MainYoutubeChannelList(viewModel = viewModel, onClick = onClick)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TitleTextWithExplain(
-                        title = "Sub Contents",
-                        explain = "침착맨 외부 방송"
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    SubYoutubeChannelList(viewModel = viewModel, onClick = onClick)
-                }
-            }
+@Composable
+fun YoutubeChannelList(
+    viewModel: YoutubeViewModel,
+    onClick: (Channel?) -> Unit
+) {
+    Column(modifier = Modifier.padding(12.dp)) {
+        if (!viewModel.state.isLoading) {
+            TitleTextWithExplain(
+                title = "Youtube",
+                explain = "침튜브 채널"
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
-            if (viewModel.state.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.Center),
-                    color = colorResource(id = R.color.item_color)
-                )
-            }
+            MainYoutubeChannelList(
+                mainChannelList = viewModel.state.channels?.filter { it?.type == 0 } ?: listOf(),
+                onClick = onClick
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TitleTextWithExplain(
+                title = "Sub Contents",
+                explain = "침착맨 외부 방송"
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            SubYoutubeChannelList(
+                subChannelList = viewModel.state.channels?.filter { it?.type == 1 } ?: listOf(),
+                onClick = onClick
+            )
         }
     }
 }
 
 @Composable
-fun MainYoutubeChannelList(
+fun LoadingView(
     viewModel: YoutubeViewModel,
+    modifier: Modifier = Modifier
+) {
+    if (viewModel.state.isLoading) {
+        CircularProgressIndicator(
+            modifier = modifier,
+            color = colorResource(id = R.color.item_color)
+        )
+    }
+}
+
+@Composable
+fun MainYoutubeChannelList(
+    mainChannelList: List<Channel?>,
     onClick: (Channel?) -> Unit = {}
 ) {
-    val mainChannelList = viewModel.state.channels?.filter { it?.type == 0 } ?: listOf()
-
     mainChannelList.forEach { channel ->
         Column {
             MainYoutubeChannelItem(
@@ -148,12 +168,9 @@ fun MainYoutubeChannelItem(
 
 @Composable
 fun SubYoutubeChannelList(
-    viewModel: YoutubeViewModel,
+    subChannelList: List<Channel?>,
     onClick: (Channel?) -> Unit = {}
 ) {
-    val subChannelList =
-        viewModel.state.channels?.filter { it?.type == 1 } ?: listOf()
-
     val spanCount = 2
     val itemCount = if (subChannelList.size % spanCount == 0) {
         subChannelList.size / spanCount

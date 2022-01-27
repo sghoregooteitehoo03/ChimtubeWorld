@@ -25,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 //  . state 형식 변경 O
 //  . repository 기능별 분리 O
 //  . 쓸데없는 재구성 지우기 O
-//  . 앱 아이콘, 아이콘, 스플래쉬 화면 이미지 변경
+//  . 앱 아이콘 O, 아이콘 O, 스플래쉬 화면 이미지 변경 O
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val globalViewModel by viewModels<GlobalViewModel>()

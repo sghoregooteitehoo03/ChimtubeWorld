@@ -11,7 +11,7 @@ class GetVideosUseCase @Inject constructor(
     private val twitchRepository: TwitchRepository
 ) {
     operator fun invoke(typeImageRes: Int, channelId: String) =
-        if (typeImageRes == R.drawable.ic_youtube) {
+        if (typeImageRes == R.drawable.youtube) {
             youtubeRepository.getVideos(channelId)
         } else {
             twitchRepository.getVideos(channelId)
