@@ -1,19 +1,16 @@
 package com.sghore.chimtubeworld
 
+import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import com.sghore.chimtubeworld.other.Contents
-import com.sghore.chimtubeworld.retrofit.RetrofitService
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.junit.Test
-
 import org.junit.Assert.*
 import retrofit2.Retrofit
 import retrofit2.await
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**

@@ -3,6 +3,58 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/compose-model-1642330017081.xml" value="0.35636856368563685" />
+        <entry key="../../../../layout/compose-model-1642330026398.xml" value="1.0" />
+        <entry key="../../../../layout/compose-model-1642341746482.xml" value="1.25" />
+        <entry key="../../../../layout/compose-model-1642341754074.xml" value="0.5" />
+        <entry key="../../../../layout/compose-model-1642342095459.xml" value="0.33" />
+        <entry key="../../../../layout/compose-model-1642344469616.xml" value="0.33" />
+        <entry key="../../../../layout/compose-model-1642345808668.xml" value="0.18" />
+        <entry key="../../../../layout/compose-model-1642385149464.xml" value="0.41350210970464135" />
+        <entry key="../../../../layout/compose-model-1642388075025.xml" value="0.165" />
+        <entry key="../../../../layout/compose-model-1642390352656.xml" value="0.335" />
+        <entry key="../../../../layout/compose-model-1642394225895.xml" value="0.22" />
+        <entry key="../../../../layout/compose-model-1642433716236.xml" value="0.22" />
+        <entry key="../../../../layout/compose-model-1642433782025.xml" value="0.2490740740740741" />
+        <entry key="../../../../layout/compose-model-1642434809782.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1642487960306.xml" value="0.19814814814814816" />
+        <entry key="../../../../layout/compose-model-1642488124990.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642491617178.xml" value="0.375" />
+        <entry key="../../../../layout/compose-model-1642503204755.xml" value="0.19814814814814816" />
+        <entry key="../../../../layout/compose-model-1642503557298.xml" value="0.19814814814814816" />
+        <entry key="../../../../layout/compose-model-1642514931824.xml" value="0.19814814814814816" />
+        <entry key="../../../../layout/compose-model-1642518451785.xml" value="0.12332775919732442" />
+        <entry key="../../../../layout/compose-model-1642560655198.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642577692827.xml" value="0.24814814814814815" />
+        <entry key="../../../../layout/compose-model-1642579022623.xml" value="0.22" />
+        <entry key="../../../../layout/compose-model-1642602559961.xml" value="0.18" />
+        <entry key="../../../../layout/compose-model-1642602559978.xml" value="0.24814814814814815" />
+        <entry key="../../../../layout/compose-model-1642659704400.xml" value="0.23148148148148148" />
+        <entry key="../../../../layout/compose-model-1642659704419.xml" value="0.18" />
+        <entry key="../../../../layout/compose-model-1642659742398.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642742068913.xml" value="0.24259259259259258" />
+        <entry key="../../../../layout/compose-model-1642742130447.xml" value="0.24259259259259258" />
+        <entry key="../../../../layout/compose-model-1642743632659.xml" value="0.5" />
+        <entry key="../../../../layout/compose-model-1642744291722.xml" value="0.24259259259259258" />
+        <entry key="../../../../layout/compose-model-1642760251678.xml" value="0.24537037037037038" />
+        <entry key="../../../../layout/compose-model-1642760946810.xml" value="0.24537037037037038" />
+        <entry key="../../../../layout/compose-model-1642762533610.xml" value="0.24537037037037038" />
+        <entry key="../../../../layout/compose-model-1642824530731.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642825080518.xml" value="0.25092592592592594" />
+        <entry key="../../../../layout/compose-model-1642825600836.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642828664970.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642828664976.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642935381411.xml" value="0.20092592592592592" />
+        <entry key="../../../../layout/compose-model-1642993422457.xml" value="0.19722222222222222" />
+        <entry key="../../../../layout/compose-model-1642997690612.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1642997732640.xml" value="0.22" />
+        <entry key="../../../../layout/compose-model-1643084840507.xml" value="0.19907407407407407" />
+        <entry key="../../../../layout/compose-model-1643087142705.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1643087838802.xml" value="0.19907407407407407" />
+        <entry key="../../../../layout/compose-model-1643090577163.xml" value="0.9307359307359307" />
+        <entry key="../../../../layout/compose-model-1643103819080.xml" value="0.19907407407407407" />
+        <entry key="../../../../layout/compose-model-1643168962139.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1643244182522.xml" value="0.19907407407407407" />
         <entry key="../../../../layout/custom_preview.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/drawable-small/splash.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable-v24/shape_corner_rec_large.xml" value="0.122" />
@@ -23,14 +75,15 @@
         <entry key="app/src/main/res/drawable/ic_twitch_bedge.xml" value="0.158" />
         <entry key="app/src/main/res/drawable/ic_twitch_betge.xml" value="0.158" />
         <entry key="app/src/main/res/drawable/ic_twitch_darker.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/ic_webtoon.xml" value="0.134" />
         <entry key="app/src/main/res/drawable/ic_webtoon_darker.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_youtube.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_youtube_darker.xml" value="0.154" />
-        <entry key="app/src/main/res/drawable/selector_cafe.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/selector_cafe.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/selector_store.xml" value="0.154" />
-        <entry key="app/src/main/res/drawable/selector_twitch.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/selector_twitch.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/selector_webtoon.xml" value="0.154" />
-        <entry key="app/src/main/res/drawable/selector_youtube.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/selector_youtube.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/shape_corner_rec_large.xml" value="0.122" />
         <entry key="app/src/main/res/drawable/shape_corner_rec_normal.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/shape_corner_rec_small.xml" value="0.1235" />
@@ -45,23 +98,24 @@
         <entry key="app/src/main/res/drawable/shape_rounded_dialog.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/shape_sideded_rounded_rec.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/dialog_select_bookmark.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_select_position.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/fragment_add_bookmark.xml" value="0.16854858398437503" />
+        <entry key="app/src/main/res/layout/fragment_add_bookmark.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_cafe.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_store.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_store_detail.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_video.xml" value="0.28229166666666666" />
-        <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.11" />
+        <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_webtoon.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/fragment_youtube.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/item_bookmark.xml" value="0.16" />
+        <entry key="app/src/main/res/layout/fragment_youtube.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/item_bookmark.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_bookmark_color.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_cafe_category.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/item_cafe_post.xml" value="0.24386138916015626" />
-        <entry key="app/src/main/res/layout/item_content_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_cafe_post.xml" value="0.19" />
+        <entry key="app/src/main/res/layout/item_content_main.xml" value="0.450402144772118" />
         <entry key="app/src/main/res/layout/item_content_sub.xml" value="0.18" />
-        <entry key="app/src/main/res/layout/item_crew.xml" value="0.2325149536132814" />
+        <entry key="app/src/main/res/layout/item_crew.xml" value="0.1436233520507813" />
         <entry key="app/src/main/res/layout/item_goods_category.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_goods_info.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_goods_item.xml" value="0.36041666666666666" />

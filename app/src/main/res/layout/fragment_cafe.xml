@@ -1,154 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
-        <import type="android.view.View" />
-
-        <variable
-            name="viewmodel"
-            type="com.sghore.chimtubeworld.viewmodel.cafeFrag.CafeViewModel" />
-
-        <variable
-            name="clickListener"
-            type="android.view.View.OnClickListener" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/top_banner_layout"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:titleEnabled="false">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/title_main_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Community"
-                        android:textColor="@color/item_color"
-                        android:textSize="22sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/subtitle_main_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:text="침착맨 팬카페"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@id/title_main_text"
-                        app:layout_constraintStart_toEndOf="@id/title_main_text" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/cafe_banner_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="218dp"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/shape_corner_rec_normal"
-                        android:backgroundTint="@color/cafe_banner"
-                        android:onClick="@{clickListener}"
-                        app:layout_constraintTop_toBottomOf="@id/title_main_text">
-
-                        <LinearLayout
-                            android:layout_width="168dp"
-                            android:layout_height="168dp"
-                            android:background="@drawable/shape_round"
-                            android:backgroundTint="@color/item_reverse_color"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="12dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <ImageView
-                                android:layout_width="52dp"
-                                android:layout_height="52dp"
-                                android:background="@drawable/shape_round"
-                                android:scaleType="centerCrop"
-                                app:setImage="@{viewmodel.cafeInfoData.image}"
-                                tools:src="@drawable/test" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:ellipsize="end"
-                                android:gravity="center"
-                                android:maxLines="1"
-                                android:text="@{viewmodel.cafeInfoData.name}"
-                                android:textColor="@color/item_color"
-                                android:textSize="18sp"
-                                tools:text="§ 침투부 카페 §" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:ellipsize="end"
-                                android:gravity="center"
-                                android:maxLines="1"
-                                android:text="@{viewmodel.cafeInfoData.explains[0]}"
-                                tools:text="75,563" />
-                        </LinearLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:id="@+id/title_sub_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:text="게시글"
-                        android:textColor="@color/item_color"
-                        android:textSize="22sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/cafe_banner_layout" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/cafe_category_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:nestedScrollingEnabled="false"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/title_sub_text"
-                app:restoreListState="@{viewmodel.categoryListState}"
-                app:setScrollPosition="@{viewmodel.selectedPos}"
-                tools:listitem="@layout/item_cafe_category" />
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/cafe_post_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="true"
-            android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/item_cafe_post" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            android:layout_height="match_parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
