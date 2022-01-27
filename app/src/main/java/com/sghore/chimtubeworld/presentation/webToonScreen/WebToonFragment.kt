@@ -33,8 +33,9 @@ class WebToonFragment : Fragment() {
                         viewModel = mViewModel,
                         onWebToonClick = {
                             OpenOtherApp(requireContext()).openNaverWebToon(
-                                Contents.NAVER_WEBTOON_PACKAGE_NAME + it.id,
-                                it.url
+                                packageName = Contents.NAVER_WEBTOON_PACKAGE_NAME,
+                                scheme = Contents.NAVER_WEBTOON_SCHEME + it.id,
+                                url = it.url
                             )
                         }
                     )

@@ -3,6 +3,9 @@
     package="com.sghore.chimtubeworld">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <queries>
+        <package android:name="com.nhn.android.webtoon" />
+    </queries>
 
     <application
         android:name="com.sghore.chimtubeworld.presentation.ui.MainApplication"
