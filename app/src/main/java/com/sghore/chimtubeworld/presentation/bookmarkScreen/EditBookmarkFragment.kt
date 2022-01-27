@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.compose.material.Surface
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,7 +16,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.databinding.FragmentAddBookmarkBinding
-import com.sghore.chimtubeworld.presentation.storeDetailScreen.StoreDetailViewModel
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

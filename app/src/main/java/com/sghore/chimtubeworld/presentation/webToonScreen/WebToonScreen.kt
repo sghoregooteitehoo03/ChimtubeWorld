@@ -28,7 +28,6 @@ import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
-import com.sghore.chimtubeworld.presentation.twitchScreen.TwitchViewModel
 
 @Composable
 fun WebToonScreen(

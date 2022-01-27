@@ -6,22 +6,18 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
-import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.BookmarkRepository
 import com.sghore.chimtubeworld.domain.GetTwitchVideoUseCase
 import com.sghore.chimtubeworld.domain.GetYoutubeVideoUseCase
-import com.sghore.chimtubeworld.presentation.storeDetailScreen.StoreDetailViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 class BookmarkViewModel @AssistedInject constructor(
     private val getYoutubeVideoUseCase: GetYoutubeVideoUseCase,

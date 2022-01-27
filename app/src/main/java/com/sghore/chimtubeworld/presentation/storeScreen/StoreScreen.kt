@@ -29,7 +29,6 @@ import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
-import com.sghore.chimtubeworld.presentation.twitchScreen.TwitchViewModel
 import kotlinx.coroutines.flow.collect
 
 @Composable
