@@ -6,12 +6,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
@@ -33,85 +31,53 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.presentation.RowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 import com.sghore.chimtubeworld.util.parseFollowText
 
 @Composable
 fun TwitchScreen(
-    viewModel: TwitchViewModel,
+    uiState: TwitchScreenState,
     onMainChannelClick: (Channel?) -> Unit,
     onTwitchCrewChannelClick: (Channel?) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
-        TwitchChannelList(
-            viewModel = viewModel,
-            onMainChannelClick = onMainChannelClick,
-            onTwitchCrewChannelClick = onTwitchCrewChannelClick
-        )
-        LoadingView(
-            viewModel = viewModel,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
-fun LoadingView(
-    viewModel: TwitchViewModel,
-    modifier: Modifier = Modifier
-) {
-    if (viewModel.state.isLoading) {
-        CircularProgressIndicator(
-            modifier = modifier,
-            color = colorResource(id = R.color.item_color)
-        )
-    }
-}
-
-@Composable
-fun TwitchChannelList(
-    viewModel: TwitchViewModel,
-    onMainChannelClick: (Channel?) -> Unit,
-    onTwitchCrewChannelClick: (Channel?) -> Unit
-) {
-    val crewChannelList = viewModel.state.channels ?: emptyList()
-
-    LazyColumn(
-        contentPadding = PaddingValues(12.dp)
-    ) {
-        if (!viewModel.state.isLoading) {
-            val spanCount = 4
-            val itemCount = if (crewChannelList.size % spanCount == 0) {
-                crewChannelList.size / spanCount
-            } else {
-                crewChannelList.size / spanCount + 1
-            }
-
-            item {
-                TitleTextWithExplain(
-                    title = "Twitch Live",
-                    explain = "침착맨 생방송 채널"
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                MainChannelInfo(
-                    mainChannel = viewModel.state.mainChannelInfo,
-                    onClick = onMainChannelClick
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                TitleTextWithExplain(
-                    title = "Twitch Crew",
-                    explain = "스트리머 크루 배도라지"
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            items(itemCount) { index ->
-                TwitchCrewChannelRow(
-                    rowIndex = index,
-                    channels = crewChannelList,
-                    spanCount = spanCount,
-                    onClick = onTwitchCrewChannelClick
-                )
-            }
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
+            )
+        } else {
+            val crewChannelList = uiState.channels ?: emptyList()
+            RowList(
+                list = crewChannelList,
+                spanCount = 4,
+                itemPaddingValue = 12.dp,
+                headerItem = {
+                    TitleTextWithExplain(
+                        title = "Twitch Live",
+                        explain = "침착맨 생방송 채널"
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    MainChannelInfo(
+                        mainChannel = uiState.mainChannelInfo,
+                        onClick = onMainChannelClick
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    TitleTextWithExplain(
+                        title = "Twitch Crew",
+                        explain = "스트리머 크루 배도라지"
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                },
+                listItem = { index, modifier ->
+                    TwitchCrewChannelItem(
+                        channel = crewChannelList[index],
+                        modifier = modifier,
+                        onClick = onTwitchCrewChannelClick
+                    )
+                }
+            )
         }
     }
 }
@@ -232,36 +198,6 @@ fun MainChannelInfo(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun TwitchCrewChannelRow(
-    rowIndex: Int,
-    channels: List<Channel?>,
-    spanCount: Int,
-    onClick: (Channel?) -> Unit = {}
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row {
-            for (index in 0 until spanCount) {
-                if (channels.size >= rowIndex * spanCount + (index + 1)) {
-                    TwitchCrewChannelItem(
-                        channel = channels[rowIndex * spanCount + index],
-                        modifier = Modifier
-                            .weight(1f),
-                        onClick = onClick
-                    )
-
-                    if (index != spanCount - 1) {
-                        Spacer(modifier = Modifier.width(12.dp))
-                    }
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 

@@ -20,7 +20,7 @@ class YoutubeViewModel @Inject constructor(
         getChannelInfo()
     }
 
-    fun getChannelInfo() = viewModelScope.launch {
+    fun getChannelInfo() {
         getYoutubeChannelUseCase().onEach { resource ->
             when (resource) {
                 is Resource.Success -> {

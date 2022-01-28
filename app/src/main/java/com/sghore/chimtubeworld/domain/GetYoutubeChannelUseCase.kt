@@ -16,6 +16,7 @@ class GetYoutubeChannelUseCase @Inject constructor(
         try {
             val channelLinkData = repository.getChannelLinkData()
             val channels = repository.getChannelInfo(channelLinkData)
+
             emit(Resource.Success<List<Channel?>>(channels))
         } catch (e: Exception) {
             e.printStackTrace()

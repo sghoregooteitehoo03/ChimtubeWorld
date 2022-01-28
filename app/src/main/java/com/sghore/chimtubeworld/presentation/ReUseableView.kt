@@ -1,6 +1,7 @@
 package com.sghore.chimtubeworld.presentation
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,23 +40,33 @@ fun TitleTextWithExplain(
 fun <T> RowList(
     list: List<T>,
     spanCount: Int = 2,
-    paddingValue: Dp = 12.dp,
-    content: @Composable (Int, Modifier) -> Unit
+    contentPaddingValue: Dp = 12.dp,
+    itemPaddingValue: Dp = 12.dp,
+    headerItem: @Composable () -> Unit,
+    listItem: @Composable (Int, Modifier) -> Unit
 ) {
-    val itemCount = if (list.size % spanCount == 0) {
-        list.size / spanCount
-    } else {
-        list.size / spanCount + 1
-    }
+    LazyColumn(
+        contentPadding = PaddingValues(contentPaddingValue)
+    ) {
+        val itemCount = if (list.size % spanCount == 0) {
+            list.size / spanCount
+        } else {
+            list.size / spanCount + 1
+        }
 
-    for (index in 0 until itemCount) {
-        RowItemCollocate(
-            rowIndex = index,
-            list = list,
-            spanCount = spanCount,
-            paddingValue = paddingValue,
-            content = content
-        )
+        item {
+            headerItem()
+        }
+
+        items(itemCount) { index ->
+            RowItemCollocate(
+                rowIndex = index,
+                list = list,
+                spanCount = spanCount,
+                paddingValue = itemPaddingValue,
+                content = listItem
+            )
+        }
     }
 }
 

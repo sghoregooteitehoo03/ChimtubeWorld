@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.presentation.RowItemCollocate
 import com.sghore.chimtubeworld.presentation.RowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 
@@ -152,16 +153,26 @@ fun SubYoutubeChannelList(
     subChannelList: List<Channel?>,
     onClick: (Channel) -> Unit = {}
 ) {
-    RowList(
-        list = subChannelList,
-        spanCount = 2,
-        paddingValue = 12.dp
-    ) { index, modifier ->
-        SubYoutubeChannelItem(
-            channel = subChannelList[index],
-            modifier = modifier,
-            onClick = onClick
-        )
+    val spanCount = 2
+    val itemCount = if (subChannelList.size % spanCount == 0) {
+        subChannelList.size / spanCount
+    } else {
+        subChannelList.size / spanCount + 1
+    }
+
+    for (rowIndex in 0 until itemCount) {
+        RowItemCollocate(
+            rowIndex = rowIndex,
+            list = subChannelList,
+            spanCount = spanCount,
+            paddingValue = 12.dp
+        ) { index, modifier ->
+            SubYoutubeChannelItem(
+                channel = subChannelList[index],
+                modifier = modifier,
+                onClick = onClick
+            )
+        }
     }
 }
 

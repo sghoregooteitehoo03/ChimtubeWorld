@@ -12,6 +12,7 @@ fun YoutubeRoute(
     navController: NavController
 ) {
     val uiState by viewModel.state.collectAsState()
+
     YoutubeScreen(
         uiState = uiState,
         onClick = { channelData ->
