@@ -52,6 +52,7 @@ fun TwitchScreen(
             RowList(
                 list = crewChannelList,
                 spanCount = 4,
+                contentPaddingValue = 12.dp,
                 itemPaddingValue = 12.dp,
                 headerItem = {
                     TitleTextWithExplain(
@@ -76,8 +77,7 @@ fun TwitchScreen(
                         modifier = modifier,
                         onClick = onTwitchCrewChannelClick
                     )
-                }
-            )
+                })
         }
     }
 }

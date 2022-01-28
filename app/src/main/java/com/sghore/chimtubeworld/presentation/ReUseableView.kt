@@ -39,9 +39,9 @@ fun TitleTextWithExplain(
 @Composable
 fun <T> RowList(
     list: List<T>,
-    spanCount: Int = 2,
-    contentPaddingValue: Dp = 12.dp,
-    itemPaddingValue: Dp = 12.dp,
+    spanCount: Int,
+    contentPaddingValue: Dp,
+    itemPaddingValue: Dp,
     headerItem: @Composable () -> Unit,
     listItem: @Composable (Int, Modifier) -> Unit
 ) {
