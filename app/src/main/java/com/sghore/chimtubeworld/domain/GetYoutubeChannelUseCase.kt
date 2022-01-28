@@ -14,8 +14,6 @@ class GetYoutubeChannelUseCase @Inject constructor(
 
     operator fun invoke(): Flow<Resource<List<Channel?>>> = flow {
         try {
-            emit(Resource.Loading<List<Channel?>>())
-
             val channelLinkData = repository.getChannelLinkData()
             val channels = repository.getChannelInfo(channelLinkData)
             emit(Resource.Success<List<Channel?>>(channels))

@@ -23,78 +23,59 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.presentation.RowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 
 @Composable
 fun YoutubeScreen(
-    viewModel: YoutubeViewModel,
-    onClick: (Channel?) -> Unit
+    uiState: YoutubeScreenState,
+    onClick: (Channel) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        YoutubeChannelList(
-            viewModel = viewModel,
-            onClick = onClick
-        )
+        Column(modifier = Modifier.padding(12.dp)) {
+            if (!uiState.isLoading) {
+                TitleTextWithExplain(
+                    title = "Youtube",
+                    explain = "침튜브 채널"
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                MainYoutubeChannelList(
+                    mainChannelList = uiState.channels?.filter { it?.type == 0 }
+                        ?: listOf(),
+                    onClick = onClick
+                )
 
-        LoadingView(
-            viewModel = viewModel,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
+                Spacer(modifier = Modifier.height(8.dp))
 
-@Composable
-fun YoutubeChannelList(
-    viewModel: YoutubeViewModel,
-    onClick: (Channel?) -> Unit
-) {
-    Column(modifier = Modifier.padding(12.dp)) {
-        if (!viewModel.state.isLoading) {
-            TitleTextWithExplain(
-                title = "Youtube",
-                explain = "침튜브 채널"
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+                TitleTextWithExplain(
+                    title = "Sub Contents",
+                    explain = "침착맨 외부 방송"
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                SubYoutubeChannelList(
+                    subChannelList = uiState.channels?.filter { it?.type == 1 } ?: listOf(),
+                    onClick = onClick
+                )
+            }
+        }
 
-            MainYoutubeChannelList(
-                mainChannelList = viewModel.state.channels?.filter { it?.type == 0 } ?: listOf(),
-                onClick = onClick
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TitleTextWithExplain(
-                title = "Sub Contents",
-                explain = "침착맨 외부 방송"
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            SubYoutubeChannelList(
-                subChannelList = viewModel.state.channels?.filter { it?.type == 1 } ?: listOf(),
-                onClick = onClick
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
             )
         }
     }
 }
 
 @Composable
-fun LoadingView(
-    viewModel: YoutubeViewModel,
-    modifier: Modifier = Modifier
-) {
-    if (viewModel.state.isLoading) {
-        CircularProgressIndicator(
-            modifier = modifier,
-            color = colorResource(id = R.color.item_color)
-        )
-    }
-}
-
-@Composable
 fun MainYoutubeChannelList(
     mainChannelList: List<Channel?>,
-    onClick: (Channel?) -> Unit = {}
+    onClick: (Channel) -> Unit = {}
 ) {
     mainChannelList.forEach { channel ->
         Column {
@@ -114,7 +95,7 @@ fun MainYoutubeChannelList(
 fun MainYoutubeChannelItem(
     channel: Channel?,
     modifier: Modifier = Modifier,
-    onClick: (Channel?) -> Unit
+    onClick: (Channel) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -127,7 +108,7 @@ fun MainYoutubeChannelItem(
                     color = colorResource(id = R.color.item_color)
                 )
             ) {
-                onClick(channel)
+                onClick(channel!!)
             }
     ) {
         Row(
@@ -169,51 +150,18 @@ fun MainYoutubeChannelItem(
 @Composable
 fun SubYoutubeChannelList(
     subChannelList: List<Channel?>,
-    onClick: (Channel?) -> Unit = {}
+    onClick: (Channel) -> Unit = {}
 ) {
-    val spanCount = 2
-    val itemCount = if (subChannelList.size % spanCount == 0) {
-        subChannelList.size / spanCount
-    } else {
-        subChannelList.size / spanCount + 1
-    }
-
-    for (index in 0 until itemCount) {
-        SubYoutubeChannelRow(
-            rowIndex = index,
-            channels = subChannelList,
-            spanCount = spanCount,
+    RowList(
+        list = subChannelList,
+        spanCount = 2,
+        paddingValue = 12.dp
+    ) { index, modifier ->
+        SubYoutubeChannelItem(
+            channel = subChannelList[index],
+            modifier = modifier,
             onClick = onClick
         )
-    }
-}
-
-@Composable
-fun SubYoutubeChannelRow(
-    rowIndex: Int,
-    channels: List<Channel?>,
-    spanCount: Int,
-    onClick: (Channel?) -> Unit
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row {
-            for (index in 0 until spanCount) {
-                if (channels.size >= rowIndex * spanCount + (index + 1)) {
-                    SubYoutubeChannelItem(
-                        channel = channels[rowIndex * spanCount + index],
-                        modifier = Modifier.weight(1f),
-                        onClick = onClick
-                    )
-
-                    if (index != spanCount - 1) {
-                        Spacer(modifier = Modifier.width(12.dp))
-                    }
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
@@ -221,7 +169,7 @@ fun SubYoutubeChannelRow(
 fun SubYoutubeChannelItem(
     channel: Channel?,
     modifier: Modifier = Modifier,
-    onClick: (Channel?) -> Unit = {}
+    onClick: (Channel) -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -232,7 +180,7 @@ fun SubYoutubeChannelItem(
                     color = colorResource(id = R.color.item_color)
                 )
             ) {
-                onClick(channel)
+                onClick(channel!!)
             }
     ) {
         Column {

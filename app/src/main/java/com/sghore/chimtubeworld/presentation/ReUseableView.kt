@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.presentation.youtubeScreen.SubYoutubeChannelItem
 
 @Composable
 fun TitleTextWithExplain(
@@ -36,28 +35,55 @@ fun TitleTextWithExplain(
     }
 }
 
-//@Composable
-//fun <T> RowList(
-//    rowIndex: Int,
-//    list: List<T>,
-//    spanCount: Int = 2,
-//    paddingValue: Dp = 12.dp,
-//    onClick: (T) -> Unit = {},
-//    content: @Composable () -> Unit
-//) {
-//    Column(modifier = Modifier.fillMaxWidth()) {
-//        Row {
-//            for (index in 0 until spanCount) {
-//                if (list.size >= rowIndex * spanCount + (index + 1)) {
-//                    content()
-//                    if (index != spanCount - 1) {
-//                        Spacer(modifier = Modifier.width(paddingValue))
-//                    }
-//                } else {
-//                    Spacer(modifier = Modifier.weight(1f))
-//                }
-//            }
-//        }
-//        Spacer(modifier = Modifier.height(paddingValue))
-//    }
-//}
+@Composable
+fun <T> RowList(
+    list: List<T>,
+    spanCount: Int = 2,
+    paddingValue: Dp = 12.dp,
+    content: @Composable (Int, Modifier) -> Unit
+) {
+    val itemCount = if (list.size % spanCount == 0) {
+        list.size / spanCount
+    } else {
+        list.size / spanCount + 1
+    }
+
+    for (index in 0 until itemCount) {
+        RowItemCollocate(
+            rowIndex = index,
+            list = list,
+            spanCount = spanCount,
+            paddingValue = paddingValue,
+            content = content
+        )
+    }
+}
+
+@Composable
+fun <T> RowItemCollocate(
+    rowIndex: Int,
+    list: List<T>,
+    spanCount: Int,
+    paddingValue: Dp,
+    content: @Composable (Int, Modifier) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row {
+            for (index in 0 until spanCount) {
+                if (list.size >= rowIndex * spanCount + (index + 1)) {
+                    content(
+                        rowIndex * spanCount + index,
+                        Modifier.weight(1f)
+                    )
+
+                    if (index != spanCount - 1) {
+                        Spacer(modifier = Modifier.width(paddingValue))
+                    }
+                } else {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(paddingValue))
+    }
+}
