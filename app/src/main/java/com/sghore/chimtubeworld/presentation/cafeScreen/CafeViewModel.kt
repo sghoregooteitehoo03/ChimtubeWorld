@@ -1,17 +1,15 @@
 package com.sghore.chimtubeworld.presentation.cafeScreen
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
+import com.sghore.chimtubeworld.data.model.Post
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.domain.GetCafeInfoUseCase
 import com.sghore.chimtubeworld.domain.GetCafePostsUseCase
 import com.sghore.chimtubeworld.domain.InsertCafeHistoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,8 +18,8 @@ class CafeViewModel @Inject constructor(
     private val getCafePostsUseCase: GetCafePostsUseCase,
     private val insertCafeHistoryUseCase: InsertCafeHistoryUseCase
 ) : ViewModel() {
-    var state by mutableStateOf(CafeScreenState())
-        private set
+    private val _state = MutableStateFlow(CafeScreenState())
+    val state: StateFlow<CafeScreenState> = _state.asStateFlow()
 
     init {
         getCafeInfo()
@@ -32,42 +30,48 @@ class CafeViewModel @Inject constructor(
         getCafeInfoUseCase().onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
-                    state = CafeScreenState(
-                        cafeInfo = resource.data,
-                        cafePosts = getCafePostsUseCase(cafeCategoryId = -1)
-                            .cachedIn(viewModelScope)
-                    )
+                    _state.update {
+                        CafeScreenState(
+                            cafeInfo = resource.data,
+                            cafePosts = getCafePostsUseCase(cafeCategoryId = -1)
+                                .cachedIn(viewModelScope)
+                        )
+                    }
                 }
                 is Resource.Loading -> {}
                 is Resource.Error -> {
-                    state = CafeScreenState(
-                        errorMsg = resource.errorMsg ?: "오류"
-                    )
+                    _state.update {
+                        CafeScreenState(
+                            errorMsg = resource.errorMsg ?: "오류"
+                        )
+                    }
                 }
             }
         }.launchIn(viewModelScope)
     }
 
     fun changeCategory(categoryId: Int) {
-        state = state.copy(
-            cafeCategoryId = categoryId,
-            cafePosts = getCafePostsUseCase(cafeCategoryId = categoryId)
-                .cachedIn(viewModelScope)
-        )
+        _state.update {
+            it.copy(
+                cafeCategoryId = categoryId,
+                cafePosts = getCafePostsUseCase(cafeCategoryId = categoryId)
+                    .cachedIn(viewModelScope)
+            )
+        }
     }
 
     // 히스토리 저장
-    fun readPost(postId: Int) {
-        insertCafeHistoryUseCase(postId).onEach { resource ->
-            when (resource) {
-                is Resource.Success -> {}
-                is Resource.Loading -> {}
-                is Resource.Error -> {
-                    state = state.copy(
-                        errorMsg = resource.errorMsg ?: ""
-                    )
-                }
+    fun readPost(post: Post) = viewModelScope.launch {
+        if (!post.isRead) {
+            _state.update {
+                it.copy(
+                    readHistory = it.readHistory.toMutableMap().apply {
+                        this[post.id] = true
+                    }
+                )
             }
-        }.launchIn(viewModelScope)
+
+            insertCafeHistoryUseCase(post.id)
+        }
     }
 }

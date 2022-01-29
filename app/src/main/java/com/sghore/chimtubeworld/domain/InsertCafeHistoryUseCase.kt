@@ -8,13 +8,11 @@ import javax.inject.Inject
 class InsertCafeHistoryUseCase @Inject constructor(
     private val repository: CafeRepository
 ) {
-    operator fun invoke(postId: Int) = flow<Resource<Boolean>> {
+    suspend operator fun invoke(postId: Int) {
         try {
             repository.readPost(postId)
-            emit(Resource.Success<Boolean>(true))
         } catch (e: Exception) {
             e.printStackTrace()
-            emit(Resource.Error<Boolean>(""))
         }
     }
 }

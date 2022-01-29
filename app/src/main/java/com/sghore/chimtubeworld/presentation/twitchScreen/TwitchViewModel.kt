@@ -13,7 +13,7 @@ class TwitchViewModel @Inject constructor(
     private val getTwitchChannelUseCase: GetTwitchChannelUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(TwitchScreenState(isLoading = true))
-    val state: StateFlow<TwitchScreenState> = _state
+    val state: StateFlow<TwitchScreenState> = _state.asStateFlow()
 
     init {
         getTwitchUserInfo()

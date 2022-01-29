@@ -13,7 +13,7 @@ class WebToonViewModel @Inject constructor(
     private val getWebToonListUseCase: GetWebToonListUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(WebToonScreenState(isLoading = true))
-    val state: StateFlow<WebToonScreenState> = _state
+    val state: StateFlow<WebToonScreenState> = _state.asStateFlow()
 
     init {
         getWebToonList()

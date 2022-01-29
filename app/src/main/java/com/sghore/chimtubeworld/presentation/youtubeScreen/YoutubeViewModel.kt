@@ -14,7 +14,7 @@ class YoutubeViewModel @Inject constructor(
     private val getYoutubeChannelUseCase: GetYoutubeChannelUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(YoutubeScreenState(isLoading = true))
-    val state: StateFlow<YoutubeScreenState> = _state
+    val state: StateFlow<YoutubeScreenState> = _state.asStateFlow()
 
     init {
         getChannelInfo()

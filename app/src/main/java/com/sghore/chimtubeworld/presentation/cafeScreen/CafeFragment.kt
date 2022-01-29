@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.sghore.chimtubeworld.databinding.FragmentCafeBinding
-import com.sghore.chimtubeworld.other.OpenOtherApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,19 +28,7 @@ class CafeFragment : Fragment() {
             this.composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    CafeScreen(
-                        viewModel = mViewModel,
-                        onCafeBannerClick = {
-                            OpenOtherApp(requireContext()).openCustomTabs(it!!.url)
-                        },
-                        onCafeCategoryClick = {
-                            mViewModel.changeCategory(it.categoryId)
-                        },
-                        onCafePostClick = {
-                            mViewModel.readPost(it!!.id)
-                            OpenOtherApp(requireContext()).openCustomTabs(it.url ?: "")
-                        }
-                    )
+                    CafeRoute(viewModel = mViewModel)
                 }
             }
 
