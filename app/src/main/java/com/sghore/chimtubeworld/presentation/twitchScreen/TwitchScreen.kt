@@ -77,7 +77,9 @@ fun TwitchScreen(
                         modifier = modifier,
                         onClick = onTwitchCrewChannelClick
                     )
-                })
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }

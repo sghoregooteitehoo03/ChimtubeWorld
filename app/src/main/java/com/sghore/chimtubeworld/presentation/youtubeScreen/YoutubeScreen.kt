@@ -24,7 +24,6 @@ import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.presentation.RowItemCollocate
-import com.sghore.chimtubeworld.presentation.RowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 
 @Composable
@@ -165,14 +164,16 @@ fun SubYoutubeChannelList(
             rowIndex = rowIndex,
             list = subChannelList,
             spanCount = spanCount,
-            paddingValue = 12.dp
-        ) { index, modifier ->
-            SubYoutubeChannelItem(
-                channel = subChannelList[index],
-                modifier = modifier,
-                onClick = onClick
-            )
-        }
+            paddingValue = 12.dp,
+            content = { index, modifier ->
+                SubYoutubeChannelItem(
+                    channel = subChannelList[index],
+                    modifier = modifier,
+                    onClick = onClick
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 

@@ -60,7 +60,8 @@ fun WebToonScreen(
                         modifier = modifier,
                         onClick = onWebToonClick
                     )
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

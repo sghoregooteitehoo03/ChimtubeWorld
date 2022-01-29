@@ -15,8 +15,6 @@ class GetStoreInfoListUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<Resource<List<Channel>>> = flow {
         try {
-            emit(Resource.Loading<List<Channel>>())
-
             // 스토어 링크 리스트
             val linkList = repository
                 .getStoreLinkData()

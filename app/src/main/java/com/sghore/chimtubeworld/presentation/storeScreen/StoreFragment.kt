@@ -32,15 +32,9 @@ class StoreFragment : Fragment() {
             this.composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    StoreScreen(
+                    StoreRoute(
                         viewModel = mViewModel,
-                        onCategoryClick = {
-                            mViewModel.changeCategory(it)
-                        },
-                        onGoodsClick = { goodsList, goodsIndex ->
-                            gViewModel.showGoodsList.value = goodsList
-                            gViewModel.selectedGoodsPos.value = goodsIndex
-                        }
+                        gViewModel = gViewModel
                     )
                 }
             }

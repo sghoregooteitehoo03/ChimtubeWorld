@@ -43,7 +43,8 @@ fun <T> RowList(
     contentPaddingValue: Dp,
     itemPaddingValue: Dp,
     headerItem: @Composable () -> Unit,
-    listItem: @Composable (Int, Modifier) -> Unit
+    listItem: @Composable (Int, Modifier) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
         contentPadding = PaddingValues(contentPaddingValue)
@@ -64,7 +65,8 @@ fun <T> RowList(
                 list = list,
                 spanCount = spanCount,
                 paddingValue = itemPaddingValue,
-                content = listItem
+                content = listItem,
+                modifier = modifier
             )
         }
     }
@@ -76,9 +78,10 @@ fun <T> RowItemCollocate(
     list: List<T>,
     spanCount: Int,
     paddingValue: Dp,
-    content: @Composable (Int, Modifier) -> Unit
+    content: @Composable (Int, Modifier) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier) {
         Row {
             for (index in 0 until spanCount) {
                 if (list.size >= rowIndex * spanCount + (index + 1)) {

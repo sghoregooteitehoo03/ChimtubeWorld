@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,91 +27,62 @@ import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Goods
+import com.sghore.chimtubeworld.presentation.RowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
-import com.sghore.chimtubeworld.presentation.twitchScreen.TwitchViewModel
-import kotlinx.coroutines.flow.collect
 
 @Composable
 fun StoreScreen(
-    viewModel: StoreViewModel,
+    uiState: StoreScreenState,
     onCategoryClick: (String) -> Unit,
     onGoodsClick: (List<Goods>, Int) -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        StoreList(
-            viewModel = viewModel,
-            onCategoryClick = onCategoryClick,
-            onGoodsClick = onGoodsClick
-        )
-        LoadingView(
-            viewModel = viewModel,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
+            )
+        } else {
+            val goodsList = uiState.goodsList
+            RowList(
+                list = goodsList,
+                spanCount = 3,
+                contentPaddingValue = 0.dp,
+                itemPaddingValue = 4.dp,
+                headerItem = {
+                    val storeInfoList = uiState.storeInfoList
+                    TitleTextWithExplain(
+                        title = "Goods",
+                        explain = "",
+                        modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                    )
 
-@Composable
-fun LoadingView(
-    viewModel: StoreViewModel,
-    modifier: Modifier = Modifier
-) {
-    if (viewModel.state.isLoading) {
-        CircularProgressIndicator(
-            modifier = modifier,
-            color = colorResource(id = R.color.item_color)
-        )
-    }
-}
-
-@Composable
-fun StoreList(
-    viewModel: StoreViewModel,
-    onCategoryClick: (String) -> Unit,
-    onGoodsClick: (List<Goods>, Int) -> Unit
-) {
-    LaunchedEffect(key1 = viewModel.state.goodsListFlow) {
-        viewModel.state.goodsListFlow?.collect {
-            viewModel.setGoodsList(it)
-        }
-    }
-
-    LazyColumn {
-        if (!viewModel.state.isLoading) {
-            val spanCount = 3
-            val itemCount = if (viewModel.state.goodsList.size % spanCount == 0) {
-                viewModel.state.goodsList.size / spanCount
-            } else {
-                viewModel.state.goodsList.size / spanCount + 1
-            }
-
-            item {
-                TitleTextWithExplain(
-                    title = "Goods",
-                    explain = "",
-                    modifier = Modifier
-                        .padding(top = 12.dp, start = 12.dp, end = 12.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                StoreInfoCategoryList(
-                    storeInfoList = viewModel.state.storeInfoList,
-                    selectedStoreUrl = viewModel.state.selectedStoreUrl,
-                    onClick = onCategoryClick
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            items(itemCount) { index ->
-                GoodsRow(
-                    rowIndex = index,
-                    goodsList = viewModel.state.goodsList,
-                    spanCount = spanCount,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp, end = 12.dp),
-                    onClick = onGoodsClick
-                )
-            }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    StoreInfoCategoryList(
+                        storeInfoList = storeInfoList,
+                        selectedStoreUrl = uiState.selectedStoreUrl,
+                        onClick = onCategoryClick
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                },
+                listItem = { index, modifier ->
+                    GoodsItem(
+                        goods = goodsList[index],
+                        modifier = modifier,
+                        onClick = {
+                            onGoodsClick(
+                                goodsList,
+                                goodsList.indexOf(it)
+                            )
+                        }
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp, end = 12.dp)
+            )
         }
     }
 }
@@ -122,7 +92,7 @@ fun StoreInfoCategoryList(
     storeInfoList: List<Channel>,
     selectedStoreUrl: String,
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit = {}
+    onClick: (String) -> Unit
 ) {
     LazyRow(
         modifier = modifier
@@ -193,43 +163,6 @@ fun StoreInfoCategoryItem(
             textAlign = TextAlign.Center,
             modifier = Modifier.width(84.dp)
         )
-    }
-}
-
-@Composable
-fun GoodsRow(
-    rowIndex: Int,
-    goodsList: List<Goods>,
-    spanCount: Int,
-    modifier: Modifier = Modifier,
-    onClick: (List<Goods>, Int) -> Unit = { _goodsList, _goodsIndex -> }
-) {
-    Column(
-        modifier = modifier
-    ) {
-        Row {
-            for (index in 0 until spanCount) {
-                if (goodsList.size >= rowIndex * spanCount + (index + 1)) {
-                    GoodsItem(
-                        goods = goodsList[rowIndex * spanCount + index],
-                        modifier = Modifier.weight(1f),
-                        onClick = {
-                            onClick(
-                                goodsList,
-                                goodsList.indexOf(it)
-                            )
-                        }
-                    )
-
-                    if (index != spanCount - 1) {
-                        Spacer(modifier = Modifier.width(4.dp))
-                    }
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(4.dp))
     }
 }
 
