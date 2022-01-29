@@ -15,8 +15,6 @@ class GetStorePreviewImagesUseCase @Inject constructor(
 ) {
     operator fun invoke(goods: Goods): Flow<Resource<List<String>>> = flow {
         try {
-            emit(Resource.Loading())
-
             val previewImages = CoroutineScope(Dispatchers.IO).async {
                 repository.getStorePreviewImages(goods)
             }.await()

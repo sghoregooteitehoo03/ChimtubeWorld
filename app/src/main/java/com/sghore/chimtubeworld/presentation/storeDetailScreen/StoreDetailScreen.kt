@@ -31,22 +31,72 @@ import com.sghore.chimtubeworld.data.model.Goods
 
 @Composable
 fun StoreDetailScreen(
-    viewModel: StoreDetailViewModel,
+    uiState: StoreDetailScreenState,
     goods: Goods?,
+    onPreviewImageClick: (String) -> Unit,
     onActionClick: (String) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box {
-            GoodsInfo(
-                viewModel = viewModel,
-                goods = goods
-            )
-            LoadingView(
-                viewModel = viewModel,
-                modifier = Modifier.align(Alignment.Center)
-            )
+            Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(
+                        color = colorResource(id = R.color.default_background_color)
+                    )
+                    .padding(12.dp)
+            ) {
+                Image(
+                    painter = rememberImagePainter(data = uiState.selectedImage),
+                    contentDescription = "Goods",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(240.dp)
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+
+                PreviewImageList(
+                    imageList = uiState.previewImages,
+                    selectedImage = uiState.selectedImage,
+                    modifier = Modifier.width(240.dp),
+                    onClick = onPreviewImageClick
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = if (uiState.isLoading) {
+                        ""
+                    } else {
+                        goods?.title ?: ""
+                    },
+                    color = colorResource(id = R.color.default_text_color),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.width(240.dp)
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = if (uiState.isLoading) {
+                        ""
+                    } else {
+                        goods?.price ?: ""
+                    },
+                    color = colorResource(id = R.color.item_color),
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .width(240.dp)
+                )
+            }
+
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = colorResource(id = R.color.item_color)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -66,75 +116,75 @@ fun StoreDetailScreen(
     }
 }
 
-@Composable
-fun LoadingView(
-    viewModel: StoreDetailViewModel,
-    modifier: Modifier = Modifier
-) {
-    if (viewModel.state.isLoading) {
-        CircularProgressIndicator(
-            modifier = modifier,
-            color = colorResource(id = R.color.item_color)
-        )
-    }
-}
+//@Composable
+//fun LoadingView(
+//    viewModel: StoreDetailViewModel,
+//    modifier: Modifier = Modifier
+//) {
+//    if (viewModel.state.isLoading) {
+//        CircularProgressIndicator(
+//            modifier = modifier,
+//            color = colorResource(id = R.color.item_color)
+//        )
+//    }
+//}
 
-@Composable
-fun GoodsInfo(
-    viewModel: StoreDetailViewModel,
-    goods: Goods?
-) {
-    Column(
-        modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(
-                color = colorResource(id = R.color.default_background_color)
-            )
-            .padding(12.dp)
-    ) {
-        Image(
-            painter = rememberImagePainter(data = viewModel.state.selectedImage),
-            contentDescription = "Goods",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(240.dp)
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-
-        PreviewImageList(
-            imageList = viewModel.state.previewImages,
-            selectedImage = viewModel.state.selectedImage,
-            modifier = Modifier.width(240.dp),
-            onClick = viewModel::selectPreviewImage
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            text = if (viewModel.state.isLoading) {
-                ""
-            } else {
-                goods?.title ?: ""
-            },
-            color = colorResource(id = R.color.default_text_color),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.width(240.dp)
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = if (viewModel.state.isLoading) {
-                ""
-            } else {
-                goods?.price ?: ""
-            },
-            color = colorResource(id = R.color.item_color),
-            fontSize = 16.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .width(240.dp)
-        )
-    }
-}
+//@Composable
+//fun GoodsInfo(
+//    viewModel: StoreDetailViewModel,
+//    goods: Goods?
+//) {
+//    Column(
+//        modifier = Modifier
+//            .clip(RoundedCornerShape(12.dp))
+//            .background(
+//                color = colorResource(id = R.color.default_background_color)
+//            )
+//            .padding(12.dp)
+//    ) {
+//        Image(
+//            painter = rememberImagePainter(data = viewModel.state.selectedImage),
+//            contentDescription = "Goods",
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier.size(240.dp)
+//        )
+//        Spacer(modifier = Modifier.height(6.dp))
+//
+//        PreviewImageList(
+//            imageList = viewModel.state.previewImages,
+//            selectedImage = viewModel.state.selectedImage,
+//            modifier = Modifier.width(240.dp),
+//            onClick = viewModel::selectPreviewImage
+//        )
+//        Spacer(modifier = Modifier.height(12.dp))
+//
+//        Text(
+//            text = if (viewModel.state.isLoading) {
+//                ""
+//            } else {
+//                goods?.title ?: ""
+//            },
+//            color = colorResource(id = R.color.default_text_color),
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis,
+//            modifier = Modifier.width(240.dp)
+//        )
+//        Spacer(modifier = Modifier.height(2.dp))
+//        Text(
+//            text = if (viewModel.state.isLoading) {
+//                ""
+//            } else {
+//                goods?.price ?: ""
+//            },
+//            color = colorResource(id = R.color.item_color),
+//            fontSize = 16.sp,
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis,
+//            modifier = Modifier
+//                .width(240.dp)
+//        )
+//    }
+//}
 
 @Composable
 fun PreviewImageList(
