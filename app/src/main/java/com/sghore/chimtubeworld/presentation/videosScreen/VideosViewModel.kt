@@ -1,8 +1,5 @@
 package com.sghore.chimtubeworld.presentation.videosScreen
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import androidx.paging.map
@@ -10,36 +7,40 @@ import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.domain.GetVideosUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 
 class VideosViewModel @AssistedInject constructor(
     private val getVideosUseCase: GetVideosUseCase,
     @Assisted val channelId: String,
     @Assisted val typeImageRes: Int
 ) : ViewModel() {
-    var state by mutableStateOf(VideosScreenState())
-        private set
+    private val _state = MutableStateFlow(VideosScreenState())
+    val state = _state.asStateFlow()
 
     init {
-        state = VideosScreenState(
-            videos = getVideosUseCase(typeImageRes, channelId)
-                .cachedIn(viewModelScope),
-            isLoading = true
-        )
+        _state.update {
+            VideosScreenState(
+                videos = getVideosUseCase(typeImageRes, channelId)
+                    .cachedIn(viewModelScope),
+                isLoading = true
+            )
+        }
     }
 
     fun setMessage(message: String) {
-        state = state.copy(
-            toastMsg = message
-        )
+        _state.update {
+            it.copy(
+                toastMsg = message
+            )
+        }
     }
 
     // 동영상 북마크리스트의 변경사항을 적용함
     fun changeVideoBookmarks(bookmark: Bookmark) {
-        state = state.copy(
-            videos = state.videos
-                ?.map {
-                    it.map { video ->
+        _state.update {
+            it.copy(
+                videos = it.videos?.map { pagingData ->
+                    pagingData.map { video ->
                         // 어떤 영상에 추가하거나 변경하고자 하는 북마크가 해당 영상 id와 같은지 확인
                         if (video.id == bookmark.videoId) {
                             val index = video.bookmarks.indexOf(bookmark)
@@ -72,7 +73,8 @@ class VideosViewModel @AssistedInject constructor(
                         }
                     }
                 }
-        )
+            )
+        }
     }
 
     @dagger.assisted.AssistedFactory

@@ -1,7 +1,5 @@
 package com.sghore.chimtubeworld.presentation.videosScreen
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -19,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -36,7 +33,6 @@ import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
-import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import com.sghore.chimtubeworld.util.parseUploadTimeText
 import com.sghore.chimtubeworld.util.parseVideoDurationText
 import com.sghore.chimtubeworld.util.parseViewCountText
@@ -47,10 +43,10 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun VideosScreen(
-    viewModel: VideosViewModel,
-    gViewModel: GlobalViewModel,
+    uiState: VideosScreenState,
     channelName: String,
     videoTypeImage: Int,
+    onHelpClick: () -> Unit,
     onVideoClick: (Video) -> Unit,
     onBookmarkClick: (Video, Int) -> Unit,
 ) {
@@ -73,15 +69,12 @@ fun VideosScreen(
                     .parallax(1f)
                     .fillMaxWidth()
                     .padding(12.dp),
-                onHelpClick = {
-                    viewModel.setMessage("유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.")
-                }
+                onHelpClick = onHelpClick
             )
         }
     ) {
         VideoList(
-            viewModel = viewModel,
-            gViewModel = gViewModel,
+            uiState = uiState,
             onVideoClick = onVideoClick,
             onBookmarkClick = onBookmarkClick
         )
@@ -128,28 +121,12 @@ fun VideosTopItem(
 
 @Composable
 fun VideoList(
-    viewModel: VideosViewModel,
-    gViewModel: GlobalViewModel,
+    uiState: VideosScreenState,
     onVideoClick: (Video) -> Unit,
     onBookmarkClick: (Video, Int) -> Unit
 ) {
-    val context: Context = LocalContext.current
-    val videoList: LazyPagingItems<Video>? = viewModel.state.videos?.collectAsLazyPagingItems()
+    val videoList: LazyPagingItems<Video>? = uiState.videos?.collectAsLazyPagingItems()
     val videoLoading = videoList?.loadState?.refresh is LoadState.Loading
-
-    gViewModel.bookmarkData.value?.let {
-        viewModel.changeVideoBookmarks(it)
-        gViewModel.bookmarkData.value = null
-    }
-
-    LaunchedEffect(key1 = viewModel.state.toastMsg) {
-        val msg = viewModel.state.toastMsg
-        if (msg.isNotEmpty()) {
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT)
-                .show()
-            viewModel.setMessage("")
-        }
-    }
 
     LazyColumn {
         videoList?.let {

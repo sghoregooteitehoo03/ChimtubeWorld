@@ -49,13 +49,12 @@ class VideosFragment : Fragment() {
             this.composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    VideosScreen(
+                    VideosRoute(
                         viewModel = mViewModel,
                         gViewModel = gViewModel,
-                        channelName = args.channelName,
-                        videoTypeImage = args.typeImageRes,
-                        onVideoClick = ::playVideo,
-                        onBookmarkClick = ::clickBookmark
+                        navController = findNavController(),
+                        args = args,
+                        videoClick = ::playVideo
                     )
                 }
             }
@@ -97,16 +96,5 @@ class VideosFragment : Fragment() {
                 "SelectPositionDialog"
             )
         }
-    }
-
-    // 북마크 클릭
-    private fun clickBookmark(video: Video, bookmarkPos: Int) {
-        val directions = VideosFragmentDirections.actionVideosFragmentToEditBookmarkFragment(
-            args.typeImageRes,
-            bookmarkPos
-        )
-
-        gViewModel.videoData.value = video
-        findNavController().navigate(directions)
     }
 }
