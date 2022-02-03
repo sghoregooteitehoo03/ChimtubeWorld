@@ -39,9 +39,9 @@ import com.sghore.chimtubeworld.util.parseFollowText
 fun TwitchScreen(
     uiState: TwitchScreenState,
     onMainChannelClick: (Channel?) -> Unit,
-    onTwitchCrewChannelClick: (Channel?) -> Unit
+    onTwitchCrewChannelClick: (Channel) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         if (uiState.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
@@ -207,7 +207,7 @@ fun MainChannelInfo(
 fun TwitchCrewChannelItem(
     channel: Channel?,
     modifier: Modifier = Modifier,
-    onClick: (Channel?) -> Unit = { }
+    onClick: (Channel) -> Unit = { }
 ) {
     Box(
         modifier
@@ -218,7 +218,7 @@ fun TwitchCrewChannelItem(
                     color = colorResource(id = R.color.item_color)
                 )
             ) {
-                onClick(channel)
+                onClick(channel!!)
             },
         contentAlignment = Alignment.TopCenter
     ) {

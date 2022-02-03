@@ -118,8 +118,8 @@ class MainActivity : ComponentActivity() {
                                 // 아이콘 선택 여부
                                 val isSelected =
                                     if (currentRoute == NavigationScreen.Videos.route) {
-                                        menu.route == NavigationScreen.Youtube.route &&
-                                                navController.backQueue.size == 3
+                                        (menu.route == NavigationScreen.Youtube.route && navController.backQueue.size == 3) ||
+                                                (menu.route == NavigationScreen.Twitch.route && navController.backQueue.size == 4)
                                     } else {
                                         currentDestination?.hierarchy?.any { it.route == menu.route } == true
                                     }

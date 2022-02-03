@@ -34,7 +34,7 @@ fun WebToonScreen(
     uiState: WebToonScreenState,
     onWebToonClick: (Channel) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         if (uiState.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
@@ -64,36 +64,6 @@ fun WebToonScreen(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-    }
-}
-
-@Composable
-fun WebToonRow(
-    rowIndex: Int,
-    webtoonsList: List<Channel>,
-    spanCount: Int,
-    onClick: (Channel) -> Unit = {}
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row {
-            for (index in 0 until spanCount) {
-                if (webtoonsList.size >= rowIndex * spanCount + (index + 1)) {
-                    WebToonItem(
-                        webtoon = webtoonsList[rowIndex * spanCount + index],
-                        modifier = Modifier
-                            .weight(1f),
-                        onClick = onClick
-                    )
-
-                    if (index != spanCount - 1) {
-                        Spacer(modifier = Modifier.width(12.dp))
-                    }
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 

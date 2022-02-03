@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
 
 @Composable
 fun TwitchRoute(
@@ -29,13 +30,9 @@ fun TwitchRoute(
         },
         onTwitchCrewChannelClick = { channel ->
             // 동영상 리스트 화면으로 이동
-            val directions = TwitchFragmentDirections
-                .actionTwitchFragmentToVideosFragment(
-                    channelName = channel!!.name,
-                    channelId = channel.id,
-                    typeImageRes = R.drawable.twitch
-                )
-            navController.navigate(directions)
+            val route =
+                NavigationScreen.Videos.route + "/${R.drawable.twitch}/${channel.name}/${channel.id}"
+            navController.navigate(route = route)
         }
     )
 }
