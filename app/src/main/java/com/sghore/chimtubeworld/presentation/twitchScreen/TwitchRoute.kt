@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.other.Contents
@@ -11,8 +12,8 @@ import com.sghore.chimtubeworld.other.OpenOtherApp
 
 @Composable
 fun TwitchRoute(
-    viewModel: TwitchViewModel,
-    navController: NavController
+    navController: NavController,
+    viewModel: TwitchViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current

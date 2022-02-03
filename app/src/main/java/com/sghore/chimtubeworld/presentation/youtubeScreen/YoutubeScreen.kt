@@ -33,7 +33,7 @@ fun YoutubeScreen(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Column(modifier = Modifier.padding(12.dp)) {

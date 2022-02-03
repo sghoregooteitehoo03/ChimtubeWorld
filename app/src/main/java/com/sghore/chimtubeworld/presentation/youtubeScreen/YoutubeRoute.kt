@@ -3,13 +3,14 @@ package com.sghore.chimtubeworld.presentation.youtubeScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sghore.chimtubeworld.R
 
 @Composable
 fun YoutubeRoute(
-    viewModel: YoutubeViewModel,
-    navController: NavController
+    navController: NavController,
+    viewModel: YoutubeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.state.collectAsState()
 

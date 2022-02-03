@@ -5,11 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sghore.chimtubeworld.other.OpenOtherApp
 
 @Composable
 fun CafeRoute(
-    viewModel: CafeViewModel
+    viewModel: CafeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
