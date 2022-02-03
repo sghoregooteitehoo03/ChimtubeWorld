@@ -2,22 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/youtubeFragment">
+    android:id="@+id/nav_graph">
 
     <action
         android:id="@+id/action_global_addBookmarkFragment"
         app:destination="@id/addBookmarkFragment" />
-
-    <fragment
-        android:id="@+id/youtubeFragment"
-        android:name="com.sghore.chimtubeworld.presentation.youtubeScreen.YoutubeFragment"
-        android:label="YoutubeFragment"
-        tools:layout="@layout/fragment_youtube">
-        <action
-            android:id="@+id/action_youtubeFragment_to_videosFragment"
-            app:destination="@id/videosFragment" />
-    </fragment>
 
     <fragment
         android:id="@+id/twitchFragment"
@@ -79,7 +68,7 @@
         android:id="@+id/editBookmarkFragment"
         android:name="com.sghore.chimtubeworld.presentation.bookmarkScreen.EditBookmarkFragment"
         android:label="EditBookmarkFragment"
-        tools:layout="@layout/fragment_add_bookmark" >
+        tools:layout="@layout/fragment_add_bookmark">
         <argument
             android:name="typeImageRes"
             app:argType="integer" />

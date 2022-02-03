@@ -5,25 +5,30 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.domain.GetVideosUseCase
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
-class VideosViewModel @AssistedInject constructor(
+@HiltViewModel
+class VideosViewModel @Inject constructor(
     private val getVideosUseCase: GetVideosUseCase,
-    @Assisted val channelId: String,
-    @Assisted val typeImageRes: Int
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _state = MutableStateFlow(VideosScreenState())
     val state = _state.asStateFlow()
 
     init {
-        _state.update {
-            VideosScreenState(
-                videos = getVideosUseCase(typeImageRes, channelId)
-                    .cachedIn(viewModelScope),
-                isLoading = true
-            )
+        val typeImageRes = savedStateHandle.get<Int>("typeImageRes")
+        val channelId = savedStateHandle.get<String>("channelId")
+
+        if (typeImageRes != null && channelId != null) {
+            _state.update {
+                VideosScreenState(
+                    videos = getVideosUseCase(typeImageRes, channelId)
+                        .cachedIn(viewModelScope),
+                    isLoading = true
+                )
+            }
         }
     }
 
@@ -74,24 +79,6 @@ class VideosViewModel @AssistedInject constructor(
                     }
                 }
             )
-        }
-    }
-
-    @dagger.assisted.AssistedFactory
-    interface AssistedFactory {
-        fun create(channelId: String, typeImageRes: Int): VideosViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            assistedFactory: AssistedFactory,
-            channelId: String,
-            typeImageRes: Int
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(channelId, typeImageRes) as T
-            }
         }
     }
 }

@@ -2,38 +2,42 @@ package com.sghore.chimtubeworld.presentation.ui
 
 import com.sghore.chimtubeworld.R
 
-sealed class BottomNavigationScreen(
+sealed class NavigationScreen(
     val route: String,
-    val selectedIcon: Int,
-    val unSelectedIcon: Int
+    val selectedIcon: Int = -1,
+    val unSelectedIcon: Int = -1
 ) {
-    object Youtube : BottomNavigationScreen(
+    object Youtube : NavigationScreen(
         route = "Youtube",
         selectedIcon = R.drawable.youtube,
         unSelectedIcon = R.drawable.youtube_darker
     )
 
-    object Twitch : BottomNavigationScreen(
+    object Twitch : NavigationScreen(
         route = "Twitch",
         selectedIcon = R.drawable.twitch,
         unSelectedIcon = R.drawable.twitch_darker
     )
 
-    object WebToon : BottomNavigationScreen(
+    object WebToon : NavigationScreen(
         route = "Webtoon",
         selectedIcon = R.drawable.webtoon,
         unSelectedIcon = R.drawable.webtoon_darker
     )
 
-    object Cafe : BottomNavigationScreen(
+    object Cafe : NavigationScreen(
         route = "Cafe",
         selectedIcon = R.drawable.cafe,
         unSelectedIcon = R.drawable.cafe_darker
     )
 
-    object Store : BottomNavigationScreen(
+    object Store : NavigationScreen(
         route = "Store",
         selectedIcon = R.drawable.store,
         unSelectedIcon = R.drawable.store_darker
+    )
+
+    object Videos : NavigationScreen(
+        route = "Videos"
     )
 }

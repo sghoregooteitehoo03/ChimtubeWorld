@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
 
 @Composable
 fun YoutubeRoute(
@@ -17,13 +18,9 @@ fun YoutubeRoute(
     YoutubeScreen(
         uiState = uiState,
         onClick = { channelData ->
-            val directions = YoutubeFragmentDirections
-                .actionYoutubeFragmentToVideosFragment(
-                    channelName = channelData.name,
-                    channelId = channelData.id.split("|")[1],
-                    typeImageRes = R.drawable.youtube
-                )
-            navController.navigate(directions)
+            val route =
+                NavigationScreen.Videos.route + "/${R.drawable.youtube}/${channelData.name}/${channelData.id.split("|")[1]}"
+            navController.navigate(route = route)
         }
     )
 }
