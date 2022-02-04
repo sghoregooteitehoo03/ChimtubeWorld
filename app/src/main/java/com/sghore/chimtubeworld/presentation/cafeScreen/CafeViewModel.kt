@@ -30,12 +30,17 @@ class CafeViewModel @Inject constructor(
         getCafeInfoUseCase().onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
+                    val cafePostState = CafePostState(
+                        cafeCategoryId = -1,
+                        cafePosts = getCafePostsUseCase(cafeCategoryId = -1)
+                            .cachedIn(viewModelScope)
+                    )
                     _state.update {
                         CafeScreenState(
                             cafeInfo = resource.data,
-                            cafePosts = getCafePostsUseCase(cafeCategoryId = -1)
-                                .cachedIn(viewModelScope)
-                        )
+                        ).apply {
+                            this.cafePostState = cafePostState
+                        }
                     }
                 }
                 is Resource.Loading -> {}
@@ -50,27 +55,27 @@ class CafeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    // 카테고리 변경
     fun changeCategory(categoryId: Int) {
-        _state.update {
-            it.copy(
-                cafeCategoryId = categoryId,
-                cafePosts = getCafePostsUseCase(cafeCategoryId = categoryId)
-                    .cachedIn(viewModelScope)
-            )
-        }
+        val latestState = _state.value
+
+        latestState.cafePostState = latestState.cafePostState.copy(
+            cafeCategoryId = categoryId,
+            cafePosts = getCafePostsUseCase(cafeCategoryId = categoryId)
+                .cachedIn(viewModelScope)
+        )
     }
 
     // 히스토리 저장
     fun readPost(post: Post) = viewModelScope.launch {
-        if (!post.isRead) {
-            _state.update {
-                it.copy(
-                    readHistory = it.readHistory.toMutableMap().apply {
-                        this[post.id] = true
-                    }
-                )
-            }
+        if (!post.isRead) { // 읽지 않은 게시글일 경우
+            val latestState = _state.value
 
+            latestState.readHistoryState = latestState.readHistoryState
+                .toMutableMap()
+                .apply {
+                    this[post.id] = true
+                }
             insertCafeHistoryUseCase(post.id)
         }
     }

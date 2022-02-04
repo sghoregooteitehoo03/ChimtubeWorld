@@ -138,8 +138,8 @@ fun CafeTopItem(
         )
         Spacer(modifier = Modifier.height(8.dp))
         CafeCategoryList(
+            uiState = uiState,
             categoryList = categoryList,
-            selectedCategoryId = uiState.cafeCategoryId,
             onClick = onCafeCategoryClick
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -211,11 +211,13 @@ fun CafeInfoBanner(
 
 @Composable
 fun CafeCategoryList(
+    uiState: CafeScreenState,
     categoryList: List<CafeCategory>,
-    selectedCategoryId: Int,
     modifier: Modifier = Modifier,
     onClick: (Int) -> Unit = {}
 ) {
+    val cafeCategoryId = uiState.cafePostState.cafeCategoryId
+
     LazyRow(
         modifier = modifier
     ) {
@@ -223,12 +225,12 @@ fun CafeCategoryList(
             Spacer(modifier = Modifier.width(12.dp))
         }
         items(categoryList) { category ->
-            val textColor = if (category.categoryId == selectedCategoryId) {
+            val textColor = if (category.categoryId == cafeCategoryId) {
                 colorResource(id = R.color.item_color)
             } else {
                 colorResource(id = R.color.default_text_color)
             }
-            val backgroundColor = if (category.categoryId == selectedCategoryId) {
+            val backgroundColor = if (category.categoryId == cafeCategoryId) {
                 colorResource(id = R.color.gray_night)
             } else {
                 colorResource(id = R.color.item_reverse_color)
@@ -273,13 +275,15 @@ fun CafePostList(
     uiState: CafeScreenState,
     onCafePostClick: (Post?) -> Unit
 ) {
-    // 게시글 리스트
-    val postList: LazyPagingItems<Post>? = uiState.cafePosts?.collectAsLazyPagingItems()
+    val cafePostState = uiState.cafePostState
+    val postList: LazyPagingItems<Post>? =
+        cafePostState.cafePosts?.collectAsLazyPagingItems() // 게시글 리스트
 
     LazyColumn {
         postList?.let {
             items(items = it) { post ->
-                val isRead = (post?.isRead ?: false) || (uiState.readHistory[post?.id] ?: false)
+                val isRead =
+                    (post?.isRead ?: false) || (uiState.readHistoryState[post?.id] ?: false)
                 CafePostItem(
                     post = post,
                     isRead = isRead,
@@ -396,11 +400,11 @@ fun CafeCategoryListPreview() {
             CafeCategory("해줘요", 4),
             CafeCategory("찾아주세요", 56)
         )
-
-        CafeCategoryList(
-            categoryList = list,
-            selectedCategoryId = -1
-        )
+//
+//        CafeCategoryList(
+//            categoryList = list,
+//            selectedCategoryId = -1
+//        )
     }
 }
 
