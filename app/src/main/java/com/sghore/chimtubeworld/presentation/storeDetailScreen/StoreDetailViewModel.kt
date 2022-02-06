@@ -43,10 +43,13 @@ class StoreDetailViewModel @AssistedInject constructor(
                 when (resource) {
                     is Resource.Success -> {
                         _state.update {
-                            StoreDetailScreenState(
-                                previewImages = resource.data ?: emptyList(),
-                                selectedImage = resource.data?.get(0) ?: ""
-                            )
+                            StoreDetailScreenState()
+                                .apply {
+                                    this.selectedImageState = SelectedImageState(
+                                        previewImages = resource.data ?: emptyList(),
+                                        selectedImage = resource.data?.get(0) ?: ""
+                                    )
+                                }
                         }
                     }
                     is Resource.Loading -> {
@@ -69,10 +72,11 @@ class StoreDetailViewModel @AssistedInject constructor(
     }
 
     fun selectPreviewImage(selectedImage: String) {
-        _state.update {
-            it.copy(
+        val latestState = _state.value
+
+        latestState.selectedImageState = latestState.selectedImageState
+            .copy(
                 selectedImage = selectedImage
             )
-        }
     }
 }
