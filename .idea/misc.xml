@@ -67,6 +67,8 @@
         <entry key="../../../../layout/compose-model-1643904422843.xml" value="0.2074074074074074" />
         <entry key="../../../../layout/compose-model-1643904422855.xml" value="0.1" />
         <entry key="../../../../layout/compose-model-1643904960373.xml" value="0.2074074074074074" />
+        <entry key="../../../../layout/compose-model-1643982643566.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1643989413518.xml" value="0.9696969696969697" />
         <entry key="../../../../layout/custom_preview.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/drawable-small/splash.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable-v24/shape_corner_rec_large.xml" value="0.122" />
@@ -110,12 +112,13 @@
         <entry key="app/src/main/res/drawable/shape_rounded_dialog.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/shape_sideded_rounded_rec.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/activity_view_pager.xml" value="0.13090057373046876" />
         <entry key="app/src/main/res/layout/dialog_select_bookmark.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_select_position.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_add_bookmark.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_cafe.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_store.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_store_detail.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_store_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_twitch.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_video.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_videos.xml" value="0.22" />

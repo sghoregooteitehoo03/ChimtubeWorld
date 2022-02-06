@@ -37,7 +37,7 @@ fun StoreScreen(
     onGoodsClick: (List<Goods>, Int) -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxSize()
     ) {
         if (uiState.isLoading) {
             CircularProgressIndicator(
@@ -45,46 +45,61 @@ fun StoreScreen(
                 color = colorResource(id = R.color.item_color)
             )
         } else {
-            val goodsList = uiState.goodsList
-            RowList(
-                list = goodsList,
-                spanCount = 3,
-                contentPaddingValue = 0.dp,
-                itemPaddingValue = 4.dp,
-                headerItem = {
-                    val storeInfoList = uiState.storeInfoList
-                    TitleTextWithExplain(
-                        title = "Goods",
-                        explain = "",
-                        modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                    StoreInfoCategoryList(
-                        storeInfoList = storeInfoList,
-                        selectedStoreUrl = uiState.selectedStoreUrl,
-                        onClick = onCategoryClick
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                },
-                listItem = { index, modifier ->
-                    GoodsItem(
-                        goods = goodsList[index],
-                        modifier = modifier,
-                        onClick = {
-                            onGoodsClick(
-                                goodsList,
-                                goodsList.indexOf(it)
-                            )
-                        }
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp)
+            GoodsList(
+                uiState = uiState,
+                onCategoryClick = onCategoryClick,
+                onGoodsClick = onGoodsClick
             )
         }
     }
+}
+
+@Composable
+fun GoodsList(
+    uiState: StoreScreenState,
+    onCategoryClick: (String) -> Unit,
+    onGoodsClick: (List<Goods>, Int) -> Unit
+) {
+    val goodsState = uiState.goodsState
+    val goodsList = goodsState.goodsListFlow?.collectAsState(initial = emptyList())?.value!!
+
+    RowList(
+        list = goodsList,
+        spanCount = 3,
+        contentPaddingValue = 0.dp,
+        itemPaddingValue = 4.dp,
+        headerItem = {
+            val storeInfoList = uiState.storeInfoList
+            TitleTextWithExplain(
+                title = "Goods",
+                explain = "",
+                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            StoreInfoCategoryList(
+                storeInfoList = storeInfoList,
+                selectedStoreUrl = goodsState.selectedStoreUrl,
+                onClick = onCategoryClick
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        },
+        listItem = { index, modifier ->
+            GoodsItem(
+                goods = goodsList[index],
+                modifier = modifier,
+                onClick = {
+                    onGoodsClick(
+                        goodsList,
+                        goodsList.indexOf(it)
+                    )
+                }
+            )
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 12.dp)
+    )
 }
 
 @Composable

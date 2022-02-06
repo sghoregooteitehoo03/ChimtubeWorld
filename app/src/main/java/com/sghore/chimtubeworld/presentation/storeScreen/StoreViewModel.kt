@@ -32,9 +32,12 @@ class StoreViewModel @Inject constructor(
                     _state.update {
                         StoreScreenState(
                             storeInfoList = storeInfoList,
-                            goodsListFlow = getGoodsListUseCase(storeInfoList[0].url),
-                            selectedStoreUrl = storeInfoList[0].url
-                        )
+                        ).apply {
+                            this.goodsState = GoodsState(
+                                goodsListFlow = getGoodsListUseCase(storeInfoList[0].url),
+                                selectedStoreUrl = storeInfoList[0].url
+                            )
+                        }
                     }
                 }
                 is Resource.Loading -> {
@@ -57,21 +60,11 @@ class StoreViewModel @Inject constructor(
 
     // 스토어의 카테고리를 변경함
     fun changeCategory(url: String) {
-        _state.update {
-            it.copy(
-                selectedStoreUrl = url,
-                goodsListFlow = getGoodsListUseCase(url),
-                goodsList = emptyList()
-            )
-        }
-    }
+        val latestState = _state.value
 
-    // 플로우를 통해 수집한 리스트를 적용함
-    fun setGoodsList(list: List<Goods>) {
-        _state.update {
-            it.copy(
-                goodsList = list
-            )
-        }
+        latestState.goodsState = latestState.goodsState.copy(
+            selectedStoreUrl = url,
+            goodsListFlow = getGoodsListUseCase(url)
+        )
     }
 }

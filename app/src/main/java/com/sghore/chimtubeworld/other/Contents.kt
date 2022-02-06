@@ -19,4 +19,7 @@ object Contents {
     const val COLLECTION_YOUTUBE_LINK = "YoutubeLink"
     const val COLLECTION_TWITCH_LINK = "TwitchLink"
     const val COLLECTION_GOODS_LINK = "goodsLink"
+
+    const val KEY_GOODS_LIST = "KEY_GOODS_LIST"
+    const val KEY_SELECTED_POS = "KEY_SELECTED_POS"
 }

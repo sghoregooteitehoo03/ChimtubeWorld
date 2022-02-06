@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.gms.google-services'
@@ -119,6 +120,9 @@ dependencies {
 
     // Compose Collapsing Toolbar
     implementation "me.onebone:toolbar-compose:2.3.0"
+
+    // ViewPager
+    implementation "com.google.accompanist:accompanist-pager:0.24.1-alpha"
 }
 
 kapt {
