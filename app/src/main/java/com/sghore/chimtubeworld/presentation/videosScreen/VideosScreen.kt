@@ -1,5 +1,7 @@
 package com.sghore.chimtubeworld.presentation.videosScreen
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -37,6 +39,7 @@ import com.sghore.chimtubeworld.util.parseUploadTimeText
 import com.sghore.chimtubeworld.util.parseVideoDurationText
 import com.sghore.chimtubeworld.util.parseViewCountText
 import com.valentinilk.shimmer.*
+import kotlinx.coroutines.CoroutineScope
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -44,13 +47,24 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @Composable
 fun VideosScreen(
     uiState: VideosScreenState,
+    context: Context,
     channelName: String,
     videoTypeImage: Int,
     onHelpClick: () -> Unit,
+    onToastClear: () -> Unit,
     onVideoClick: (Video) -> Unit,
     onBookmarkClick: (Video, Int) -> Unit,
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
+    LaunchedEffect(key1 = uiState.toastMsg) { // ToastMessage
+        val msg = uiState.toastMsg
+
+        if (msg.isNotEmpty()) {
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT)
+                .show()
+            onToastClear()
+        }
+    }
 
     CollapsingToolbarScaffold(
         modifier = Modifier.fillMaxSize(),

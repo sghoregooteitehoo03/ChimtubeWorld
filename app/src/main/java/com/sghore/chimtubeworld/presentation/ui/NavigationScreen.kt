@@ -40,4 +40,12 @@ sealed class NavigationScreen(
     object Videos : NavigationScreen(
         route = "Videos"
     )
+
+    object AddBookmark : NavigationScreen(
+        route = "AddBookmark"
+    )
+
+    object EditBookmark : NavigationScreen(
+        route = "EditBookmark"
+    )
 }

@@ -23,14 +23,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class BookmarkViewModel @AssistedInject constructor(
+@HiltViewModel
+class BookmarkViewModel @Inject constructor(
     private val getYoutubeVideoUseCase: GetYoutubeVideoUseCase,
     private val getTwitchVideoUseCase: GetTwitchVideoUseCase,
     private val repository: BookmarkRepository,
-    @Assisted videoData: Video?,
-    @Assisted val selectedBookmark: Bookmark?,
-    @Assisted typeImageRes: Int,
-    @Assisted videoUrl: String?
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val baseYoutubeUrl = "youtu.be"
     private val baseTwitchUrl = "www.twitch.tv"
@@ -39,35 +37,18 @@ class BookmarkViewModel @AssistedInject constructor(
         private set
 
     init {
-        if (videoData != null && selectedBookmark != null && typeImageRes != -1) {
+        val videoData = savedStateHandle.get<Video>("video") // 영상 데이터
+        val pos = savedStateHandle.get<Int>("pos") ?: -1 // 북마크 위치
+        val typeImageRes = savedStateHandle.get<Int>("typeImageRes") ?: -1 // 유튜브 or 트위치 이미지
+        val videoUrl = savedStateHandle.get<String>("url") // 영상 url
+
+        if (videoData != null && pos != -1 && typeImageRes != -1) {
+            // 북마크 수정
+            val selectedBookmark = videoData.bookmarks[pos]
             initValue(videoData, selectedBookmark, typeImageRes)
         } else if (videoUrl != null) {
+            // 북마크 생성
             getVideoData(videoUrl)
-        }
-    }
-
-    @dagger.assisted.AssistedFactory
-    interface AssistedFactory {
-        fun create(
-            videoData: Video?,
-            bookmark: Bookmark?,
-            typeImageRes: Int,
-            url: String?
-        ): BookmarkViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            assistedFactory: BookmarkViewModel.AssistedFactory,
-            videoData: Video? = null,
-            bookmark: Bookmark? = null,
-            typeImageRes: Int = -1,
-            url: String? = null
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(videoData, bookmark, typeImageRes, url) as T
-            }
         }
     }
 

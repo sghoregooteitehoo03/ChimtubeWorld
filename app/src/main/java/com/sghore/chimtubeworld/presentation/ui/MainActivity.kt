@@ -14,8 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBackIos
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -28,9 +26,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,7 +39,12 @@ import androidx.navigation.navArgument
 import com.plcoding.cryptocurrencyappyt.presentation.ui.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Goods
+import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.data.model.VideoParamType
 import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkFragmentDirections
+import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkRoute
+import com.sghore.chimtubeworld.presentation.bookmarkScreen.EditBookmarkRoute
 import com.sghore.chimtubeworld.presentation.cafeScreen.CafeRoute
 import com.sghore.chimtubeworld.presentation.storeScreen.StoreRoute
 import com.sghore.chimtubeworld.presentation.twitchScreen.TwitchRoute
@@ -57,6 +61,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val gViewModel by viewModels<GlobalViewModel>()
+    private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +69,7 @@ class MainActivity : ComponentActivity() {
             ChimtubeWorldTheme(
                 darkTheme = isSystemInDarkTheme()
             ) {
-                val navController = rememberNavController()
+                navController = rememberNavController()
                 val bottomMenu = listOf(
                     NavigationScreen.Youtube,
                     NavigationScreen.Twitch,
@@ -199,11 +204,41 @@ class MainActivity : ComponentActivity() {
                                         ?: R.drawable.youtube
                                 )
                             }
+                            composable(
+                                route = NavigationScreen.AddBookmark.route + "?url={url}",
+                                arguments = listOf(
+                                    navArgument("url") { type = NavType.StringType }
+                                )
+                            ) {
+                                AddBookmarkRoute(
+                                    gViewModel = gViewModel,
+                                    navController = navController
+                                )
+                            }
+                            composable(
+                                route = NavigationScreen.EditBookmark.route + "?typeImageRes={typeImageRes}&pos={pos}&video={video}",
+                                arguments = listOf(
+                                    navArgument("typeImageRes") { type = NavType.IntType },
+                                    navArgument("pos") { type = NavType.IntType },
+                                    navArgument("video") { type = VideoParamType() }
+                                )
+                            ) {
+                                EditBookmarkRoute(
+                                    gViewModel = gViewModel,
+                                    navController = navController
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    // 새로운 인텐트가 들어올 때
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        moveFragment(intent)
     }
 
     private fun moveViewPagerScreen(goodsList: List<Goods>, selectedPos: Int) {
@@ -221,5 +256,24 @@ class MainActivity : ComponentActivity() {
                     this.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }
         )
+    }
+
+    // fragment 이동
+    private fun moveFragment(intent: Intent?) {
+        when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                // 동영상의 url 주소
+                val url = intent.extras?.getString(Intent.EXTRA_TEXT) ?: ""
+
+                if (url.isNotEmpty()) {
+                    // 북마크 제작 화면으로 이동
+                    val route = NavigationScreen.AddBookmark.route + "?url=${url}"
+                    navController.navigate(
+                        route = route
+                    )
+                }
+            }
+        }
+        setIntent(null) // 인텐트 초기화
     }
 }

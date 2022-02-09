@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.sghore.chimtubeworld.data.model.Bookmark
+import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.domain.GetVideosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -17,6 +18,12 @@ class VideosViewModel @Inject constructor(
     private val _state = MutableStateFlow(VideosScreenState())
     val state = _state.asStateFlow()
 
+    // 다이얼로그에 사용할 데이터
+    var packageName = ""
+        private set
+    var video: Video? = null
+        private set
+
     init {
         val typeImageRes = savedStateHandle.get<Int>("typeImageRes")
         val channelId = savedStateHandle.get<String>("channelId")
@@ -25,17 +32,31 @@ class VideosViewModel @Inject constructor(
             _state.update {
                 VideosScreenState(
                     videos = getVideosUseCase(typeImageRes, channelId)
-                        .cachedIn(viewModelScope),
-                    isLoading = true
+                        .cachedIn(viewModelScope)
                 )
             }
         }
     }
 
+    //  Toast Message 설정
     fun setMessage(message: String) {
+        val latestState = _state.value
+
+        latestState.toastMsg = message
+    }
+
+    // 다이얼로그 Open 여부 설정
+    fun setDialogOpen(
+        _packageName: String,
+        _video: Video?,
+        isOpen: Boolean
+    ) {
+        this.packageName = _packageName
+        this.video = _video
+
         _state.update {
             it.copy(
-                toastMsg = message
+                isDialogOpen = isOpen
             )
         }
     }

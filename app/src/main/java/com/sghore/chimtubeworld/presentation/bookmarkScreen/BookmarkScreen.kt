@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
@@ -191,8 +192,8 @@ fun BookmarkScreen(
 }
 
 @Composable
-fun AddBookmarkScreen(
-    viewModel: BookmarkViewModel,
+fun AddBookmarkRoute(
+    viewModel: BookmarkViewModel = hiltViewModel(),
     gViewModel: GlobalViewModel,
     navController: NavController
 ) {
@@ -220,8 +221,8 @@ fun AddBookmarkScreen(
 }
 
 @Composable
-fun EditBookmarkScreen(
-    viewModel: BookmarkViewModel,
+fun EditBookmarkRoute(
+    viewModel: BookmarkViewModel = hiltViewModel(),
     gViewModel: GlobalViewModel,
     navController: NavController,
 ) {
@@ -243,7 +244,7 @@ fun EditBookmarkScreen(
         colorList = colorList,
         buttonText = "수정하기",
         onButtonClick = {
-            viewModel.addOrEditBookmark(viewModel.selectedBookmark?.id!!)
+//            viewModel.addOrEditBookmark(viewModel.selectedBookmark?.id!!)
         }
     )
 }
