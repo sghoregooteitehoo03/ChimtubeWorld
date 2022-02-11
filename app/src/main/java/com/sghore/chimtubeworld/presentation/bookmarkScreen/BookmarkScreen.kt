@@ -1,6 +1,5 @@
 package com.sghore.chimtubeworld.presentation.bookmarkScreen
 
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -11,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -19,26 +17,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.data.model.Video
-import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import com.sghore.chimtubeworld.util.parseUploadTimeText
 import com.sghore.chimtubeworld.util.parseVideoDurationText
 import com.sghore.chimtubeworld.util.parseViewCountText
@@ -46,14 +39,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.Duration
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun BookmarkScreen(
-    viewModel: BookmarkViewModel,
-    gViewModel: GlobalViewModel,
-    navController: NavController,
-    colorList: List<Int>,
+    uiState: BookmarkScreenState,
     buttonText: String,
+    onTitleChange: (String) -> Unit,
+    onVideoPositionChange: (String) -> Unit,
+    onChangeBookmarkColor: (Int) -> Unit,
     onButtonClick: () -> Unit = {}
 ) {
     Box(
@@ -63,190 +55,29 @@ fun BookmarkScreen(
                 state = rememberScrollState()
             )
     ) {
-        val context = LocalContext.current
-        val focusRequester = remember { FocusRequester() }
-        val keyboardController = LocalSoftwareKeyboardController.current
-
-        LaunchedEffect(key1 = viewModel.state.errorMsg) {
-            val msg = viewModel.state.errorMsg
-            if (msg.isNotEmpty()) {
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT)
-                    .show()
-                viewModel.clearMsg()
-            }
-            viewModel.state.completeBookmark?.let {
-                gViewModel.bookmarkData.value = it
-                navController.navigateUp()
-            }
-        }
-
-        viewModel.state.videoData?.let {
-            Column {
-                VideoInfo(
-                    video = viewModel.state.videoData,
-                    typeImage = viewModel.state.videoTypeImage
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-                Column(
-                    Modifier
-                        .padding(start = 12.dp, end = 12.dp)
-                ) {
-                    TextField(
-                        value = viewModel.state.bookmarkTitle,
-                        onValueChange = viewModel::setTitle,
-                        maxLines = 1,
-                        placeholder = {
-                            Text(
-                                text = "북마크 제목",
-                                color = colorResource(id = R.color.default_text_color)
-                            )
-                        },
-                        colors = TextFieldDefaults.textFieldColors(
-                            textColor = colorResource(id = R.color.item_color),
-                            backgroundColor = Color.Transparent,
-                            focusedIndicatorColor = colorResource(id = R.color.item_color),
-                            unfocusedIndicatorColor = colorResource(id = R.color.gray_night),
-                            cursorColor = colorResource(id = R.color.item_color)
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusRequester.requestFocus() }
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TextField(
-                        value = viewModel.state.videoPosition,
-                        onValueChange = viewModel::setVideoPosition,
-                        maxLines = 1,
-                        placeholder = {
-                            Text(
-                                text = "영상 위치 (00:00)",
-                                color = colorResource(id = R.color.default_text_color)
-                            )
-                        },
-                        colors = TextFieldDefaults.textFieldColors(
-                            textColor = colorResource(id = R.color.item_color),
-                            backgroundColor = Color.Transparent,
-                            focusedIndicatorColor = colorResource(id = R.color.item_color),
-                            unfocusedIndicatorColor = colorResource(id = R.color.gray_night),
-                            cursorColor = colorResource(id = R.color.item_color)
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = { keyboardController?.hide() }
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .focusRequester(focusRequester)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(28.dp))
-                BookmarkColorList(
-                    colorList = colorList,
-                    selectedColor = viewModel.state.selectedColor,
-                    onClick = viewModel::changeBookmarkColor
-                )
-                Spacer(modifier = Modifier.height(56.dp))
-
-                Row(
-                    modifier = Modifier
-                        .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
-                ) {
-                    val buttonColors = ButtonDefaults.buttonColors(
-                        backgroundColor = colorResource(id = R.color.item_color),
-                        disabledBackgroundColor = colorResource(id = R.color.gray_night)
-                    )
-
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        colors = buttonColors,
-                        shape = RoundedCornerShape(8.dp),
-                        enabled = viewModel.state.isEnable,
-                        onClick = { onButtonClick() }
-                    ) {
-                        Text(
-                            text = buttonText,
-                            color = colorResource(id = R.color.item_reverse_color)
-                        )
-                    }
-                }
-            }
-        }
-
-        if (viewModel.state.isLoading) {
+        if (uiState.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
                 color = colorResource(id = R.color.item_color)
             )
+        } else {
+            Column {
+                VideoInfo(
+                    video = uiState.videoData,
+                    typeImage = uiState.videoTypeImage
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                InputBookmarkInfo(
+                    uiState = uiState,
+                    buttonText = buttonText,
+                    onTitleChange = onTitleChange,
+                    onVideoPositionChange = onVideoPositionChange,
+                    onChangeBookmarkColor = onChangeBookmarkColor,
+                    onButtonClick = onButtonClick
+                )
+            }
         }
     }
-}
-
-@Composable
-fun AddBookmarkRoute(
-    viewModel: BookmarkViewModel = hiltViewModel(),
-    gViewModel: GlobalViewModel,
-    navController: NavController
-) {
-    val colorList = listOf(
-        android.graphics.Color.parseColor("#FF0000"),
-        android.graphics.Color.parseColor("#FF6200"),
-        android.graphics.Color.parseColor("#FFEB00"),
-        android.graphics.Color.parseColor("#76FF00"),
-        android.graphics.Color.parseColor("#0014FF"),
-        android.graphics.Color.parseColor("#C400FF"),
-        android.graphics.Color.parseColor("#767676"),
-        android.graphics.Color.parseColor("#000000")
-    )
-
-    BookmarkScreen(
-        viewModel = viewModel,
-        gViewModel = gViewModel,
-        navController = navController,
-        colorList = colorList,
-        buttonText = "만들기",
-        onButtonClick = {
-            viewModel.addOrEditBookmark()
-        }
-    )
-}
-
-@Composable
-fun EditBookmarkRoute(
-    viewModel: BookmarkViewModel = hiltViewModel(),
-    gViewModel: GlobalViewModel,
-    navController: NavController,
-) {
-    val colorList = listOf(
-        android.graphics.Color.parseColor("#FF0000"),
-        android.graphics.Color.parseColor("#FF6200"),
-        android.graphics.Color.parseColor("#FFEB00"),
-        android.graphics.Color.parseColor("#76FF00"),
-        android.graphics.Color.parseColor("#0014FF"),
-        android.graphics.Color.parseColor("#C400FF"),
-        android.graphics.Color.parseColor("#767676"),
-        android.graphics.Color.parseColor("#000000")
-    )
-
-    BookmarkScreen(
-        viewModel = viewModel,
-        gViewModel = gViewModel,
-        navController = navController,
-        colorList = colorList,
-        buttonText = "수정하기",
-        onButtonClick = {
-//            viewModel.addOrEditBookmark(viewModel.selectedBookmark?.id!!)
-        }
-    )
 }
 
 @Composable
@@ -319,13 +150,127 @@ fun VideoInfo(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun InputBookmarkInfo(
+    uiState: BookmarkScreenState,
+    buttonText: String,
+    onTitleChange: (String) -> Unit,
+    onVideoPositionChange: (String) -> Unit,
+    onChangeBookmarkColor: (Int) -> Unit,
+    onButtonClick: () -> Unit
+) {
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Column(
+        modifier = Modifier.padding(start = 12.dp, end = 12.dp)
+    ) {
+        TextField(
+            value = uiState.bookmarkInfoState.bookmarkTitle,
+            onValueChange = onTitleChange,
+            maxLines = 1,
+            placeholder = {
+                Text(
+                    text = "북마크 제목",
+                    color = colorResource(id = R.color.default_text_color)
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = colorResource(id = R.color.item_color),
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = colorResource(id = R.color.item_color),
+                unfocusedIndicatorColor = colorResource(id = R.color.gray_night),
+                cursorColor = colorResource(id = R.color.item_color)
+            ),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusRequester.requestFocus() }
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = uiState.bookmarkInfoState.videoPosition,
+            onValueChange = onVideoPositionChange,
+            maxLines = 1,
+            placeholder = {
+                Text(
+                    text = "영상 위치 (00:00)",
+                    color = colorResource(id = R.color.default_text_color)
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = colorResource(id = R.color.item_color),
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = colorResource(id = R.color.item_color),
+                unfocusedIndicatorColor = colorResource(id = R.color.gray_night),
+                cursorColor = colorResource(id = R.color.item_color)
+            ),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { keyboardController?.hide() }
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+        )
+    }
+
+    Spacer(modifier = Modifier.height(28.dp))
+    BookmarkColorList(
+        selectedColor = uiState.bookmarkInfoState.selectedColor,
+        onClick = onChangeBookmarkColor
+    )
+    Spacer(modifier = Modifier.height(56.dp))
+
+    Row(
+        modifier = Modifier
+            .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
+    ) {
+        val buttonColors = ButtonDefaults.buttonColors(
+            backgroundColor = colorResource(id = R.color.item_color),
+            disabledBackgroundColor = colorResource(id = R.color.gray_night)
+        )
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = buttonColors,
+            shape = RoundedCornerShape(8.dp),
+            enabled = uiState.bookmarkInfoState.isEnable,
+            onClick = { onButtonClick() }
+        ) {
+            Text(
+                text = buttonText,
+                color = colorResource(id = R.color.item_reverse_color)
+            )
+        }
+    }
+}
+
 @Composable
 fun BookmarkColorList(
-    colorList: List<Int>,
     selectedColor: Int,
     onClick: (Int) -> Unit = {}
 ) {
+    val colorList = listOf(
+        android.graphics.Color.parseColor("#FF0000"),
+        android.graphics.Color.parseColor("#FF6200"),
+        android.graphics.Color.parseColor("#FFEB00"),
+        android.graphics.Color.parseColor("#76FF00"),
+        android.graphics.Color.parseColor("#0014FF"),
+        android.graphics.Color.parseColor("#C400FF"),
+        android.graphics.Color.parseColor("#767676"),
+        android.graphics.Color.parseColor("#000000")
+    )
     val colorIndex = colorList.indexOf(selectedColor)
+
     LazyRow {
         item {
             Spacer(modifier = Modifier.width(12.dp))
@@ -419,18 +364,7 @@ fun VideoInfoPreview() {
 @Composable
 fun BookmarkColorListPreview() {
     MaterialTheme {
-        val colorList = listOf(
-            android.graphics.Color.parseColor("#FF0000"),
-            android.graphics.Color.parseColor("#FF6200"),
-            android.graphics.Color.parseColor("#FFEB00"),
-            android.graphics.Color.parseColor("#76FF00"),
-            android.graphics.Color.parseColor("#0014FF"),
-            android.graphics.Color.parseColor("#C400FF"),
-            android.graphics.Color.parseColor("#767676"),
-            android.graphics.Color.parseColor("#000000")
-        )
-
-        BookmarkColorList(colorList = colorList, selectedColor = colorList[0])
+        BookmarkColorList(selectedColor = android.graphics.Color.parseColor("#FF0000"))
     }
 }
 

@@ -1,16 +1,23 @@
 package com.sghore.chimtubeworld.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
 
 @Composable
 fun TitleTextWithExplain(
@@ -99,5 +106,70 @@ fun <T> RowItemCollocate(
             }
         }
         Spacer(modifier = Modifier.height(paddingValue))
+    }
+}
+
+
+fun TopAppBarNavigationItem(
+    currentRoute: String?,
+    content: @Composable () -> Unit,
+): (@Composable (() -> Unit))? {
+    return when (currentRoute) {
+        NavigationScreen.Videos.route, NavigationScreen.AddBookmark.route, NavigationScreen.EditBookmark.route -> {
+            content
+        }
+        else -> null
+    }
+}
+
+@Composable
+fun BottomNavigationBar(
+    isHide: Boolean,
+    navController: NavHostController,
+    bottomMenu: List<NavigationScreen>,
+    currentDestination: NavDestination?,
+    currentRoute: String?
+) {
+    if (!isHide) {
+        BottomNavigation(
+            backgroundColor = colorResource(id = R.color.default_background_color),
+        ) {
+            bottomMenu.forEach { menu ->
+                // 아이콘 선택 여부
+                val isSelected =
+                    if (currentRoute == NavigationScreen.Videos.route) {
+                        (menu.route == NavigationScreen.Youtube.route && navController.backQueue.size == 3) ||
+                                (menu.route == NavigationScreen.Twitch.route && navController.backQueue.size == 4)
+                    } else {
+                        currentDestination?.hierarchy?.any { it.route == menu.route } == true
+                    }
+
+                BottomNavigationItem(
+                    icon = {
+                        Image(
+                            painter = painterResource(
+                                id = if (isSelected) {
+                                    menu.selectedIcon
+                                } else {
+                                    menu.unSelectedIcon
+                                }
+                            ),
+                            contentDescription = null
+                        )
+                    },
+                    selected = isSelected,
+                    onClick = {
+                        navController.navigate(menu.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
+            }
+        }
     }
 }

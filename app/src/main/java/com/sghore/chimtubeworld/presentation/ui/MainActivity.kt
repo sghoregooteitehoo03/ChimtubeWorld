@@ -5,44 +5,32 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.plcoding.cryptocurrencyappyt.presentation.ui.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Goods
-import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.model.VideoParamType
 import com.sghore.chimtubeworld.other.Contents
-import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkFragmentDirections
+import com.sghore.chimtubeworld.presentation.BottomNavigationBar
+import com.sghore.chimtubeworld.presentation.TopAppBarNavigationItem
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkRoute
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.EditBookmarkRoute
 import com.sghore.chimtubeworld.presentation.cafeScreen.CafeRoute
@@ -55,6 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 // TODO:
 //  . StoreDetailFragment 재구성 버그 수정 O
+//  . MainActivity 재구성시 Composable 초기화 방지
 //  . 같은 채널에서 제공하는 영상인 경우 탭으로 표현
 //  . 단기 방송 재생목록 만들기
 
@@ -78,100 +67,100 @@ class MainActivity : ComponentActivity() {
                     NavigationScreen.Store
                 )
 
-                Scaffold(
+                com.google.accompanist.insets.ui.Scaffold(
                     topBar = {
                         val navBackStackEntry by navController.currentBackStackEntryAsState()
                         // 현재 루트
-                        val currentRoute =
-                            navBackStackEntry?.destination?.route?.substringBefore("/")
+                        val currentRoute = navBackStackEntry?.destination
+                            ?.route
+                            ?.substringBefore("/")
+                            ?.substringBefore("?")
 
-                        TopAppBar(
-                            elevation = 0.dp
-                        ) {
-                            if (NavigationScreen.Videos.route == currentRoute) {
-                                Spacer(modifier = Modifier.width(14.dp))
-                                Icon(
-                                    imageVector = Icons.Default.ArrowBack,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .align(Alignment.CenterVertically)
-                                        .size(24.dp)
-                                        .clip(CircleShape)
-                                        .clickable(
-                                            interactionSource = remember { MutableInteractionSource() },
-                                            indication = rememberRipple()
-                                        ) {
-                                            navController.navigateUp()
+                        com.google.accompanist.insets.ui.TopAppBar(
+                            backgroundColor = colorResource(id = R.color.default_background_color),
+                            elevation = 0.dp,
+                            modifier = Modifier.fillMaxWidth(),
+                            title = {
+                                when (currentRoute) {
+                                    NavigationScreen.AddBookmark.route, NavigationScreen.EditBookmark.route -> {
+                                        Text(text = "북마크")
+                                    }
+                                    NavigationScreen.Videos.route -> {
+                                        Text(text = "")
+                                    }
+                                    else -> {
+                                        Text(
+                                            text = "CHIMHA",
+                                            color = MaterialTheme.colors.onPrimary,
+                                            fontSize = 24.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+
+                                        if (gViewModel.bookmarkData.value != null) {
+                                            gViewModel.bookmarkData.value = null
                                         }
-                                )
-                            } else {
-                                Text(
-                                    text = "CHIMHA",
-                                    color = colorResource(id = R.color.item_color),
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
+                                    }
+                                }
+                            },
+                            navigationIcon = TopAppBarNavigationItem(currentRoute = currentRoute) {
+                                IconButton(onClick = {
+                                    navController.navigateUp()
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowBack,
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            actions = {
+                                if (currentRoute == NavigationScreen.EditBookmark.route) {
+                                    IconButton(onClick = {
+                                        gViewModel.topAppBarAction = Contents.ACTION_COPY_URL
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Assignment,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colors.onPrimary
+                                        )
+                                    }
+                                    IconButton(onClick = {
+                                        gViewModel.topAppBarAction = Contents.ACTION_DELETE_BOOKMARK
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colors.onPrimary
+                                        )
+                                    }
+                                }
                             }
-                        }
+                        )
                     },
                     bottomBar = {
-                        BottomNavigation(
-                            backgroundColor = colorResource(id = R.color.default_background_color)
-                        ) {
-                            val navBackStackEntry by navController.currentBackStackEntryAsState()
-                            val currentDestination = navBackStackEntry?.destination
-                            val currentRoute = currentDestination?.route?.substringBefore("/")
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentDestination = navBackStackEntry?.destination
+                        val currentRoute = currentDestination?.route
+                            ?.substringBefore("/")
+                            ?.substringBefore("?")
 
-                            bottomMenu.forEach { menu ->
-                                // 아이콘 선택 여부
-                                val isSelected =
-                                    if (currentRoute == NavigationScreen.Videos.route) {
-                                        (menu.route == NavigationScreen.Youtube.route && navController.backQueue.size == 3) ||
-                                                (menu.route == NavigationScreen.Twitch.route && navController.backQueue.size == 4)
-                                    } else {
-                                        currentDestination?.hierarchy?.any { it.route == menu.route } == true
-                                    }
-
-                                BottomNavigationItem(
-                                    icon = {
-                                        Image(
-                                            painter = painterResource(
-                                                id = if (isSelected) {
-                                                    menu.selectedIcon
-                                                } else {
-                                                    menu.unSelectedIcon
-                                                }
-                                            ),
-                                            contentDescription = null
-                                        )
-                                    },
-                                    selected = isSelected,
-                                    onClick = {
-                                        navController.navigate(menu.route) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
-                                            }
-
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    }
-                                )
-                            }
-                        }
+                        BottomNavigationBar(
+                            isHide = currentRoute == NavigationScreen.AddBookmark.route || currentRoute == NavigationScreen.EditBookmark.route,
+                            navController = navController,
+                            bottomMenu = bottomMenu,
+                            currentDestination = currentDestination,
+                            currentRoute = currentRoute
+                        )
                     }
                 ) { innerPadding ->
-                    Column {
+                    Column(modifier = Modifier.padding(innerPadding)) {
                         Divider(
                             color = colorResource(id = R.color.gray_bright_night)
                         )
-
                         NavHost(
                             navController = navController,
                             startDestination = NavigationScreen.Youtube.route,
-                            modifier = Modifier.padding(innerPadding)
                         ) {
                             composable(route = NavigationScreen.Youtube.route) {
                                 YoutubeRoute(navController = navController)

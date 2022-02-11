@@ -12,8 +12,6 @@ class GetYoutubeVideoUseCase @Inject constructor(
 ) {
     operator fun invoke(videoUrl: String, baseUrl: String): Flow<Resource<Video>> = flow {
         try {
-            emit(Resource.Loading<Video>())
-
             val videoData = repository.getVideo(
                 url = videoUrl,
                 baseUrl = baseUrl

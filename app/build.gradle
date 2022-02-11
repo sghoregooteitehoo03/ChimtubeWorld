@@ -121,8 +121,7 @@ dependencies {
     // Compose Collapsing Toolbar
     implementation "me.onebone:toolbar-compose:2.3.0"
 
-    // ViewPager
-    implementation "com.google.accompanist:accompanist-pager:0.24.1-alpha"
+    implementation "com.google.accompanist:accompanist-insets-ui:0.24.1-alpha"
 }
 
 kapt {
