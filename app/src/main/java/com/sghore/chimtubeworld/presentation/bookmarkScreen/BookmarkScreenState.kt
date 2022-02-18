@@ -12,7 +12,8 @@ data class BookmarkScreenState(
     val videoTypeImage: Int = R.drawable.youtube,
     val isLoading: Boolean = false,
     val completeBookmark: Bookmark? = null,
-    val errorMsg: String = ""
+    val errorMsg: String = "",
+    val isOpenDialog: Boolean = false
 ) {
     var bookmarkInfoState by mutableStateOf(BookmarkInfoState())
 }

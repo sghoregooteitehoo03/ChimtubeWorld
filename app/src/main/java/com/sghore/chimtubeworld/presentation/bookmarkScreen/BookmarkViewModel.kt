@@ -216,6 +216,18 @@ class BookmarkViewModel @Inject constructor(
         }
     }
 
+    fun setDialogState(isOpen: Boolean) {
+        val latestState = _state.value
+
+        _state.update {
+            it.copy(
+                isOpenDialog = isOpen
+            ).apply {
+                bookmarkInfoState = latestState.bookmarkInfoState
+            }
+        }
+    }
+
     fun getVideoUrl(videoPosition: Long): String {
         val time = getSecondsFromPosition(videoPosition)
         val latestState = _state.value

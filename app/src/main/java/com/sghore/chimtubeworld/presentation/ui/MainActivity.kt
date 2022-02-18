@@ -43,7 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 // TODO:
 //  . StoreDetailFragment 재구성 버그 수정 O
-//  . MainActivity 재구성시 Composable 초기화 방지
+//  . MainActivity 재구성시 Composable 초기화 방지 (나중에)
 //  . 같은 채널에서 제공하는 영상인 경우 탭으로 표현
 //  . 단기 방송 재생목록 만들기
 
