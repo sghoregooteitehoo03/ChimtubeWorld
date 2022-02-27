@@ -2,14 +2,12 @@ package com.sghore.chimtubeworld.presentation.videosScreen
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import android.widget.Toast
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.other.Contents
@@ -23,28 +21,33 @@ fun VideosRoute(
     viewModel: VideosViewModel = hiltViewModel(),
     gViewModel: GlobalViewModel,
     navController: NavController,
-    channelName: String,
     typeImageRes: Int
 ) {
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
 
-    gViewModel.bookmarkData.value?.let {
+    gViewModel.bookmarkData?.let {
         viewModel.changeVideoBookmarks(it)
-        gViewModel.bookmarkData.value = null
+        gViewModel.bookmarkData = null
     }
 
-    VideosScreen(
+    LaunchedEffect(gViewModel.topAppBarAction) {
+        val action = gViewModel.topAppBarAction
+
+        if (action == Contents.ACTION_SHOW_HELP) {
+            Toast.makeText(
+                context,
+                "유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        gViewModel.topAppBarAction = ""
+    }
+
+    VideosTabs(
         uiState = uiState,
-        context = context,
-        channelName = channelName,
-        videoTypeImage = typeImageRes,
-        onHelpClick = {
-            viewModel.setMessage("유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.")
-        },
-        onToastClear = {
-            viewModel.setMessage("")
-        },
+        onTabClick = viewModel::changeTabIndex,
         onVideoClick = { video ->
             playVideo(
                 viewModel = viewModel,

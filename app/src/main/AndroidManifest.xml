@@ -44,6 +44,7 @@
 
         <activity
             android:name="com.sghore.chimtubeworld.presentation.ui.ViewPagerActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Transparent.NoActionBar" />
 
     </application>

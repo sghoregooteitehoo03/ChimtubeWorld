@@ -5,9 +5,6 @@ import androidx.paging.PagingState
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.db.Dao
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import retrofit2.await
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,7 +39,7 @@ class YoutubePagingSource(
                 currentPageKey = pageKey
             ) // 동영상 리스트
 
-            return LoadResult.Page(
+            LoadResult.Page(
                 data = videoList,
                 prevKey = null,
                 nextKey = nextKey

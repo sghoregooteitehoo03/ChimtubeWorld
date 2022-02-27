@@ -260,11 +260,11 @@ fun MainChannelInfoPreview() {
     MaterialTheme {
         MainChannelInfo(
             mainChannel = Channel(
-                "",
-                "침착맨",
-                arrayOf("", "590000"),
-                "",
-                "",
+                id = "",
+                name = "침착맨",
+                explains = arrayOf("", "590000"),
+                url = "",
+                image = "",
                 type = 0,
                 isOnline = false
             )
@@ -278,11 +278,11 @@ fun TwitchCrewChannelItemPreview() {
     MaterialTheme {
         TwitchCrewChannelItem(
             channel = Channel(
-                "",
-                "침착맨",
-                arrayOf("준회원", "590000"),
-                "",
-                "",
+                id = "",
+                name = "침착맨",
+                explains = arrayOf("준회원", "590000"),
+                url = "",
+                image = "",
                 type = 0
             )
         )

@@ -118,11 +118,11 @@ fun WebToonItemPreview() {
     MaterialTheme {
         WebToonItem(
             webtoon = Channel(
-                "",
-                "이말년씨리즈",
-                arrayOf("최종 업데이트 2018.12.03"),
-                "",
-                "",
+                id = "",
+                name = "이말년씨리즈",
+                explains = arrayOf("최종 업데이트 2018.12.03"),
+                url = "",
+                image = "",
                 type = android.graphics.Color.parseColor("#C3B9A0")
             ),
             modifier = Modifier.fillMaxWidth()

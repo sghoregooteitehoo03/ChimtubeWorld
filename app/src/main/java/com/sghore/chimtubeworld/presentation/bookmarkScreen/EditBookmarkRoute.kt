@@ -45,7 +45,7 @@ fun EditBookmarkRoute(
         }
 
         uiState.completeBookmark?.let {
-            gViewModel.bookmarkData.value = it
+            gViewModel.bookmarkData = it
             navController.navigateUp()
         }
     }

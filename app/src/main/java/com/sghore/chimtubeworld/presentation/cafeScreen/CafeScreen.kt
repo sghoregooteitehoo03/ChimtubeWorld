@@ -373,11 +373,11 @@ fun CafeInfoBannerPreview() {
     MaterialTheme {
         CafeInfoBanner(
             cafeInfo = Channel(
-                "",
-                "§ 침투부 카페 §",
-                arrayOf("75,563"),
-                "",
-                "",
+                id = "",
+                name = "§ 침투부 카페 §",
+                explains = arrayOf("75,563"),
+                url = "",
+                image = "",
                 type = 0
             )
         )

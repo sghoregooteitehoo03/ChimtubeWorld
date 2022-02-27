@@ -25,4 +25,5 @@ object Contents {
 
     const val ACTION_COPY_URL = "ACTION_COPY_URL"
     const val ACTION_DELETE_BOOKMARK = "ACTION_DELETE_BOOKMARK"
+    const val ACTION_SHOW_HELP = "ACTION_SHOW_HELP"
 }

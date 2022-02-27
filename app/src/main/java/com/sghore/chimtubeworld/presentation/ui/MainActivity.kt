@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Help
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -44,12 +45,13 @@ import dagger.hilt.android.AndroidEntryPoint
 // TODO:
 //  . StoreDetailFragment 재구성 버그 수정 O
 //  . MainActivity 재구성시 Composable 초기화 방지 (나중에)
-//  . 같은 채널에서 제공하는 영상인 경우 탭으로 표현
+//  . 같은 채널에서 제공하는 영상인 경우 탭으로 표현 O
 //  . 단기 방송 재생목록 만들기
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val gViewModel by viewModels<GlobalViewModel>()
+    private var channelNameForToolbar = ""
     private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,9 +88,11 @@ class MainActivity : ComponentActivity() {
                                         Text(text = "북마크")
                                     }
                                     NavigationScreen.Videos.route -> {
-                                        Text(text = "")
+                                        Text(text = channelNameForToolbar)
                                     }
                                     else -> {
+                                        channelNameForToolbar = "" // 툴바 텍스트 초기화
+
                                         Text(
                                             text = "CHIMHA",
                                             color = MaterialTheme.colors.onPrimary,
@@ -98,8 +102,8 @@ class MainActivity : ComponentActivity() {
                                             modifier = Modifier.fillMaxWidth()
                                         )
 
-                                        if (gViewModel.bookmarkData.value != null) {
-                                            gViewModel.bookmarkData.value = null
+                                        if (gViewModel.bookmarkData != null) {
+                                            gViewModel.bookmarkData = null
                                         }
                                     }
                                 }
@@ -115,25 +119,40 @@ class MainActivity : ComponentActivity() {
                                 }
                             },
                             actions = {
-                                if (currentRoute == NavigationScreen.EditBookmark.route) {
-                                    IconButton(onClick = {
-                                        gViewModel.topAppBarAction = Contents.ACTION_COPY_URL
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Assignment,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colors.onPrimary
-                                        )
+                                when (currentRoute) {
+                                    NavigationScreen.EditBookmark.route -> {
+                                        IconButton(onClick = {
+                                            gViewModel.topAppBarAction = Contents.ACTION_COPY_URL
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Default.Assignment,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colors.onPrimary
+                                            )
+                                        }
+                                        IconButton(onClick = {
+                                            gViewModel.topAppBarAction =
+                                                Contents.ACTION_DELETE_BOOKMARK
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Default.Delete,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colors.onPrimary
+                                            )
+                                        }
                                     }
-                                    IconButton(onClick = {
-                                        gViewModel.topAppBarAction = Contents.ACTION_DELETE_BOOKMARK
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colors.onPrimary
-                                        )
+                                    NavigationScreen.Videos.route -> {
+                                        IconButton(onClick = {
+                                            gViewModel.topAppBarAction = Contents.ACTION_SHOW_HELP
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Default.Help,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colors.onPrimary
+                                            )
+                                        }
                                     }
+                                    else -> {}
                                 }
                             }
                         )
@@ -178,17 +197,22 @@ class MainActivity : ComponentActivity() {
                                 StoreRoute(onGoodsClick = ::moveViewPagerScreen)
                             }
                             composable(
-                                route = NavigationScreen.Videos.route + "/{typeImageRes}/{channelName}/{channelId}",
+                                route = NavigationScreen.Videos.route +
+                                        "?typeImageRes={typeImageRes}&channelName={channelName}&playlistId={playlistId}&playlistName={playlistName}",
                                 arguments = listOf(
                                     navArgument("typeImageRes") { type = NavType.IntType },
                                     navArgument("channelName") { type = NavType.StringType },
-                                    navArgument("channelId") { type = NavType.StringType }
+                                    navArgument("playlistId") { type = NavType.StringType },
+                                    navArgument("playlistName") { type = NavType.StringType }
                                 )
                             ) { entry ->
+                                channelNameForToolbar = entry.arguments
+                                    ?.getString("channelName")
+                                    ?: ""
+
                                 VideosRoute(
                                     gViewModel = gViewModel,
                                     navController = navController,
-                                    channelName = entry.arguments?.getString("channelName") ?: "",
                                     typeImageRes = entry.arguments?.getInt("typeImageRes")
                                         ?: R.drawable.youtube
                                 )
