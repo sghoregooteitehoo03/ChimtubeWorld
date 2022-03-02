@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.Navigator
 import com.google.gson.Gson
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Video
@@ -59,7 +60,7 @@ fun VideosRoute(
         onBookmarkClick = { video, pos ->
             val route =
                 NavigationScreen.EditBookmark.route + "?typeImageRes=${typeImageRes}&pos=${pos}&video=${
-                    Uri.encode(Gson().toJson(video))
+                    Gson().toJson(video)
                 }"
             navController.navigate(route = route)
         }

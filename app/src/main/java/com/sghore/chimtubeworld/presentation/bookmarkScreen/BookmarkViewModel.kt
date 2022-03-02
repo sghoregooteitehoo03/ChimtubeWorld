@@ -1,20 +1,14 @@
 package com.sghore.chimtubeworld.presentation.bookmarkScreen
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
+import com.google.gson.Gson
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
-import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.BookmarkRepository
 import com.sghore.chimtubeworld.domain.GetTwitchVideoUseCase
 import com.sghore.chimtubeworld.domain.GetYoutubeVideoUseCase
-import com.sghore.chimtubeworld.presentation.storeDetailScreen.StoreDetailViewModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -39,7 +33,11 @@ class BookmarkViewModel @Inject constructor(
         private set
 
     init {
-        val videoData = savedStateHandle.get<Video>("video") // 영상 데이터
+        // 영상 데이터
+        val videoData = Gson().fromJson(
+            savedStateHandle.get<String>("video"),
+            Video::class.java
+        )
         val pos = savedStateHandle.get<Int>("pos") ?: -1 // 북마크 위치
         val typeImageRes = savedStateHandle.get<Int>("typeImageRes") ?: -1 // 유튜브 or 트위치 이미지
         val videoUrl = savedStateHandle.get<String>("url") // 영상 url

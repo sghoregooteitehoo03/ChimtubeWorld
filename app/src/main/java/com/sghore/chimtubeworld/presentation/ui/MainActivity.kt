@@ -28,7 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import com.plcoding.cryptocurrencyappyt.presentation.ui.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Goods
-import com.sghore.chimtubeworld.data.model.VideoParamType
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.presentation.BottomNavigationBar
 import com.sghore.chimtubeworld.presentation.TopAppBarNavigationItem
@@ -44,7 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 // TODO:
 //  . StoreDetailFragment 재구성 버그 수정 O
-//  . MainActivity 재구성시 Composable 초기화 방지 (나중에)
+//  . MainActivity 재구성시 Composable 초기화 방지 O
 //  . 같은 채널에서 제공하는 영상인 경우 탭으로 표현 O
 //  . 단기 방송 재생목록 만들기
 
@@ -228,12 +227,13 @@ class MainActivity : ComponentActivity() {
                                     navController = navController
                                 )
                             }
+                            // TODO: Video 데이터를 JSON 형식인 String으로 받고 BookmarkViewModel에서 Video 데이터로 변환
                             composable(
                                 route = NavigationScreen.EditBookmark.route + "?typeImageRes={typeImageRes}&pos={pos}&video={video}",
                                 arguments = listOf(
                                     navArgument("typeImageRes") { type = NavType.IntType },
                                     navArgument("pos") { type = NavType.IntType },
-                                    navArgument("video") { type = VideoParamType() }
+                                    navArgument("video") { type = NavType.StringType }
                                 )
                             ) {
                                 EditBookmarkRoute(
