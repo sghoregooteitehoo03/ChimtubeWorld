@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
@@ -27,101 +26,44 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.presentation.RowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 
 @Composable
 fun WebToonScreen(
-    viewModel: WebToonViewModel,
+    uiState: WebToonScreenState,
     onWebToonClick: (Channel) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        WebToonList(
-            viewModel = viewModel,
-            onWebToonClick = onWebToonClick
-        )
-        LoadingView(
-            viewModel = viewModel,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
-fun LoadingView(
-    viewModel: WebToonViewModel,
-    modifier: Modifier = Modifier
-) {
-    if (viewModel.state.isLoading) {
-        CircularProgressIndicator(
-            modifier = modifier,
-            color = colorResource(id = R.color.item_color)
-        )
-    }
-}
-
-@Composable
-fun WebToonList(
-    viewModel: WebToonViewModel,
-    onWebToonClick: (Channel) -> Unit
-) {
-    val webToonList = viewModel.state.webtoos ?: emptyList()
-
-    LazyColumn(contentPadding = PaddingValues(12.dp)) {
-        if (!viewModel.state.isLoading) {
-            val spanCount = 2
-            val itemCount = if (webToonList.size % spanCount == 0) {
-                webToonList.size / spanCount
-            } else {
-                webToonList.size / spanCount + 1
-            }
-
-            item {
-                TitleTextWithExplain(
-                    title = "WebToon",
-                    explain = "이말년 시절 작품활동"
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            items(itemCount) { index ->
-                WebToonRow(
-                    rowIndex = index,
-                    webtoonsList = webToonList,
-                    spanCount = spanCount,
-                    onClick = onWebToonClick
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun WebToonRow(
-    rowIndex: Int,
-    webtoonsList: List<Channel>,
-    spanCount: Int,
-    onClick: (Channel) -> Unit = {}
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row {
-            for (index in 0 until spanCount) {
-                if (webtoonsList.size >= rowIndex * spanCount + (index + 1)) {
-                    WebToonItem(
-                        webtoon = webtoonsList[rowIndex * spanCount + index],
-                        modifier = Modifier
-                            .weight(1f),
-                        onClick = onClick
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
+            )
+        } else {
+            val webToonList = uiState.webtoos ?: emptyList()
+            RowList(
+                list = webToonList,
+                spanCount = 2,
+                contentPaddingValue = 12.dp,
+                itemPaddingValue = 12.dp,
+                headerItem = {
+                    TitleTextWithExplain(
+                        title = "WebToon",
+                        explain = "이말년 시절 작품활동"
                     )
-
-                    if (index != spanCount - 1) {
-                        Spacer(modifier = Modifier.width(12.dp))
-                    }
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
+                    Spacer(modifier = Modifier.height(16.dp))
+                },
+                listItem = { index, modifier ->
+                    WebToonItem(
+                        webtoon = webToonList[index],
+                        modifier = modifier,
+                        onClick = onWebToonClick
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
         }
-        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
@@ -176,11 +118,11 @@ fun WebToonItemPreview() {
     MaterialTheme {
         WebToonItem(
             webtoon = Channel(
-                "",
-                "이말년씨리즈",
-                arrayOf("최종 업데이트 2018.12.03"),
-                "",
-                "",
+                id = "",
+                name = "이말년씨리즈",
+                explains = arrayOf("최종 업데이트 2018.12.03"),
+                url = "",
+                image = "",
                 type = android.graphics.Color.parseColor("#C3B9A0")
             ),
             modifier = Modifier.fillMaxWidth()

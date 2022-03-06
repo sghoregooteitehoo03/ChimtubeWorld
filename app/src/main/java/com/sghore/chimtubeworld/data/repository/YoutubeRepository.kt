@@ -45,7 +45,9 @@ class YoutubeRepository @Inject constructor(
                     id = document["id"] as String,
                     url = document["url"] as String,
                     explain = document["explain"] as String,
-                    type = (document["type"] as Long).toInt()
+                    type = (document["type"] as Long).toInt(),
+                    playlistId = document["playlistId"] as String,
+                    playlistName = document["playlistName"] as String
                 )
             }
 
@@ -75,6 +77,8 @@ class YoutubeRepository @Inject constructor(
 
             val channelData = Channel(
                 id = linkInfo.id,
+                playlistId = linkInfo.playlistId,
+                playlistName = linkInfo.playlistName,
                 name = channelInfo.snippet.title,
                 explains = arrayOf(explain),
                 url = linkInfo.url,

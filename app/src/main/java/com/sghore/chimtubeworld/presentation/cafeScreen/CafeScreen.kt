@@ -38,13 +38,12 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 // Todo:
 //  . Collapsing 시 렉 걸리는 버그 고치기 ㅁ
-//  . 카페 글을 본 후 네비게이션 한 다음 다시 돌아오면 히스토리가 적용 안되는 버그 수정 X
 
 @Composable
 fun CafeScreen(
-    viewModel: CafeViewModel,
-    onCafeBannerClick: (Channel?) -> Unit,
-    onCafeCategoryClick: (CafeCategory) -> Unit,
+    uiState: CafeScreenState,
+    onCafeBannerClick: (String) -> Unit,
+    onCafeCategoryClick: (Int) -> Unit,
     onCafePostClick: (Post?) -> Unit
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
@@ -78,7 +77,7 @@ fun CafeScreen(
                         .height(48.dp)
                 )
                 CafeTopItem(
-                    viewModel = viewModel,
+                    uiState = uiState,
                     modifier = Modifier
                         .parallax(1f)
                         .fillMaxWidth(),
@@ -88,7 +87,7 @@ fun CafeScreen(
             }
         ) {
             CafePostList(
-                viewModel = viewModel,
+                uiState = uiState,
                 onCafePostClick = onCafePostClick
             )
         }
@@ -97,10 +96,10 @@ fun CafeScreen(
 
 @Composable
 fun CafeTopItem(
-    viewModel: CafeViewModel,
+    uiState: CafeScreenState,
     modifier: Modifier = Modifier,
-    onCafeBannerClick: (Channel?) -> Unit,
-    onCafeCategoryClick: (CafeCategory) -> Unit
+    onCafeBannerClick: (String) -> Unit,
+    onCafeCategoryClick: (Int) -> Unit
 ) {
     // 카테고리 리스트
     val categoryList = listOf(
@@ -126,7 +125,7 @@ fun CafeTopItem(
         )
         Spacer(modifier = Modifier.height(16.dp))
         CafeInfoBanner(
-            cafeInfo = viewModel.state.cafeInfo,
+            cafeInfo = uiState.cafeInfo,
             modifier = Modifier.padding(start = 12.dp, end = 12.dp),
             onClick = onCafeBannerClick
         )
@@ -139,11 +138,9 @@ fun CafeTopItem(
         )
         Spacer(modifier = Modifier.height(8.dp))
         CafeCategoryList(
+            uiState = uiState,
             categoryList = categoryList,
-            selectedCategoryId = viewModel.state.cafeCategoryId,
-            onClick = {
-                onCafeCategoryClick(it)
-            }
+            onClick = onCafeCategoryClick
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -153,7 +150,7 @@ fun CafeTopItem(
 fun CafeInfoBanner(
     cafeInfo: Channel?,
     modifier: Modifier = Modifier,
-    onClick: (Channel?) -> Unit = {}
+    onClick: (String) -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -170,7 +167,7 @@ fun CafeInfoBanner(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple()
             ) {
-                onClick(cafeInfo)
+                onClick(cafeInfo?.url ?: "")
             },
         contentAlignment = Alignment.Center
     ) {
@@ -214,11 +211,13 @@ fun CafeInfoBanner(
 
 @Composable
 fun CafeCategoryList(
+    uiState: CafeScreenState,
     categoryList: List<CafeCategory>,
-    selectedCategoryId: Int,
     modifier: Modifier = Modifier,
-    onClick: (CafeCategory) -> Unit = {}
+    onClick: (Int) -> Unit = {}
 ) {
+    val cafeCategoryId = uiState.cafePostState.cafeCategoryId
+
     LazyRow(
         modifier = modifier
     ) {
@@ -226,12 +225,12 @@ fun CafeCategoryList(
             Spacer(modifier = Modifier.width(12.dp))
         }
         items(categoryList) { category ->
-            val textColor = if (category.categoryId == selectedCategoryId) {
+            val textColor = if (category.categoryId == cafeCategoryId) {
                 colorResource(id = R.color.item_color)
             } else {
                 colorResource(id = R.color.default_text_color)
             }
-            val backgroundColor = if (category.categoryId == selectedCategoryId) {
+            val backgroundColor = if (category.categoryId == cafeCategoryId) {
                 colorResource(id = R.color.gray_night)
             } else {
                 colorResource(id = R.color.item_reverse_color)
@@ -256,7 +255,7 @@ fun CafeCategoryList(
                             color = colorResource(id = R.color.item_color)
                         )
                     ) {
-                        onClick(category)
+                        onClick(category.categoryId)
                     }
                     .padding(top = 8.dp, bottom = 8.dp, start = 10.dp, end = 10.dp),
                 contentAlignment = Alignment.Center
@@ -273,30 +272,25 @@ fun CafeCategoryList(
 
 @Composable
 fun CafePostList(
-    viewModel: CafeViewModel,
+    uiState: CafeScreenState,
     onCafePostClick: (Post?) -> Unit
 ) {
-    // 게시글 리스트
+    val cafePostState = uiState.cafePostState
     val postList: LazyPagingItems<Post>? =
-        viewModel.state.cafePosts?.collectAsLazyPagingItems()
-    val readState = remember { mutableStateMapOf<Int, Boolean>() } // 게시글 아이템 읽음 여부
+        cafePostState.cafePosts?.collectAsLazyPagingItems() // 게시글 리스트
 
     LazyColumn {
         postList?.let {
             items(items = it) { post ->
-                val isRead = (post?.isRead ?: false) || (readState[post?.id] ?: false)
+                val isRead =
+                    (post?.isRead ?: false) || (uiState.readHistoryState[post?.id] ?: false)
                 CafePostItem(
                     post = post,
                     isRead = isRead,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 12.dp, end = 12.dp),
-                    onClick = { clickPost ->
-                        if (!isRead) {
-                            readState[clickPost!!.id] = true
-                        }
-                        onCafePostClick(clickPost)
-                    }
+                    onClick = onCafePostClick
                 )
             }
         }
@@ -379,11 +373,11 @@ fun CafeInfoBannerPreview() {
     MaterialTheme {
         CafeInfoBanner(
             cafeInfo = Channel(
-                "",
-                "§ 침투부 카페 §",
-                arrayOf("75,563"),
-                "",
-                "",
+                id = "",
+                name = "§ 침투부 카페 §",
+                explains = arrayOf("75,563"),
+                url = "",
+                image = "",
                 type = 0
             )
         )
@@ -406,11 +400,11 @@ fun CafeCategoryListPreview() {
             CafeCategory("해줘요", 4),
             CafeCategory("찾아주세요", 56)
         )
-
-        CafeCategoryList(
-            categoryList = list,
-            selectedCategoryId = -1
-        )
+//
+//        CafeCategoryList(
+//            categoryList = list,
+//            selectedCategoryId = -1
+//        )
     }
 }
 

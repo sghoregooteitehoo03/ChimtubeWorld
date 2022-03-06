@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.databinding.FragmentStoreDetailBinding
-import com.sghore.chimtubeworld.other.OpenOtherApp
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -42,14 +41,7 @@ class StoreDetailFragment(private val goods: Goods? = null) : Fragment() {
             this.composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    StoreDetailScreen(
-                        viewModel = mViewModel,
-                        goods = goods,
-                        onActionClick = {
-                            OpenOtherApp(requireContext())
-                                .openCustomTabs(it)
-                        }
-                    )
+                    StoreDetailRoute(viewModel = mViewModel)
                 }
             }
 

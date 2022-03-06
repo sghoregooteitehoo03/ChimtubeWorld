@@ -53,7 +53,9 @@ class TwitchRepository @Inject constructor(
                     id = document["id"] as String,
                     url = document["url"]?.toString() ?: "",
                     explain = document["explain"]?.toString() ?: "",
-                    type = (document["type"] as Long).toInt()
+                    type = (document["type"] as Long).toInt(),
+                    playlistId = document["playlistId"] as String,
+                    playlistName = document["playlistName"] as String
                 )
             }
 
@@ -95,6 +97,8 @@ class TwitchRepository @Inject constructor(
             } else {
                 Channel(
                     id = userData.id,
+                    playlistId = userData.id,
+                    playlistName = linkInfo.playlistName,
                     name = userData.displayName,
                     explains = arrayOf(linkInfo.explain),
                     url = linkInfo.url,
@@ -186,6 +190,8 @@ class TwitchRepository @Inject constructor(
 
             Channel(
                 id = userInfo.id,
+                playlistId = userInfo.id,
+                playlistName = linkInfo.playlistName,
                 name = userInfo.displayName,
                 explains = arrayOf(linkInfo.explain, followData.total.toString()),
                 url = linkInfo.url,

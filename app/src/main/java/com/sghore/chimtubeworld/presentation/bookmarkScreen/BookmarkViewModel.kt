@@ -1,9 +1,7 @@
 package com.sghore.chimtubeworld.presentation.bookmarkScreen
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
+import com.google.gson.Gson
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.data.model.Resource
@@ -11,205 +9,231 @@ import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.BookmarkRepository
 import com.sghore.chimtubeworld.domain.GetTwitchVideoUseCase
 import com.sghore.chimtubeworld.domain.GetYoutubeVideoUseCase
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class BookmarkViewModel @AssistedInject constructor(
+@HiltViewModel
+class BookmarkViewModel @Inject constructor(
     private val getYoutubeVideoUseCase: GetYoutubeVideoUseCase,
     private val getTwitchVideoUseCase: GetTwitchVideoUseCase,
     private val repository: BookmarkRepository,
-    @Assisted videoData: Video?,
-    @Assisted val selectedBookmark: Bookmark?,
-    @Assisted typeImageRes: Int,
-    @Assisted videoUrl: String?
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val baseYoutubeUrl = "youtu.be"
     private val baseTwitchUrl = "www.twitch.tv"
 
-    var state by mutableStateOf(BookmarkScreenState())
+    private val _state = MutableStateFlow(BookmarkScreenState(isLoading = true))
+    val state = _state.asStateFlow()
+
+    var selectedBookmark: Bookmark? = null
         private set
 
     init {
-        if (videoData != null && selectedBookmark != null && typeImageRes != -1) {
-            initValue(videoData, selectedBookmark, typeImageRes)
+        // 영상 데이터
+        val videoData = Gson().fromJson(
+            savedStateHandle.get<String>("video"),
+            Video::class.java
+        )
+        val pos = savedStateHandle.get<Int>("pos") ?: -1 // 북마크 위치
+        val typeImageRes = savedStateHandle.get<Int>("typeImageRes") ?: -1 // 유튜브 or 트위치 이미지
+        val videoUrl = savedStateHandle.get<String>("url") // 영상 url
+
+        if (videoData != null && pos != -1 && typeImageRes != -1) {
+            // 북마크 수정
+            selectedBookmark = videoData.bookmarks[pos]
+            initValue(videoData, selectedBookmark!!, typeImageRes)
         } else if (videoUrl != null) {
+            // 북마크 생성
             getVideoData(videoUrl)
-        }
-    }
-
-    @dagger.assisted.AssistedFactory
-    interface AssistedFactory {
-        fun create(
-            videoData: Video?,
-            bookmark: Bookmark?,
-            typeImageRes: Int,
-            url: String?
-        ): BookmarkViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            assistedFactory: BookmarkViewModel.AssistedFactory,
-            videoData: Video? = null,
-            bookmark: Bookmark? = null,
-            typeImageRes: Int = -1,
-            url: String? = null
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(videoData, bookmark, typeImageRes, url) as T
-            }
         }
     }
 
     // 넘겨온 영상 url을 통해 영상 정보를 가져옴
     fun getVideoData(videoUrl: String) {
-        state.videoData ?: let {
-            val baseUrl = getBaseUrl(videoUrl)
-            var videoTypeImage = -1
+        val baseUrl = getBaseUrl(videoUrl)
+        var videoTypeImage = -1
 
-            val videoFlow = if (baseUrl == baseYoutubeUrl) {
-                videoTypeImage = R.drawable.youtube
-                getYoutubeVideoUseCase(videoUrl, baseUrl)
-            } else {
-                videoTypeImage = R.drawable.twitch
-                getTwitchVideoUseCase(videoUrl, baseUrl)
-            }
+        val videoFlow = if (baseUrl == baseYoutubeUrl) {
+            videoTypeImage = R.drawable.youtube
+            getYoutubeVideoUseCase(videoUrl, baseUrl)
+        } else {
+            videoTypeImage = R.drawable.twitch
+            getTwitchVideoUseCase(videoUrl, baseUrl)
+        }
 
-            videoFlow.onEach { resource ->
-                when (resource) {
-                    is Resource.Success -> {
-                        state = BookmarkScreenState(
+        videoFlow.onEach { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    _state.update {
+                        BookmarkScreenState(
                             videoData = resource.data,
                             videoTypeImage = videoTypeImage
                         )
                     }
-                    is Resource.Loading -> {
-                        state = BookmarkScreenState(
+                }
+                is Resource.Loading -> {
+                    _state.update {
+                        BookmarkScreenState(
                             isLoading = true
                         )
                     }
-                    is Resource.Error -> {
-                        state = BookmarkScreenState(
+                }
+                is Resource.Error -> {
+                    _state.update {
+                        BookmarkScreenState(
                             errorMsg = resource.errorMsg ?: "오류"
                         )
                     }
                 }
-            }.launchIn(viewModelScope)
-        }
+            }
+        }.launchIn(viewModelScope)
+
     }
 
     fun setTitle(title: String) {
         if (title.length <= 10) {
-            state = state.copy(
+            val latestState = _state.value
+
+            latestState.bookmarkInfoState = latestState.bookmarkInfoState.copy(
                 bookmarkTitle = title,
-                isEnable = title.isNotEmpty() && state.videoPosition.isNotEmpty()
+                isEnable = title.isNotEmpty() && latestState.bookmarkInfoState.videoPosition.isNotEmpty()
             )
         }
     }
 
     fun setVideoPosition(videoPosition: String) {
         if (videoPosition.length <= 8) {
-            state = state.copy(
+            val latestState = _state.value
+
+            latestState.bookmarkInfoState = latestState.bookmarkInfoState.copy(
                 videoPosition = videoPosition,
-                isEnable = state.bookmarkTitle.isNotEmpty() && videoPosition.isNotEmpty()
+                isEnable = latestState.bookmarkInfoState.bookmarkTitle.isNotEmpty() && videoPosition.isNotEmpty()
             )
         }
     }
 
     fun changeBookmarkColor(color: Int) {
-        state = state.copy(
+        val latestState = _state.value
+
+        latestState.bookmarkInfoState = latestState.bookmarkInfoState.copy(
             selectedColor = color
         )
     }
 
     fun clearMsg() {
-        state = state.copy(
-            errorMsg = ""
-        )
+        _state.update {
+            it.copy(
+                errorMsg = ""
+            )
+        }
     }
 
     // 북마크 추가 및 수정
     fun addOrEditBookmark(editBookmarkId: Int = -1) = viewModelScope.launch {
+        val latestState = _state.value
+        val bookmarkInfoState = latestState.bookmarkInfoState
         // 데이터가 다 들어와 있을 때
-        if (state.isEnable) {
-            val positionTime = getDateFromPosition(state.videoPosition)
+        if (bookmarkInfoState.isEnable) {
+            val positionTime = getDateFromPosition(bookmarkInfoState.videoPosition)
 
             // 영상 범위가 정상인
-            if (checkVideoPosition(positionTime, state.videoData?.duration!!)) {
+            if (checkVideoPosition(positionTime, latestState.videoData?.duration!!)) {
                 if (editBookmarkId == -1) { // 북마크 추가
                     val bookmark = Bookmark(
-                        videoId = state.videoData?.id ?: "",
-                        title = state.bookmarkTitle,
+                        videoId = latestState.videoData.id ?: "",
+                        title = bookmarkInfoState.bookmarkTitle,
                         videoPosition = positionTime!!,
-                        color = state.selectedColor
+                        color = bookmarkInfoState.selectedColor
                     )
 
                     repository.addBookmark(bookmark)
 
                     val id = repository.getItemId(bookmark)
-                    state = state.copy(
-                        errorMsg = "북마크가 추가되었습니다.",
-                        completeBookmark = bookmark.copy(id = id)
-                    )
+                    _state.update {
+                        it.copy(
+                            errorMsg = "북마크가 추가되었습니다.",
+                            completeBookmark = bookmark.copy(id = id)
+                        )
+                    }
                 } else { // 북마크 수정
                     val bookmark =
                         Bookmark(
                             id = editBookmarkId,
-                            videoId = state.videoData?.id ?: "",
-                            title = state.bookmarkTitle,
+                            videoId = latestState.videoData.id,
+                            title = bookmarkInfoState.bookmarkTitle,
                             videoPosition = positionTime!!,
-                            color = state.selectedColor
+                            color = bookmarkInfoState.selectedColor
                         )
 
                     repository.editBookmark(bookmark)
-                    state = state.copy(
-                        errorMsg = "북마크가 수정되었습니다",
-                        completeBookmark = bookmark
-                    )
+                    _state.update {
+                        it.copy(
+                            errorMsg = "북마크가 수정되었습니다",
+                            completeBookmark = bookmark
+                        )
+                    }
                 }
             } else {
-                state = state.copy(
-                    errorMsg = "영상 위치가 잘 못 되었습니다."
-                )
+                _state.update {
+                    it.copy(
+                        errorMsg = "영상 위치가 잘 못 되었습니다."
+                    )
+                }
             }
         }
     }
 
     // 값 세팅
     fun initValue(videoData: Video, bookmark: Bookmark, typeImageRes: Int) {
-        state.videoData ?: let {
-            state = BookmarkScreenState(
-                bookmarkTitle = bookmark.title,
-                videoPosition = getDateStrFromPosition(bookmark.videoPosition),
+        _state.update {
+            BookmarkScreenState(
                 videoData = videoData,
-                videoTypeImage = typeImageRes,
-                selectedColor = bookmark.color,
-                isEnable = true
-            )
+                videoTypeImage = typeImageRes
+            ).apply {
+                this.bookmarkInfoState = BookmarkInfoState(
+                    bookmarkTitle = bookmark.title,
+                    videoPosition = getDateStrFromPosition(bookmark.videoPosition),
+                    selectedColor = bookmark.color,
+                    isEnable = true
+                )
+            }
         }
     }
 
     fun deleteBookmark(bookmark: Bookmark) = viewModelScope.launch {
         repository.deleteBookmark(bookmark)
-        state = state.copy(
-            errorMsg = "북마크가 삭제 되었습니다.",
-            completeBookmark = bookmark.copy(title = "", videoPosition = 0)
-        )
+        _state.update {
+            it.copy(
+                errorMsg = "북마크가 삭제 되었습니다.",
+                completeBookmark = bookmark.copy(title = "", videoPosition = 0)
+            )
+        }
+    }
+
+    fun setDialogState(isOpen: Boolean) {
+        val latestState = _state.value
+
+        _state.update {
+            it.copy(
+                isOpenDialog = isOpen
+            ).apply {
+                bookmarkInfoState = latestState.bookmarkInfoState
+            }
+        }
     }
 
     fun getVideoUrl(videoPosition: Long): String {
         val time = getSecondsFromPosition(videoPosition)
+        val latestState = _state.value
 
-        return if (state.videoTypeImage == R.drawable.youtube) {
-            "${state.videoData!!.url}&t=$time"
-        } else if (state.videoTypeImage == R.drawable.twitch) {
-            "$${state.videoData!!.url}?t=$time"
+        return if (latestState.videoTypeImage == R.drawable.youtube) {
+            "${latestState.videoData!!.url}&t=$time"
+        } else if (latestState.videoTypeImage == R.drawable.twitch) {
+            "$${latestState.videoData!!.url}?t=$time"
         } else {
             ""
         }

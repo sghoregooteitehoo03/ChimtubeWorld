@@ -17,7 +17,7 @@ interface RetrofitService {
 
     @GET("playlistItems?key=${Contents.API_KEY}&part=contentDetails&maxResults=20")
     fun getYPlaylistItems(
-        @Query("playlistId") channelId: String,
+        @Query("playlistId") playlistId: String,
         @Query("pageToken") pageToken: String? = null
     ): Call<PlaylistItemsDTO>
 
@@ -52,14 +52,6 @@ interface RetrofitService {
         @Header("Authorization") accessKey: String,
         @Query("user_id") userId: String,
         @Query("after") afterPage: String
-    ): Call<com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.VideosDTO>
-
-    @Headers("Client-ID: ${Contents.CLIENT_ID}")
-    @GET("videos")
-    fun getTVideosFromUserIdBefore(
-        @Header("Authorization") accessKey: String,
-        @Query("user_id") userId: String,
-        @Query("before") beforePage: String,
     ): Call<com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.VideosDTO>
 
     @Headers("Client-ID: ${Contents.CLIENT_ID}")

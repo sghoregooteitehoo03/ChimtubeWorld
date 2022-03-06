@@ -144,13 +144,9 @@ class ExampleUnitTest {
     //    -32399000 -> 00:01
     @Test
     fun test() {
-//        val dateFormat = SimpleDateFormat(
-//            "hh:mm:ss",
-//            Locale.KOREA
-//        ).format(5215000 - 32400000)
-//        val value = (-32399000 + 32400000) / 1000
+        val test = "109ace"
+        val a = test.split("|")
 
-        val url = "https://www.twitch.tv/videos/1252477049"
-        println(url.contains("?"))
+        println("default: $a, filter: ${a.filterIndexed { index, s -> index != 0 }}")
     }
 }

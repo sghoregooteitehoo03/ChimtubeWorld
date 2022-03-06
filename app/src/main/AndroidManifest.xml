@@ -32,7 +32,8 @@
             android:name="com.sghore.chimtubeworld.presentation.ui.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:parentActivityName="com.sghore.chimtubeworld.presentation.ui.SplashActivity">
+            android:parentActivityName="com.sghore.chimtubeworld.presentation.ui.SplashActivity"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -40,6 +41,11 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.sghore.chimtubeworld.presentation.ui.ViewPagerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar" />
 
     </application>
 

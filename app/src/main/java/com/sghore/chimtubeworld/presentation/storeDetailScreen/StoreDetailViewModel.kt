@@ -1,23 +1,19 @@
 package com.sghore.chimtubeworld.presentation.storeDetailScreen
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.domain.GetStorePreviewImagesUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 
 class StoreDetailViewModel @AssistedInject constructor(
     private val getStorePreviewImagesUseCase: GetStorePreviewImagesUseCase,
     @Assisted val goods: Goods?
 ) : ViewModel() {
-    var state by mutableStateOf(StoreDetailScreenState())
-        private set
+    private val _state = MutableStateFlow(StoreDetailScreenState(isLoading = true))
+    val state = _state.asStateFlow()
 
     init {
         getStoreDetail(goods)
@@ -46,20 +42,29 @@ class StoreDetailViewModel @AssistedInject constructor(
             getStorePreviewImagesUseCase(it).onEach { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        state = StoreDetailScreenState(
-                            previewImages = resource.data ?: emptyList(),
-                            selectedImage = resource.data?.get(0) ?: ""
-                        )
+                        _state.update {
+                            StoreDetailScreenState()
+                                .apply {
+                                    this.selectedImageState = SelectedImageState(
+                                        previewImages = resource.data ?: emptyList(),
+                                        selectedImage = resource.data?.get(0) ?: ""
+                                    )
+                                }
+                        }
                     }
                     is Resource.Loading -> {
-                        state = StoreDetailScreenState(
-                            isLoading = true
-                        )
+                        _state.update {
+                            StoreDetailScreenState(
+                                isLoading = true
+                            )
+                        }
                     }
                     is Resource.Error -> {
-                        state = StoreDetailScreenState(
-                            errorMsg = resource.errorMsg ?: "오류"
-                        )
+                        _state.update {
+                            StoreDetailScreenState(
+                                errorMsg = resource.errorMsg ?: "오류"
+                            )
+                        }
                     }
                 }
             }.launchIn(viewModelScope)
@@ -67,8 +72,11 @@ class StoreDetailViewModel @AssistedInject constructor(
     }
 
     fun selectPreviewImage(selectedImage: String) {
-        state = state.copy(
-            selectedImage = selectedImage
-        )
+        val latestState = _state.value
+
+        latestState.selectedImageState = latestState.selectedImageState
+            .copy(
+                selectedImage = selectedImage
+            )
     }
 }

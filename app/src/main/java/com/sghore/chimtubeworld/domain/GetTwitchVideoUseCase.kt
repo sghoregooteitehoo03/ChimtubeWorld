@@ -13,8 +13,6 @@ class GetTwitchVideoUseCase @Inject constructor(
 
     operator fun invoke(videoUrl: String, baseUrl: String): Flow<Resource<Video>> = flow {
         try {
-            emit(Resource.Loading<Video>())
-
             val accessKey = repository.getTwitchAccessKey()
             val videoData = repository.getVideo(
                 url = videoUrl,

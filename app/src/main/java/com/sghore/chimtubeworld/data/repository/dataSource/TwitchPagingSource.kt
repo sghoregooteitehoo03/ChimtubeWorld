@@ -8,9 +8,6 @@ import com.sghore.chimtubeworld.data.db.Dao
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.VideosDataDTO
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
 import retrofit2.await
 import java.text.SimpleDateFormat
@@ -50,7 +47,7 @@ class TwitchPagingSource(
             val nextKey = videosResult.pagination.cursor // 다음 페이지
             val videoList = translateVideoData(videosResult.data, pageKey) // 영상 리스트
 
-            return LoadResult.Page(
+            LoadResult.Page(
                 data = videoList,
                 prevKey = null,
                 nextKey = nextKey
