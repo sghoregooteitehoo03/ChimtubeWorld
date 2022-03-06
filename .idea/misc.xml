@@ -78,6 +78,12 @@
         <entry key="../../../../layout/compose-model-1645941728027.xml" value="0.1" />
         <entry key="../../../../layout/compose-model-1645941768956.xml" value="0.262037037037037" />
         <entry key="../../../../layout/compose-model-1645942314480.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1646537715167.xml" value="0.20462962962962963" />
+        <entry key="../../../../layout/compose-model-1646537736672.xml" value="0.20462962962962963" />
+        <entry key="../../../../layout/compose-model-1646537781675.xml" value="0.9567099567099567" />
+        <entry key="../../../../layout/compose-model-1646537799668.xml" value="0.20462962962962963" />
+        <entry key="../../../../layout/compose-model-1646537863258.xml" value="0.20462962962962963" />
+        <entry key="../../../../layout/compose-model-1646537882930.xml" value="0.20462962962962963" />
         <entry key="../../../../layout/custom_preview.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/drawable-small/splash.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable-v24/shape_corner_rec_large.xml" value="0.122" />
@@ -90,6 +96,7 @@
         <entry key="app/src/main/res/drawable/ic_delete.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_description.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_help.xml" value="0.124" />
+        <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1105" />
         <entry key="app/src/main/res/drawable/ic_logo.xml" value="0.124" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_store.xml" value="0.154" />

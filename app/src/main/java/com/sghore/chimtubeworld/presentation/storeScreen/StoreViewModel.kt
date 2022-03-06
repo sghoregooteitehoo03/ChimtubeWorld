@@ -2,7 +2,6 @@ package com.sghore.chimtubeworld.presentation.storeScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.domain.GetGoodsListUseCase
 import com.sghore.chimtubeworld.domain.GetStoreInfoListUseCase

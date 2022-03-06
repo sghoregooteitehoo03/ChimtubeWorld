@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.*
@@ -40,12 +41,6 @@ import com.sghore.chimtubeworld.presentation.videosScreen.VideosRoute
 import com.sghore.chimtubeworld.presentation.webToonScreen.WebToonRoute
 import com.sghore.chimtubeworld.presentation.youtubeScreen.YoutubeRoute
 import dagger.hilt.android.AndroidEntryPoint
-
-// TODO:
-//  . StoreDetailFragment 재구성 버그 수정 O
-//  . MainActivity 재구성시 Composable 초기화 방지 O
-//  . 같은 채널에서 제공하는 영상인 경우 탭으로 표현 O
-//  . 단기 방송 재생목록 만들기
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -84,10 +79,18 @@ class MainActivity : ComponentActivity() {
                             title = {
                                 when (currentRoute) {
                                     NavigationScreen.AddBookmark.route, NavigationScreen.EditBookmark.route -> {
-                                        Text(text = "북마크")
+                                        Text(
+                                            text = "북마크",
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
                                     }
                                     NavigationScreen.Videos.route -> {
-                                        Text(text = channelNameForToolbar)
+                                        Text(
+                                            text = channelNameForToolbar,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
                                     }
                                     else -> {
                                         channelNameForToolbar = "" // 툴바 텍스트 초기화
@@ -227,7 +230,6 @@ class MainActivity : ComponentActivity() {
                                     navController = navController
                                 )
                             }
-                            // TODO: Video 데이터를 JSON 형식인 String으로 받고 BookmarkViewModel에서 Video 데이터로 변환
                             composable(
                                 route = NavigationScreen.EditBookmark.route + "?typeImageRes={typeImageRes}&pos={pos}&video={video}",
                                 arguments = listOf(
@@ -242,6 +244,8 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
+
+                        onNewIntent(intent) // 인텐트로 인해 앱이 실행된것인지 확인
                     }
                 }
             }

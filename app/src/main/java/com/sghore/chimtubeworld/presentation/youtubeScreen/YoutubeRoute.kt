@@ -1,12 +1,10 @@
 package com.sghore.chimtubeworld.presentation.youtubeScreen
 
-import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.gson.Gson
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
 

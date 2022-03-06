@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,9 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 

@@ -2,7 +2,6 @@ package com.sghore.chimtubeworld.presentation.ui.adapter
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.presentation.storeDetailScreen.StoreDetailFragment

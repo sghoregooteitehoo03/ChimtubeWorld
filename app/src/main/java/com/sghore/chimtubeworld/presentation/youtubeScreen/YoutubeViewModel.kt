@@ -6,7 +6,6 @@ import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.domain.GetYoutubeChannelUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
