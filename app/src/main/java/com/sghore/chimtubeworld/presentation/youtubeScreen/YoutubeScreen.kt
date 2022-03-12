@@ -29,24 +29,28 @@ import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 @Composable
 fun YoutubeScreen(
     uiState: YoutubeScreenState,
-    onClick: (Channel) -> Unit
+    onChannelClick: (Channel) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            if (!uiState.isLoading) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = colorResource(id = R.color.item_color)
+            )
+        } else {
+            Column(modifier = Modifier.padding(12.dp)) {
                 TitleTextWithExplain(
                     title = "Youtube",
                     explain = "침튜브 채널"
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 MainYoutubeChannelList(
-                    mainChannelList = uiState.channels?.filter { it?.type == 0 }
-                        ?: listOf(),
-                    onClick = onClick
+                    mainChannelList = uiState.channels?.filter { it?.type == 0 } ?: emptyList(),
+                    onClick = onChannelClick
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -57,17 +61,10 @@ fun YoutubeScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 SubYoutubeChannelList(
-                    subChannelList = uiState.channels?.filter { it?.type == 1 } ?: listOf(),
-                    onClick = onClick
+                    subChannelList = uiState.channels?.filter { it?.type == 1 } ?: emptyList(),
+                    onClick = onChannelClick
                 )
             }
-        }
-
-        if (uiState.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
-            )
         }
     }
 }
@@ -75,15 +72,14 @@ fun YoutubeScreen(
 @Composable
 fun MainYoutubeChannelList(
     mainChannelList: List<Channel?>,
-    onClick: (Channel) -> Unit = {}
+    onClick: (Channel) -> Unit
 ) {
     mainChannelList.forEach { channel ->
         Column {
             MainYoutubeChannelItem(
                 channel = channel,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                    .fillMaxWidth(),
                 onClick = onClick
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -94,11 +90,11 @@ fun MainYoutubeChannelList(
 @Composable
 fun MainYoutubeChannelItem(
     channel: Channel?,
-    modifier: Modifier = Modifier,
-    onClick: (Channel) -> Unit
+    onClick: (Channel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = Modifier
+    Row(
+        modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .background(colorResource(id = R.color.gray_bright_night))
             .clickable(
@@ -110,39 +106,36 @@ fun MainYoutubeChannelItem(
             ) {
                 onClick(channel!!)
             }
+            .padding(16.dp)
     ) {
-        Row(
-            modifier = modifier
+        Image(
+            painter = rememberImagePainter(
+                data = channel?.image
+            ),
+            contentDescription = channel?.id,
+            modifier = Modifier
+                .size(60.dp)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(
+            modifier = Modifier.align(Alignment.CenterVertically)
         ) {
-            Image(
-                painter = rememberImagePainter(
-                    data = channel?.image
-                ),
-                contentDescription = channel?.id,
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
+            Text(
+                text = channel?.name ?: "",
+                color = colorResource(id = R.color.item_color),
+                fontSize = 18.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.width(12.dp))
-            Column(
-                modifier = Modifier.align(Alignment.CenterVertically)
-            ) {
-                Text(
-                    text = channel?.name ?: "",
-                    color = colorResource(id = R.color.item_color),
-                    fontSize = 18.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = channel?.explains?.get(0) ?: "",
-                    color = colorResource(id = R.color.default_text_color),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = channel?.explains?.get(0) ?: "",
+                color = colorResource(id = R.color.default_text_color),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -168,8 +161,8 @@ fun SubYoutubeChannelList(
             content = { index, modifier ->
                 SubYoutubeChannelItem(
                     channel = subChannelList[index],
+                    onClick = onClick,
                     modifier = modifier,
-                    onClick = onClick
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -180,48 +173,44 @@ fun SubYoutubeChannelList(
 @Composable
 fun SubYoutubeChannelItem(
     channel: Channel?,
-    modifier: Modifier = Modifier,
-    onClick: (Channel) -> Unit = {}
+    onClick: (Channel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    bounded = true,
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
-                onClick(channel!!)
-            }
-    ) {
-        Column {
-            Image(
-                painter = rememberImagePainter(
-                    data = channel?.image
-                ),
-                contentDescription = channel?.id,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop
+    Column(modifier = modifier
+        .clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = rememberRipple(
+                bounded = true,
+                color = colorResource(id = R.color.item_color)
             )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = channel?.explains?.get(0) ?: "",
-                color = colorResource(id = R.color.item_color),
-                fontSize = 18.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = channel?.name ?: "",
-                color = colorResource(id = R.color.default_text_color),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+        ) {
+            onClick(channel!!)
+        }) {
+        Image(
+            painter = rememberImagePainter(
+                data = channel?.image
+            ),
+            contentDescription = channel?.id,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .clip(RoundedCornerShape(12.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = channel?.explains?.get(0) ?: "",
+            color = colorResource(id = R.color.item_color),
+            fontSize = 18.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = channel?.name ?: "",
+            color = colorResource(id = R.color.default_text_color),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 

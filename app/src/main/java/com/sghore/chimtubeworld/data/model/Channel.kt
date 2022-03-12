@@ -11,6 +11,4 @@ data class Channel(
     val thumbnailImage: String? = null,
     val type: Int,
     val isOnline: Boolean? = null,
-) {
-    var isSelected: Boolean = false
-}
+)

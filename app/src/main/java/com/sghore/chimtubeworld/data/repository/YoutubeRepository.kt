@@ -52,30 +52,28 @@ class YoutubeRepository @Inject constructor(
             }
 
     // 채널의 정보를 가져옴
-    suspend fun getChannelInfo(channelLinkList: List<LinkInfo>): List<Channel?> {
+    suspend fun getChannelInfo(channelLinkList: List<LinkInfo>): List<Channel> {
         val retrofitService = getRetrofit()
 
-        // 채널 리스트
-        val channelList = arrayOfNulls<Channel>(channelLinkList.size)
-            .toMutableList()
-        // 채널 아이디 배열            [0] = 채널아이디, [1] = 플레이리스트 아이디
-        val channelIdArr = channelLinkList.map { it.id.split("|")[0] }
-            .toTypedArray()
+        // API를 통해 채널들의 정보를 가져옴             [0] = 채널아이디, [1] = 플레이리스트 아이디
+        val result = retrofitService.getYChannelInfo(
+            channelId = channelLinkList.map { it.id.split("|")[0] }
+                .toTypedArray()
+        )
+        // 채널 아이디 배열
+        val channelIdArr = result.items.map { it.id }
 
-        // API를 통해 채널들의 정보를 가져옴
-        val result = retrofitService.getYChannelInfo(channelIdArr)
-
-        result.items.forEach { channelInfo ->
-            // 채널들을 배열순서에 맞쳐 리스트에 집어넣기 위한 인덱스 값
-            val index = channelIdArr.indexOf(channelInfo.id)
-            val linkInfo = channelLinkList[index]
+        return channelLinkList.map { linkInfo ->
+            // API에서 넘어온 데이터가 linkInfo와 일치하는 데이터의 Index값
+            val index = channelIdArr.indexOf(linkInfo.id.split("|")[0])
+            val channelInfo = result.items[index]
             val explain = if (linkInfo.type == 0) {
                 channelInfo.snippet.description
             } else {
                 linkInfo.explain
             }
 
-            val channelData = Channel(
+            Channel(
                 id = linkInfo.id,
                 playlistId = linkInfo.playlistId,
                 playlistName = linkInfo.playlistName,
@@ -85,11 +83,7 @@ class YoutubeRepository @Inject constructor(
                 image = channelInfo.snippet.thumbnails.medium.url,
                 type = linkInfo.type
             )
-
-            channelList[index] = channelData
         }
-
-        return channelList.toList()
     }
 
     // 유튜브에서 영상 정보를 가져옴

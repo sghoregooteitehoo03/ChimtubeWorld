@@ -102,18 +102,20 @@ fun CafeTopItem(
     onCafeCategoryClick: (Int) -> Unit
 ) {
     // 카테고리 리스트
-    val categoryList = listOf(
-        CafeCategory("전체", -1),
-        CafeCategory("방송일정 및 공지", 5),
-        CafeCategory("침착맨 전용", 42),
-        CafeCategory("침착맨 갤러리", 33),
-        CafeCategory("침착맨 이야기", 1),
-        CafeCategory("팬아트", 2),
-        CafeCategory("침착맨 짤", 6),
-        CafeCategory("추천영상", 55),
-        CafeCategory("해줘요", 4),
-        CafeCategory("찾아주세요", 56)
-    )
+    val categoryList = remember {
+        listOf(
+            CafeCategory("전체", -1),
+            CafeCategory("방송일정 및 공지", 5),
+            CafeCategory("침착맨 전용", 42),
+            CafeCategory("침착맨 갤러리", 33),
+            CafeCategory("침착맨 이야기", 1),
+            CafeCategory("팬아트", 2),
+            CafeCategory("침착맨 짤", 6),
+            CafeCategory("추천영상", 55),
+            CafeCategory("해줘요", 4),
+            CafeCategory("찾아주세요", 56)
+        )
+    }
 
     Column(
         modifier = modifier
