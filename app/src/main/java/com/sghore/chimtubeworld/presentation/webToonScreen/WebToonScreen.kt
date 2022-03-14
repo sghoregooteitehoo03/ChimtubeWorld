@@ -57,7 +57,9 @@ fun WebToonScreen(
                 listItem = { index, modifier ->
                     WebToonItem(
                         webtoon = webToonList[index],
-                        modifier = modifier,
+                        modifier = modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .height(220.dp),
                         onClick = onWebToonClick
                     )
                 },
@@ -70,13 +72,11 @@ fun WebToonScreen(
 @Composable
 fun WebToonItem(
     webtoon: Channel,
-    modifier: Modifier = Modifier,
-    onClick: (Channel) -> Unit = {}
+    onClick: (Channel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .height(220.dp)
             .background(color = Color(webtoon.type))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -125,6 +125,7 @@ fun WebToonItemPreview() {
                 image = "",
                 type = android.graphics.Color.parseColor("#C3B9A0")
             ),
+            onClick = {},
             modifier = Modifier.fillMaxWidth()
         )
     }

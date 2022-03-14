@@ -16,9 +16,7 @@ class GetWebToonListUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<Resource<List<Channel>>> = flow {
         try {
-            val webtoons = CoroutineScope(Dispatchers.IO).async {
-                repository.getWebToonList()
-            }.await()
+            val webtoons = repository.getWebToonList()
             emit(Resource.Success<List<Channel>>(webtoons))
         } catch (e: Exception) {
             e.printStackTrace()
