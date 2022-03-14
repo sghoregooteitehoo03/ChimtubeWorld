@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -48,9 +49,8 @@ fun TwitchScreen(
                 color = colorResource(id = R.color.item_color)
             )
         } else {
-            val crewChannelList = uiState.channels ?: emptyList()
             RowList(
-                list = crewChannelList,
+                list = uiState.channels,
                 spanCount = 4,
                 contentPaddingValue = 12.dp,
                 itemPaddingValue = 12.dp,
@@ -73,9 +73,9 @@ fun TwitchScreen(
                 },
                 listItem = { index, modifier ->
                     TwitchCrewChannelItem(
-                        channel = crewChannelList[index],
-                        modifier = modifier,
-                        onClick = onTwitchCrewChannelClick
+                        channel = uiState.channels[index],
+                        onClick = onTwitchCrewChannelClick,
+                        modifier = modifier
                     )
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -87,7 +87,8 @@ fun TwitchScreen(
 @Composable
 fun MainChannelInfo(
     mainChannel: Channel?,
-    onClick: (Channel?) -> Unit = { }
+    onClick: (Channel?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val colorFilter = if (mainChannel?.isOnline == true) {
         null
@@ -99,7 +100,7 @@ fun MainChannelInfo(
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -130,16 +131,15 @@ fun MainChannelInfo(
                     painter = rememberImagePainter(
                         data = mainChannel?.image
                     ),
-                    contentDescription = mainChannel?.id,
+                    contentDescription = "침착맨 프로필",
                     modifier = Modifier
                         .size(64.dp)
                         .border(
                             width = 2.dp,
-                            color = if (mainChannel?.isOnline == true) colorResource(
-                                id = R.color.green_online_color
-                            ) else colorResource(
-                                id = android.R.color.darker_gray
-                            ),
+                            color = if (mainChannel?.isOnline == true)
+                                colorResource(id = R.color.green_online_color)
+                            else
+                                colorResource(id = android.R.color.darker_gray),
                             shape = CircleShape
                         )
                         .padding(4.dp)
@@ -154,7 +154,7 @@ fun MainChannelInfo(
                     if (mainChannel?.isOnline == true) {
                         Text(
                             text = "생방송",
-                            color = colorResource(id = R.color.white),
+                            color = Color.White,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
@@ -206,11 +206,11 @@ fun MainChannelInfo(
 @Composable
 fun TwitchCrewChannelItem(
     channel: Channel?,
-    modifier: Modifier = Modifier,
-    onClick: (Channel) -> Unit = { }
+    onClick: (Channel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier
+    Column(
+        modifier = modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(
@@ -220,37 +220,33 @@ fun TwitchCrewChannelItem(
             ) {
                 onClick(channel!!)
             },
-        contentAlignment = Alignment.TopCenter
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = rememberImagePainter(
-                    data = channel?.image
-                ),
-                contentDescription = channel?.id,
-                modifier = Modifier
-                    .size(80.dp)
-                    .aspectRatio(1f)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = channel?.name ?: "",
-                color = colorResource(id = R.color.item_color),
-                fontSize = 18.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = channel?.explains?.get(0) ?: "",
-                color = colorResource(id = R.color.default_text_color),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+        Image(
+            painter = rememberImagePainter(
+                data = channel?.image
+            ),
+            contentDescription = channel?.id,
+            modifier = Modifier
+                .size(80.dp)
+                .aspectRatio(1f)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = channel?.name ?: "",
+            color = colorResource(id = R.color.item_color),
+            fontSize = 18.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = channel?.explains?.get(0) ?: "",
+            color = colorResource(id = R.color.default_text_color),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
@@ -267,7 +263,8 @@ fun MainChannelInfoPreview() {
                 image = "",
                 type = 0,
                 isOnline = false
-            )
+            ),
+            onClick = {}
         )
     }
 }
@@ -284,7 +281,8 @@ fun TwitchCrewChannelItemPreview() {
                 url = "",
                 image = "",
                 type = 0
-            )
+            ),
+            onClick = {}
         )
     }
 }

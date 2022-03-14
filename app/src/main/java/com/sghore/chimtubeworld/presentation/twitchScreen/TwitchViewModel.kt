@@ -25,15 +25,13 @@ class TwitchViewModel @Inject constructor(
                 is Resource.Success -> {
                     _state.update {
                         TwitchScreenState(
-                            mainChannelInfo = resource.data?.filter { it?.type == 0 }?.get(0),
+                            mainChannelInfo = resource.data!!.filter { it.type == 0 }[0],
                             channels = resource.data
                         )
                     }
                 }
                 is Resource.Loading -> {
-                    _state.update {
-                        TwitchScreenState(isLoading = true)
-                    }
+
                 }
                 is Resource.Error -> {
                     _state.update {
