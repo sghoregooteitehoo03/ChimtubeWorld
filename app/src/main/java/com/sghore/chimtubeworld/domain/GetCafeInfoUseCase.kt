@@ -15,10 +15,7 @@ class GetCafeInfoUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<Resource<Channel>> = flow {
         try {
-            val cafeInfo = CoroutineScope(Dispatchers.IO).async {
-                repository.getCafeInfo()
-            }.await()
-
+            val cafeInfo = repository.getCafeInfo()
             emit(Resource.Success<Channel>(cafeInfo))
         } catch (e: Exception) {
             e.printStackTrace()
