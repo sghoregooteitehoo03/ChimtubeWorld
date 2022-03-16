@@ -272,7 +272,9 @@ fun CafeCategoryList(
                             color = colorResource(id = R.color.item_color)
                         )
                     ) {
-                        onClick(category.categoryId)
+                        if (category.categoryId != selectedCategoryId) {
+                            onClick(category.categoryId)
+                        }
                     }
                     .padding(top = 8.dp, bottom = 8.dp, start = 10.dp, end = 10.dp),
                 contentAlignment = Alignment.Center

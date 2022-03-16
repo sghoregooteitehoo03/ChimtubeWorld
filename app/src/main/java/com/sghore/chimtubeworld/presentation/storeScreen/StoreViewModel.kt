@@ -6,6 +6,7 @@ import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.domain.GetGoodsListUseCase
 import com.sghore.chimtubeworld.domain.GetStoreInfoListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -16,6 +17,8 @@ class StoreViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(StoreScreenState(isLoading = true))
     val state: StateFlow<StoreScreenState> = _state
+
+    private var job: Job? = null
 
     init {
         getStoreInfo()
@@ -30,22 +33,12 @@ class StoreViewModel @Inject constructor(
 
                     _state.update {
                         StoreScreenState(
-                            storeInfoList = storeInfoList,
-                        ).apply {
-                            this.goodsState = GoodsState(
-                                goodsListFlow = getGoodsListUseCase(storeInfoList[0].url),
-                                selectedStoreUrl = storeInfoList[0].url
-                            )
-                        }
-                    }
-                }
-                is Resource.Loading -> {
-                    _state.update {
-                        StoreScreenState(
-                            isLoading = true
+                            storeInfoList = storeInfoList
                         )
                     }
+                    changeCategory(url = storeInfoList[0].url)
                 }
+                is Resource.Loading -> {}
                 is Resource.Error -> {
                     _state.update {
                         StoreScreenState(
@@ -59,11 +52,20 @@ class StoreViewModel @Inject constructor(
 
     // 스토어의 카테고리를 변경함
     fun changeCategory(url: String) {
-        val latestState = _state.value
+        job?.cancel() // 이전 작업이 존재하면 취소함
 
-        latestState.goodsState = latestState.goodsState.copy(
-            selectedStoreUrl = url,
-            goodsListFlow = getGoodsListUseCase(url)
-        )
+        _state.update {
+            it.copy(
+                selectedStoreUrl = url,
+                goodsList = emptyList()
+            )
+        }
+        job = getGoodsListUseCase(url).onEach { goods ->
+            _state.update {
+                it.copy(
+                    goodsList = goods
+                )
+            }
+        }.launchIn(viewModelScope)
     }
 }

@@ -9,13 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 data class StoreScreenState(
     val storeInfoList: List<Channel> = emptyList(),
+    val selectedStoreUrl: String = "",
+    val goodsList: List<Goods> = emptyList(),
     val isLoading: Boolean = false,
     val errorMsg: String = ""
-) {
-    var goodsState by mutableStateOf(GoodsState())
-}
-
-data class GoodsState(
-    val selectedStoreUrl: String = "",
-    val goodsListFlow: Flow<List<Goods>>? = null
 )
