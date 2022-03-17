@@ -15,6 +15,9 @@ import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.presentation.selectBookmarkScreen.SelectBookmarkDialog
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onSubscription
 
 @Composable
 fun VideosRoute(
@@ -31,18 +34,18 @@ fun VideosRoute(
         gViewModel.bookmarkData = null
     }
 
-    LaunchedEffect(gViewModel.topAppBarAction) {
-        val action = gViewModel.topAppBarAction
-
-        if (action == Contents.ACTION_SHOW_HELP) {
-            Toast.makeText(
-                context,
-                "유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.",
-                Toast.LENGTH_SHORT
-            ).show()
+    LaunchedEffect(true) {
+        gViewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is GlobalViewModel.ActionEvent.ShowHelp -> {
+                    Toast.makeText(
+                        context,
+                        "유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
-
-        gViewModel.topAppBarAction = ""
     }
 
     VideosTabs(

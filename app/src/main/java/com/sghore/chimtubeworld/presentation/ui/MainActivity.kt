@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                             modifier = Modifier.fillMaxWidth()
                                         )
 
-                                        if (gViewModel.bookmarkData != null) {
+                                        gViewModel.bookmarkData?.let {
                                             gViewModel.bookmarkData = null
                                         }
                                     }
@@ -145,7 +145,9 @@ class MainActivity : ComponentActivity() {
                                     }
                                     NavigationScreen.Videos.route -> {
                                         IconButton(onClick = {
-                                            gViewModel.topAppBarAction = Contents.ACTION_SHOW_HELP
+                                            gViewModel.setEventFlow(
+                                                event = GlobalViewModel.ActionEvent.ShowHelp
+                                            )
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Default.Help,

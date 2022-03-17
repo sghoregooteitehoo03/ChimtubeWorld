@@ -10,6 +10,4 @@ data class Video(
     val duration: Long,
     val url: String,
     var bookmarks: List<Bookmark> = listOf(),
-) {
-    var currentPageKey: String? = null
-}
+)
