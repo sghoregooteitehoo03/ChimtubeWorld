@@ -124,7 +124,9 @@ class MainActivity : ComponentActivity() {
                                 when (currentRoute) {
                                     NavigationScreen.EditBookmark.route -> {
                                         IconButton(onClick = {
-                                            gViewModel.topAppBarAction = Contents.ACTION_COPY_URL
+                                            gViewModel.setEventFlow(
+                                                event = GlobalViewModel.ActionEvent.CopyVideoUrl
+                                            )
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Default.Assignment,
@@ -133,8 +135,9 @@ class MainActivity : ComponentActivity() {
                                             )
                                         }
                                         IconButton(onClick = {
-                                            gViewModel.topAppBarAction =
-                                                Contents.ACTION_DELETE_BOOKMARK
+                                            gViewModel.setEventFlow(
+                                                event = GlobalViewModel.ActionEvent.DeleteBookmark
+                                            )
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Default.Delete,

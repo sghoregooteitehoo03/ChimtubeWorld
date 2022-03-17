@@ -1,7 +1,6 @@
 package com.sghore.chimtubeworld.presentation.videosScreen
 
 import android.content.Context
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -15,9 +14,7 @@ import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.presentation.selectBookmarkScreen.SelectBookmarkDialog
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
-import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onSubscription
 
 @Composable
 fun VideosRoute(
@@ -44,6 +41,8 @@ fun VideosRoute(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+                is GlobalViewModel.ActionEvent.CopyVideoUrl -> {}
+                is GlobalViewModel.ActionEvent.DeleteBookmark -> {}
             }
         }
     }

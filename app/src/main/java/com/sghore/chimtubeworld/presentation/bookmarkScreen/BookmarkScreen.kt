@@ -164,7 +164,7 @@ fun InputBookmarkInfo(
         modifier = Modifier.padding(start = 12.dp, end = 12.dp)
     ) {
         TextField(
-            value = uiState.bookmarkInfoState.bookmarkTitle,
+            value = uiState.bookmarkTitle,
             onValueChange = onTitleChange,
             maxLines = 1,
             placeholder = {
@@ -190,7 +190,7 @@ fun InputBookmarkInfo(
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
-            value = uiState.bookmarkInfoState.videoPosition,
+            value = uiState.videoPosition,
             onValueChange = onVideoPositionChange,
             maxLines = 1,
             placeholder = {
@@ -220,7 +220,7 @@ fun InputBookmarkInfo(
 
     Spacer(modifier = Modifier.height(28.dp))
     BookmarkColorList(
-        selectedColor = uiState.bookmarkInfoState.selectedColor,
+        selectedColor = uiState.selectedColor,
         onClick = onChangeBookmarkColor
     )
     Spacer(modifier = Modifier.height(56.dp))
@@ -240,7 +240,7 @@ fun InputBookmarkInfo(
                 .height(48.dp),
             colors = buttonColors,
             shape = RoundedCornerShape(8.dp),
-            enabled = uiState.bookmarkInfoState.isEnable,
+            enabled = uiState.isEnable,
             onClick = { onButtonClick() }
         ) {
             Text(

@@ -24,11 +24,8 @@ interface Dao {
         color: Int
     ): Int
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookmark(bookmark: Bookmark)
-
-    @Update
-    suspend fun updateBookmark(bookmark: Bookmark)
 
     @Delete
     suspend fun deleteBookmark(bookmark: Bookmark)

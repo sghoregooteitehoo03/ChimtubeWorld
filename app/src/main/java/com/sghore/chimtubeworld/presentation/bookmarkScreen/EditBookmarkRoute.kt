@@ -17,9 +17,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flattenMerge
+import kotlinx.coroutines.flow.flowOf
 
+@OptIn(FlowPreview::class)
 @Composable
 fun EditBookmarkRoute(
     viewModel: BookmarkViewModel = hiltViewModel(),
@@ -29,35 +33,32 @@ fun EditBookmarkRoute(
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = uiState.errorMsg) {
-        val msg = uiState.errorMsg
-        if (msg.isNotEmpty()) {
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT)
-                .show()
+    LaunchedEffect(key1 = true) {
+        flowOf(viewModel.event, gViewModel.eventFlow).flattenMerge()
+            .collectLatest { event ->
+                when (event) {
+                    is BookmarkViewModel.BookmarkEvent.ShowToastMessage -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    is BookmarkViewModel.BookmarkEvent.ChangeBookmark -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                            .show()
+                        gViewModel.bookmarkData = event.bookmark
 
-            if (uiState.completeBookmark == null) {
-                viewModel.clearMsg()
+                        navController.navigateUp()
+                    }
+                    is GlobalViewModel.ActionEvent.CopyVideoUrl -> {
+                        clipData(
+                            viewModel = viewModel,
+                            context = context
+                        )
+                    }
+                    is GlobalViewModel.ActionEvent.DeleteBookmark -> {
+                        viewModel.setDialogState(true)
+                    }
+                }
             }
-        }
-
-        uiState.completeBookmark?.let {
-            gViewModel.bookmarkData = it
-            navController.navigateUp()
-        }
-    }
-
-    LaunchedEffect(key1 = gViewModel.topAppBarAction) {
-        val action = gViewModel.topAppBarAction // navigation menu 액션
-        if (action == Contents.ACTION_COPY_URL) { // URL 복사
-            clipData(
-                viewModel = viewModel,
-                context = context
-            )
-        } else if (action == Contents.ACTION_DELETE_BOOKMARK ) { // 북마크 삭제
-            viewModel.setDialogState(true)
-        }
-
-        gViewModel.topAppBarAction = ""
     }
 
     BookmarkScreen(

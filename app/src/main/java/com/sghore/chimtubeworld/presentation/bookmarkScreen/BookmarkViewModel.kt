@@ -23,11 +23,20 @@ class BookmarkViewModel @Inject constructor(
     private val repository: BookmarkRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    sealed class BookmarkEvent {
+        data class ShowToastMessage(val message: String) : BookmarkEvent()
+        data class ChangeBookmark(val message: String, val bookmark: Bookmark) : BookmarkEvent()
+    }
+
     private val baseYoutubeUrl = "youtu.be"
     private val baseTwitchUrl = "www.twitch.tv"
 
     private val _state = MutableStateFlow(BookmarkScreenState(isLoading = true))
+    private val _event = MutableSharedFlow<BookmarkEvent>()
+
     val state = _state.asStateFlow()
+    val event = _event.asSharedFlow()
 
     var selectedBookmark: Bookmark? = null
         private set
@@ -75,19 +84,14 @@ class BookmarkViewModel @Inject constructor(
                         )
                     }
                 }
-                is Resource.Loading -> {
-                    _state.update {
-                        BookmarkScreenState(
-                            isLoading = true
-                        )
-                    }
-                }
+                is Resource.Loading -> {}
                 is Resource.Error -> {
                     _state.update {
-                        BookmarkScreenState(
-                            errorMsg = resource.errorMsg ?: "오류"
-                        )
+                        BookmarkScreenState()
                     }
+                    _event.emit(
+                        BookmarkEvent.ShowToastMessage(message = resource.errorMsg ?: "오류")
+                    )
                 }
             }
         }.launchIn(viewModelScope)
@@ -96,93 +100,74 @@ class BookmarkViewModel @Inject constructor(
 
     fun setTitle(title: String) {
         if (title.length <= 10) {
-            val latestState = _state.value
-
-            latestState.bookmarkInfoState = latestState.bookmarkInfoState.copy(
-                bookmarkTitle = title,
-                isEnable = title.isNotEmpty() && latestState.bookmarkInfoState.videoPosition.isNotEmpty()
-            )
+            _state.update {
+                it.copy(
+                    bookmarkTitle = title,
+                    isEnable = title.isNotEmpty() && it.videoPosition.isNotEmpty()
+                )
+            }
         }
     }
 
     fun setVideoPosition(videoPosition: String) {
         if (videoPosition.length <= 8) {
-            val latestState = _state.value
-
-            latestState.bookmarkInfoState = latestState.bookmarkInfoState.copy(
-                videoPosition = videoPosition,
-                isEnable = latestState.bookmarkInfoState.bookmarkTitle.isNotEmpty() && videoPosition.isNotEmpty()
-            )
+            _state.update {
+                it.copy(
+                    videoPosition = videoPosition,
+                    isEnable = it.bookmarkTitle.isNotEmpty() && videoPosition.isNotEmpty()
+                )
+            }
         }
     }
 
     fun changeBookmarkColor(color: Int) {
-        val latestState = _state.value
-
-        latestState.bookmarkInfoState = latestState.bookmarkInfoState.copy(
-            selectedColor = color
-        )
-    }
-
-    fun clearMsg() {
         _state.update {
             it.copy(
-                errorMsg = ""
+                selectedColor = color
             )
         }
     }
 
     // 북마크 추가 및 수정
-    fun addOrEditBookmark(editBookmarkId: Int = -1) = viewModelScope.launch {
-        val latestState = _state.value
-        val bookmarkInfoState = latestState.bookmarkInfoState
+    fun addOrEditBookmark(editBookmarkId: Int? = null) = viewModelScope.launch {
         // 데이터가 다 들어와 있을 때
-        if (bookmarkInfoState.isEnable) {
-            val positionTime = getDateFromPosition(bookmarkInfoState.videoPosition)
+        if (_state.value.isEnable) {
+            val positionTime = getDateFromPosition(
+                _state.value.videoPosition
+            )
 
-            // 영상 범위가 정상인
-            if (checkVideoPosition(positionTime, latestState.videoData?.duration!!)) {
-                if (editBookmarkId == -1) { // 북마크 추가
-                    val bookmark = Bookmark(
-                        videoId = latestState.videoData.id ?: "",
-                        title = bookmarkInfoState.bookmarkTitle,
+            // 영상 범위가 정상일 때
+            if (checkVideoPosition(positionTime, _state.value.videoData?.duration!!)) {
+                val bookmark =
+                    Bookmark(
+                        id = editBookmarkId,
+                        videoId = _state.value.videoData!!.id,
+                        title = _state.value.bookmarkTitle,
                         videoPosition = positionTime!!,
-                        color = bookmarkInfoState.selectedColor
+                        color = _state.value.selectedColor
                     )
+                repository.addBookmark(bookmark)
 
-                    repository.addBookmark(bookmark)
-
+                if (editBookmarkId == null) { // 북마크 추가
                     val id = repository.getItemId(bookmark)
-                    _state.update {
-                        it.copy(
-                            errorMsg = "북마크가 추가되었습니다.",
-                            completeBookmark = bookmark.copy(id = id)
+                    _event.emit(
+                        BookmarkEvent.ChangeBookmark(
+                            message = "북마크가 추가되었습니다.",
+                            bookmark = bookmark.copy(id = id)
                         )
-                    }
+                    )
                 } else { // 북마크 수정
-                    val bookmark =
-                        Bookmark(
-                            id = editBookmarkId,
-                            videoId = latestState.videoData.id,
-                            title = bookmarkInfoState.bookmarkTitle,
-                            videoPosition = positionTime!!,
-                            color = bookmarkInfoState.selectedColor
+                    _event.emit(
+                        BookmarkEvent.ChangeBookmark(
+                            message = "북마크가 수정되었습니다.",
+                            bookmark = bookmark
                         )
-
-                    repository.editBookmark(bookmark)
-                    _state.update {
-                        it.copy(
-                            errorMsg = "북마크가 수정되었습니다",
-                            completeBookmark = bookmark
-                        )
-                    }
+                    )
                 }
             } else {
-                _state.update {
-                    it.copy(
-                        errorMsg = "영상 위치가 잘 못 되었습니다."
-                    )
-                }
+                _event.emit(
+                    BookmarkEvent.ShowToastMessage(message = "영상 위치가 잘 못 되었습니다.")
+                )
             }
         }
     }
@@ -192,37 +177,33 @@ class BookmarkViewModel @Inject constructor(
         _state.update {
             BookmarkScreenState(
                 videoData = videoData,
-                videoTypeImage = typeImageRes
-            ).apply {
-                this.bookmarkInfoState = BookmarkInfoState(
-                    bookmarkTitle = bookmark.title,
-                    videoPosition = getDateStrFromPosition(bookmark.videoPosition),
-                    selectedColor = bookmark.color,
-                    isEnable = true
-                )
-            }
-        }
-    }
-
-    fun deleteBookmark(bookmark: Bookmark) = viewModelScope.launch {
-        repository.deleteBookmark(bookmark)
-        _state.update {
-            it.copy(
-                errorMsg = "북마크가 삭제 되었습니다.",
-                completeBookmark = bookmark.copy(title = "", videoPosition = 0)
+                videoTypeImage = typeImageRes,
+                bookmarkTitle = bookmark.title,
+                videoPosition = getDateStrFromPosition(bookmark.videoPosition),
+                selectedColor = bookmark.color,
+                isEnable = true
             )
         }
     }
 
-    fun setDialogState(isOpen: Boolean) {
-        val latestState = _state.value
+    fun deleteBookmark(bookmark: Bookmark) = viewModelScope.launch {
+        repository.deleteBookmark(
+            bookmark.copy(title = "", videoPosition = 0)
+        )
 
+        _event.emit(
+            BookmarkEvent.ChangeBookmark(
+                message = "북마크가 삭제 되었습니다.",
+                bookmark = bookmark
+            )
+        )
+    }
+
+    fun setDialogState(isOpen: Boolean) {
         _state.update {
             it.copy(
                 isOpenDialog = isOpen
-            ).apply {
-                bookmarkInfoState = latestState.bookmarkInfoState
-            }
+            )
         }
     }
 
@@ -239,14 +220,15 @@ class BookmarkViewModel @Inject constructor(
         }
     }
 
-    private fun getBaseUrl(url: String) = url.substringAfter("https://").substringBefore("/")
+    private fun getBaseUrl(url: String) =
+        url.substringAfter("https://").substringBefore("/")
 
     // 영상 범위 확인
     private fun checkVideoPosition(positionTime: Long?, duration: Long): Boolean {
         return if (positionTime == null) {
             false
         } else {
-            // 0[s] <= position <= duration[s]
+            // 0[s] <= position <= Video Duration[s]
             -32400000 <= positionTime && positionTime <= duration
         }
     }
