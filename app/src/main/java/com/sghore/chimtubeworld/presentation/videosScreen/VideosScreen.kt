@@ -41,11 +41,15 @@ fun VideosScreen(
     onBookmarkClick: (Video, Int) -> Unit,
 ) {
     val videoList: LazyPagingItems<Video>? = uiState.videos?.collectAsLazyPagingItems()
-    val videoLoading = videoList?.loadState?.refresh is LoadState.Loading
+    val isLoading by remember {
+        derivedStateOf {
+            videoList?.loadState?.refresh is LoadState.Loading
+        }
+    }
 
     LazyColumn {
         videoList?.let {
-            if (!videoLoading) {
+            if (!isLoading) {
                 items(items = it) { video ->
                     VideoItem(
                         video = video,
@@ -119,7 +123,7 @@ fun VideoItem(
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = "${parseViewCountText(video?.viewCount ?: 0)} | ${parseUploadTimeText(video?.uploadTime ?: 0)}",
+            text = "${parseViewCountText(video?.viewCount ?: 0)} • ${parseUploadTimeText(video?.uploadTime ?: 0)}",
             color = colorResource(id = R.color.default_text_color),
             modifier = Modifier
                 .fillMaxWidth()
@@ -217,46 +221,6 @@ fun BookmarkItem(
             text = bookmark.title,
             color = colorResource(id = R.color.item_color),
             fontSize = 12.sp
-        )
-    }
-}
-
-@Composable
-fun VideosTabs(
-    uiState: VideosUIState,
-    onTabClick: (Int) -> Unit,
-    onVideoClick: (Video) -> Unit,
-    onBookmarkClick: (Video, Int) -> Unit
-) {
-    Column {
-        if (uiState.videosScreenStates.size > 1) {
-            // 여러개의 재생목록이 존재 할 떄 표시
-            TabRow(selectedTabIndex = uiState.tabIndex) {
-                uiState.videosScreenStates.forEachIndexed { index, videosState ->
-                    Tab(
-                        selected = uiState.tabIndex == index,
-                        onClick = {
-                            if (uiState.tabIndex != index) {
-                                onTabClick(index)
-                            }
-                        },
-                        text = {
-                            Text(
-                                text = videosState.playlistName,
-                                fontSize = 14.sp,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    )
-                }
-            }
-        }
-
-        VideosScreen(
-            uiState = uiState.videosScreenStates[uiState.tabIndex],
-            onVideoClick = onVideoClick,
-            onBookmarkClick = onBookmarkClick
         )
     }
 }

@@ -47,9 +47,8 @@ fun VideosRoute(
         }
     }
 
-    VideosTabs(
+    VideosScreen(
         uiState = uiState,
-        onTabClick = viewModel::changeTabIndex,
         onVideoClick = { video ->
             playVideo(
                 viewModel = viewModel,

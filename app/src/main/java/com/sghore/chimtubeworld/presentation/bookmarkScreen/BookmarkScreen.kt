@@ -134,7 +134,7 @@ fun VideoInfo(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "${parseViewCountText(video?.viewCount ?: 0)} | ${parseUploadTimeText(video?.uploadTime ?: 0)}",
+                text = "${parseViewCountText(video?.viewCount ?: 0)} • ${parseUploadTimeText(video?.uploadTime ?: 0)}",
                 color = colorResource(id = R.color.default_text_color)
             )
         }

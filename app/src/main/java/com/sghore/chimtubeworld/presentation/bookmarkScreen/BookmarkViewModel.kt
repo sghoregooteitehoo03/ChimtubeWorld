@@ -187,14 +187,12 @@ class BookmarkViewModel @Inject constructor(
     }
 
     fun deleteBookmark(bookmark: Bookmark) = viewModelScope.launch {
-        repository.deleteBookmark(
-            bookmark.copy(title = "", videoPosition = 0)
-        )
+        repository.deleteBookmark(bookmark)
 
         _event.emit(
             BookmarkEvent.ChangeBookmark(
                 message = "북마크가 삭제 되었습니다.",
-                bookmark = bookmark
+                bookmark = bookmark.copy(title = "", videoPosition = 0L)
             )
         )
     }

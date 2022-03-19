@@ -28,7 +28,7 @@ class TwitchRepository @Inject constructor(
 
     // 트위치 영상을 페이징하여 가져옴
     fun getVideos(channelId: String) =
-        Pager(PagingConfig(20)) {
+        Pager(PagingConfig(10)) {
             val retrofitService = getRetrofit()
             TwitchPagingSource(
                 channelId = channelId,

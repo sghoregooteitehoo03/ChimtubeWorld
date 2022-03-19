@@ -10,6 +10,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import retrofit2.Retrofit
 import retrofit2.await
+import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
@@ -26,39 +27,25 @@ class ExampleUnitTest {
 
     @Test
     fun retrofitTest() {
-        // 109ace, 1983kej, rooftopcat99, yagubu, zilioner, kiyulking, noizemasta, hanryang1125
         runBlocking {
             val builder = Retrofit.Builder()
-                .baseUrl(Contents.TWITCH_API_URL)
+                .baseUrl(Contents.YOUTUBE_API_URL)
                 .client(OkHttpClient.Builder().apply {
                     readTimeout(2, TimeUnit.MINUTES)
                 }.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             val retrofit = builder.create(RetrofitService::class.java)
-            val array = arrayOf(
-                "109ace",
-                "1983kej",
-                "rooftopcat99",
-                "yagubu",
-                "zilioner",
-                "kiyulking",
-                "noizemasta",
-                "hanryang1125"
+
+            val result = retrofit.getYPlaylists(
+                channelId = null,
+                playlistId = listOf(
+                    "PLif_jr7pPZABQ2BIQoX_IG4kJ46hUJJJA",
+                    "PLif_jr7pPZACAXuOjNHP_FDKuOQ30Gj5l"
+                )
             )
 
-//            val result = retrofit.test(
-//                "Bearer 3u0x3d7dngj9jormp20nw4zd6b3ls0",
-//                array
-//            ).await()
-//            val channelList = arrayOfNulls<String>(array.size)
-//                .toMutableList()
-//
-//            result.data.forEach {
-//                val index = array.indexOf(it.login)
-//                channelList[index] = it.login
-//            }
-//            println("res: ${channelList}}")
+            println("result: $result")
             println("끝")
         }
     }
@@ -146,7 +133,15 @@ class ExampleUnitTest {
     fun test() {
         val test = "109ace"
         val a = test.split("|")
+        testLoop(a.toMutableList())
+    }
 
-        println("default: $a, filter: ${a.filterIndexed { index, s -> index != 0 }}")
+    fun testLoop(list: MutableList<String>) {
+        for (i in 0..1) {
+            if (list.isNotEmpty()) {
+                list.removeAt(0)
+            }
+        }
+        println("Check size: ${list.size}")
     }
 }

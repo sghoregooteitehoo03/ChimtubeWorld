@@ -115,7 +115,8 @@ fun TopAppBarNavigationItem(
     content: @Composable () -> Unit,
 ): (@Composable (() -> Unit))? {
     return when (currentRoute) {
-        NavigationScreen.Videos.route, NavigationScreen.AddBookmark.route, NavigationScreen.EditBookmark.route -> {
+        NavigationScreen.Playlists.route, NavigationScreen.Videos.route,
+        NavigationScreen.AddBookmark.route, NavigationScreen.EditBookmark.route -> {
             content
         }
         else -> null
@@ -128,21 +129,31 @@ fun BottomNavigationBar(
     navController: NavHostController,
     bottomMenu: List<NavigationScreen>,
     currentDestination: NavDestination?,
-    currentRoute: String?
+    currentRoute: String?,
+    previousRoute: String?
 ) {
+
     if (!isHide) {
         BottomNavigation(
             backgroundColor = colorResource(id = R.color.default_background_color),
         ) {
             bottomMenu.forEach { menu ->
                 // 아이콘 선택 여부
-                val isSelected =
-                    if (currentRoute == NavigationScreen.Videos.route) {
-                        (menu.route == NavigationScreen.Youtube.route && navController.backQueue.size == 3) ||
-                                (menu.route == NavigationScreen.Twitch.route && navController.backQueue.size == 4)
-                    } else {
+                val isSelected = when (currentRoute) {
+                    NavigationScreen.Playlists.route -> {
+                        menu.route == NavigationScreen.Youtube.route
+                                && previousRoute == NavigationScreen.Youtube.route
+                    }
+                    NavigationScreen.Videos.route -> {
+                        (menu.route == NavigationScreen.Youtube.route
+                                && previousRoute == NavigationScreen.Playlists.route) ||
+                        (menu.route == NavigationScreen.Twitch.route
+                                && previousRoute == NavigationScreen.Twitch.route)
+                    }
+                    else -> {
                         currentDestination?.hierarchy?.any { it.route == menu.route } == true
                     }
+                }
 
                 BottomNavigationItem(
                     icon = {

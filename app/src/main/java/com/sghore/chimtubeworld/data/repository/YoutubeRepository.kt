@@ -6,7 +6,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.data.db.Dao
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.LinkInfo
+import com.sghore.chimtubeworld.data.model.Playlist
 import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.data.repository.dataSource.PlaylistsPagingSource
 import com.sghore.chimtubeworld.data.repository.dataSource.YoutubePagingSource
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
@@ -26,7 +28,7 @@ class YoutubeRepository @Inject constructor(
 
     // 유튜브 영상을 페이징하여 가져옴
     fun getVideos(channelId: String) =
-        Pager(PagingConfig(20)) {
+        Pager(PagingConfig(10)) {
             val retrofitService = getRetrofit()
             YoutubePagingSource(
                 channelId = channelId,
@@ -34,6 +36,19 @@ class YoutubeRepository @Inject constructor(
                 dao = dao
             )
         }.flow
+
+    // 유튜브 재생목록을 페이징하여 가져옴
+    fun getPlaylists(
+        channelId: String?,
+        playlistId: List<String>
+    ) = Pager(PagingConfig(pageSize = 10)) {
+        val retrofitService = getRetrofit()
+        PlaylistsPagingSource(
+            channelId = channelId,
+            playlistId = playlistId.toMutableList(),
+            retrofitService = retrofitService
+        )
+    }.flow
 
     // 채널의 Id 및 API에서 가져오지 못하는 부가설명을 가져옴
     suspend fun getChannelLinkData() =
