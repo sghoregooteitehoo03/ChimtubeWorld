@@ -11,7 +11,10 @@ plugins {
 android {
     signingConfigs {
         release {
-
+            storeFile file('/Users/sghore/Desktop/코딩/안드로이드/프로젝트/CHIMHA/ChimtubeWorld.jks')
+            storePassword 'ssf1215021019'
+            keyAlias 'key0'
+            keyPassword 'ssf1215021019'
         }
     }
     compileSdk 31
@@ -75,7 +78,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     // Paging
-    implementation "androidx.paging:paging-runtime-ktx:3.1.0"
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 
     // Retrofit
@@ -90,7 +93,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0'
 
     // Firestore
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.0.1'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.0.2'
 
     // Jsoup
     implementation 'org.jsoup:jsoup:1.13.1'

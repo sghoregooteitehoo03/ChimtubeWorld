@@ -59,9 +59,10 @@ fun VideosRoute(
         },
         onBookmarkClick = { video, pos ->
             val route =
-                NavigationScreen.EditBookmark.route + "?typeImageRes=${typeImageRes}&pos=${pos}&video=${
-                    Gson().toJson(video)
-                }"
+                NavigationScreen.EditBookmark.route +
+                        "?typeImageRes=${typeImageRes}" +
+                        "&pos=${pos}" +
+                        "&video=${Gson().toJson(video)}"
             navController.navigate(route = route)
         }
     )

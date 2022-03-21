@@ -48,6 +48,11 @@ fun CafeScreen(
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
     val scrollState = rememberScrollState()
+    val isEnabled by remember {
+        derivedStateOf {
+            collapsingState.toolbarState.progress != 0f
+        }
+    }
 
     Surface(
         color = colorResource(id = R.color.default_background_color)
@@ -60,10 +65,10 @@ fun CafeScreen(
                 .fillMaxWidth()
                 .verticalScroll(
                     state = scrollState,
-                    enabled = collapsingState.toolbarState.progress != 0f
+                    enabled = isEnabled
                 )
                 .background(
-                    color = if (collapsingState.toolbarState.progress != 0f) {
+                    color = if (isEnabled) {
                         colorResource(id = R.color.default_background_color)
                     } else {
                         colorResource(id = R.color.gray_bright_night)

@@ -74,7 +74,11 @@ fun SelectBookmarkScreen(
                 items(bookmarkList) { bookmark ->
                     BookmarkItem(
                         bookmark = bookmark,
-                        onClick = onBookmarkClick
+                        onClick = onBookmarkClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(color = colorResource(id = R.color.gray_bright_night))
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }

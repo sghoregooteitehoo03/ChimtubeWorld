@@ -95,11 +95,17 @@ fun PlaylistItem(
             }
     ) {
         Image(
-            painter = rememberImagePainter(data = playlist?.thumbnailImage),
+            painter = rememberImagePainter(
+                data = playlist?.thumbnailImage
+            ),
             contentDescription = "playlistImage",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .aspectRatio(16 / 9f)
+                .background(
+                    colorResource(id = R.color.gray_night),
+                    shape = RoundedCornerShape(8.dp)
+                )
                 .clip(RoundedCornerShape(8.dp))
         )
         Row(

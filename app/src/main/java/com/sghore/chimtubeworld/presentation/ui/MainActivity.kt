@@ -210,7 +210,9 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(
                                 route = NavigationScreen.Playlists.route +
-                                        "?channelName={channelName}&channelId={channelId}&playlistId={playlistId}",
+                                        "?channelName={channelName}" +
+                                        "&channelId={channelId}" +
+                                        "&playlistId={playlistId}",
                                 arguments = listOf(
                                     navArgument("channelName") {
                                         type = NavType.StringType
@@ -233,7 +235,9 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(
                                 route = NavigationScreen.Videos.route +
-                                        "?typeImageRes={typeImageRes}&playlistId={playlistId}&playlistName={playlistName}",
+                                        "?typeImageRes={typeImageRes}" +
+                                        "&playlistId={playlistId}" +
+                                        "&playlistName={playlistName}",
                                 arguments = listOf(
                                     navArgument("typeImageRes") { type = NavType.IntType },
                                     navArgument("playlistId") { type = NavType.StringType },
@@ -263,7 +267,10 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(
-                                route = NavigationScreen.EditBookmark.route + "?typeImageRes={typeImageRes}&pos={pos}&video={video}",
+                                route = NavigationScreen.EditBookmark.route +
+                                        "?typeImageRes={typeImageRes}" +
+                                        "&pos={pos}" +
+                                        "&video={video}",
                                 arguments = listOf(
                                     navArgument("typeImageRes") { type = NavType.IntType },
                                     navArgument("pos") { type = NavType.IntType },

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 
@@ -53,9 +54,15 @@ class OpenOtherApp(
     }
 
     fun openCustomTabs(url: String) {
-        CustomTabsIntent.Builder()
-            .build()
-            .launchUrl(context, Uri.parse(url))
+        try {
+            CustomTabsIntent.Builder()
+                .build()
+                .launchUrl(context, Uri.parse(url))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "크롬 브라우저가 존재하지 않습니다.", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     // 패키지 존재여부 확인
