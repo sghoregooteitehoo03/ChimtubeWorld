@@ -28,9 +28,7 @@ class YoutubeViewModel @Inject constructor(
                     }
                 }
                 is Resource.Loading -> {
-                    _state.update {
-                        YoutubeScreenState(isLoading = true)
-                    }
+
                 }
                 is Resource.Error -> {
                     _state.update {

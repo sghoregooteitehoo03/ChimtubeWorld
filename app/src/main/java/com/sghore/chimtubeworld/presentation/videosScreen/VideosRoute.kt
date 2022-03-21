@@ -1,7 +1,6 @@
 package com.sghore.chimtubeworld.presentation.videosScreen
 
 import android.content.Context
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -15,6 +14,7 @@ import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.presentation.selectBookmarkScreen.SelectBookmarkDialog
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun VideosRoute(
@@ -31,23 +31,24 @@ fun VideosRoute(
         gViewModel.bookmarkData = null
     }
 
-    LaunchedEffect(gViewModel.topAppBarAction) {
-        val action = gViewModel.topAppBarAction
-
-        if (action == Contents.ACTION_SHOW_HELP) {
-            Toast.makeText(
-                context,
-                "유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.",
-                Toast.LENGTH_SHORT
-            ).show()
+    LaunchedEffect(true) {
+        gViewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is GlobalViewModel.ActionEvent.ShowHelp -> {
+                    Toast.makeText(
+                        context,
+                        "유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is GlobalViewModel.ActionEvent.CopyVideoUrl -> {}
+                is GlobalViewModel.ActionEvent.DeleteBookmark -> {}
+            }
         }
-
-        gViewModel.topAppBarAction = ""
     }
 
-    VideosTabs(
+    VideosScreen(
         uiState = uiState,
-        onTabClick = viewModel::changeTabIndex,
         onVideoClick = { video ->
             playVideo(
                 viewModel = viewModel,
@@ -58,9 +59,10 @@ fun VideosRoute(
         },
         onBookmarkClick = { video, pos ->
             val route =
-                NavigationScreen.EditBookmark.route + "?typeImageRes=${typeImageRes}&pos=${pos}&video=${
-                    Gson().toJson(video)
-                }"
+                NavigationScreen.EditBookmark.route +
+                        "?typeImageRes=${typeImageRes}" +
+                        "&pos=${pos}" +
+                        "&video=${Gson().toJson(video)}"
             navController.navigate(route = route)
         }
     )

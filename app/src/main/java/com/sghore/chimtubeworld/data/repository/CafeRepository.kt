@@ -7,6 +7,9 @@ import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.ReadHistory
 import com.sghore.chimtubeworld.data.db.Dao
 import com.sghore.chimtubeworld.other.Contents
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import org.jsoup.Jsoup
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -20,35 +23,37 @@ class CafeRepository @Inject constructor(
         }.flow
 
     // 침착맨 팬카페의 정보를 가져옴
-    fun getCafeInfo(): Channel {
-        val doc = Jsoup.connect(Contents.CAFE_MAIN_URL)
-            .userAgent("19.0.1.84.52")
-            .get()
+    suspend fun getCafeInfo(): Channel {
+        return CoroutineScope(Dispatchers.IO).async {
+            val doc = Jsoup.connect(Contents.CAFE_MAIN_URL)
+                .userAgent("19.0.1.84.52")
+                .get()
 
-        // 카페 운영진의 이미지
-        val gmImage = doc.select("li.gm-tcol-c")
-            .select("a img")
-            .attr("src")
+            // 카페 운영진의 이미지
+            val gmImage = doc.select("li.gm-tcol-c")
+                .select("a img")
+                .attr("src")
 
-        // 카페 회원 수
-        val memberNumbers = doc.select("li.mem-cnt-info")
-            .select("a em")
-            .text()
-            .toInt()
+            // 카페 회원 수
+            val memberNumbers = doc.select("li.mem-cnt-info")
+                .select("a em")
+                .text()
+                .toInt()
 
-        // 카페 이름
-        val cafeTitle = doc.select("footer.footer")
-            .select("h2.cafe_name")
-            .text()
+            // 카페 이름
+            val cafeTitle = doc.select("footer.footer")
+                .select("h2.cafe_name")
+                .text()
 
-        return Channel(
-            id = "",
-            name = cafeTitle,
-            explains = arrayOf(DecimalFormat("#,###").format(memberNumbers)),
-            url = Contents.CAFE_MAIN_URL,
-            image = gmImage,
-            type = 0
-        )
+            Channel(
+                id = "",
+                name = cafeTitle,
+                explains = arrayOf(DecimalFormat("#,###").format(memberNumbers)),
+                url = Contents.CAFE_MAIN_URL,
+                image = gmImage,
+                type = 0
+            )
+        }.await()
     }
 
     suspend fun readPost(articleId: Int) {

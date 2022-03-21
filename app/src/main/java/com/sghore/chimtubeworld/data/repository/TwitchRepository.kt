@@ -12,9 +12,6 @@ import com.sghore.chimtubeworld.data.repository.dataSource.TwitchPagingSource
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserDataDTO
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await
@@ -31,7 +28,7 @@ class TwitchRepository @Inject constructor(
 
     // 트위치 영상을 페이징하여 가져옴
     fun getVideos(channelId: String) =
-        Pager(PagingConfig(20)) {
+        Pager(PagingConfig(10)) {
             val retrofitService = getRetrofit()
             TwitchPagingSource(
                 channelId = channelId,
@@ -71,23 +68,23 @@ class TwitchRepository @Inject constructor(
     suspend fun getTwitchUserInfo(
         channelLinkList: List<LinkInfo>,
         accessKey: String
-    ): List<Channel?> {
+    ): List<Channel> {
         val retrofitService = getRetrofit()
 
-        // 채널 리스트
-        val channelList = arrayOfNulls<Channel>(channelLinkList.size).toMutableList()
-        val channelIdArr = channelLinkList.map { it.id }
-            .toTypedArray()
-
         // Twitch API를 통해 채널의 정보를 가져옴
-        val result = retrofitService.getTUserInfo(accessKey, channelIdArr)
+        val result = retrofitService.getTUserInfo(
+            accessKey,
+            channelLinkList.map { it.id }.toTypedArray()
+        )
+        // 채널 아이디 리스트
+        val channelIdList = result.data.map { it.login }
 
-        result.data.forEach { userData ->
-            // 채널들을 배열순서에 맞쳐 리스트에 집어넣기 위한 인덱스 값
-            val index = channelIdArr.indexOf(userData.login)
-            val linkInfo = channelLinkList[index]
+        return channelLinkList.map { linkInfo ->
+            // API에서 넘어온 데이터가 linkInfo와 일치하는 데이터의 Index값
+            val index = channelIdList.indexOf(linkInfo.id)
+            val userData = result.data[index]
 
-            val channelData = if (linkInfo.type == 0) { // 침착맨 채널의 정보일 때
+            if (linkInfo.type == 0) { // 침착맨 채널의 정보일 때
                 getTwitchUserState(
                     retrofitService,
                     accessKey,
@@ -108,11 +105,7 @@ class TwitchRepository @Inject constructor(
                     isOnline = false
                 )
             }
-
-            channelList[index] = channelData // 리스트 추가
         }
-
-        return channelList.toList()
     }
 
     // 트위치에서 영상 정보를 가져옴
@@ -170,37 +163,35 @@ class TwitchRepository @Inject constructor(
         userInfo: UserDataDTO,
         linkInfo: LinkInfo
     ): Channel {
-        val channelData = CoroutineScope(Dispatchers.IO).async {
-            val followData = retrofitService.getTUserFollows(accessKey, userInfo.id) // 팔로우 수
-            val streamData = retrofitService.getTUserStream(accessKey, userInfo.login) // 방송 데이터
-            val isOnline: Boolean // 방송 여부
+        val followData = retrofitService.getTUserFollows(accessKey, userInfo.id) // 팔로우 수
+        val streamData = retrofitService.getTUserStream(accessKey, userInfo.login) // 방송 데이터
+        val isOnline: Boolean // 방송 여부
 
-            // 썸네일
-            val thumbnailImage = if (streamData.data.isEmpty()) {
-                // 방송이 오프라인 일 때
-                isOnline = false
-                userInfo.offline_image_url
-            } else {
-                // 방송이 온라인 일 때
-                isOnline = true
-                streamData.data[0].thumbnailUrl
-                    .replace("{width}", "1920")
-                    .replace("{height}", "1080")
-            }
+        // 썸네일
+        val thumbnailImage = if (streamData.data.isEmpty()) {
+            // 방송이 오프라인 일 때
+            isOnline = false
+            userInfo.offline_image_url
+        } else {
+            // 방송이 온라인 일 때
+            isOnline = true
+            streamData.data[0].thumbnailUrl
+                .replace("{width}", "1920")
+                .replace("{height}", "1080")
+        }
 
-            Channel(
-                id = userInfo.id,
-                playlistId = userInfo.id,
-                playlistName = linkInfo.playlistName,
-                name = userInfo.displayName,
-                explains = arrayOf(linkInfo.explain, followData.total.toString()),
-                url = linkInfo.url,
-                image = userInfo.profile_image_url,
-                thumbnailImage = thumbnailImage,
-                type = linkInfo.type,
-                isOnline = isOnline
-            )
-        }.await()
+        val channelData = Channel(
+            id = userInfo.id,
+            playlistId = userInfo.id,
+            playlistName = linkInfo.playlistName,
+            name = userInfo.displayName,
+            explains = arrayOf(linkInfo.explain, followData.total.toString()),
+            url = linkInfo.url,
+            image = userInfo.profile_image_url,
+            thumbnailImage = thumbnailImage,
+            type = linkInfo.type,
+            isOnline = isOnline
+        )
 
         Log.i("Check", "data: $channelData")
         return channelData

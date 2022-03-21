@@ -17,10 +17,15 @@ fun YoutubeRoute(
 
     YoutubeScreen(
         uiState = uiState,
-        onClick = { channelData ->
-            val route =
-                NavigationScreen.Videos.route +
-                        "?typeImageRes=${R.drawable.youtube}&channelName=${channelData.name}&playlistId=${channelData.playlistId}&playlistName=${channelData.playlistName}"
+        onChannelClick = { channelData ->
+            val route = if (channelData.type == 0) {
+                NavigationScreen.Playlists.route +
+                        "?channelName=${channelData.name}&channelId=${channelData.id.split("|")[0]}&playlistId=${channelData.playlistId}"
+            } else {
+                NavigationScreen.Playlists.route +
+                        "?channelName=${channelData.name}&playlistId=${channelData.playlistId}"
+            }
+
             navController.navigate(route = route)
         }
     )

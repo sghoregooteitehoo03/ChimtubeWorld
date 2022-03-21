@@ -45,69 +45,53 @@ fun StoreScreen(
                 color = colorResource(id = R.color.item_color)
             )
         } else {
-            GoodsList(
-                uiState = uiState,
-                onCategoryClick = onCategoryClick,
-                onGoodsClick = onGoodsClick
+            val goodsList = uiState.goodsList
+            RowList(
+                list = goodsList,
+                spanCount = 3,
+                contentPaddingValue = 0.dp,
+                itemPaddingValue = 4.dp,
+                headerItem = {
+                    TitleTextWithExplain(
+                        title = "Goods",
+                        explain = "",
+                        modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    StoreInfoCategoryList(
+                        storeInfoList = uiState.storeInfoList,
+                        selectedStoreUrl = uiState.selectedStoreUrl,
+                        onClick = onCategoryClick
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                },
+                listItem = { index, modifier ->
+                    GoodsItem(
+                        goods = goodsList[index],
+                        modifier = modifier,
+                        onClick = {
+                            onGoodsClick(
+                                goodsList,
+                                goodsList.indexOf(it)
+                            )
+                        }
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp, end = 12.dp)
             )
         }
     }
 }
 
 @Composable
-fun GoodsList(
-    uiState: StoreScreenState,
-    onCategoryClick: (String) -> Unit,
-    onGoodsClick: (List<Goods>, Int) -> Unit
-) {
-    val goodsState = uiState.goodsState
-    val goodsList = goodsState.goodsListFlow?.collectAsState(initial = emptyList())?.value!!
-
-    RowList(
-        list = goodsList,
-        spanCount = 3,
-        contentPaddingValue = 0.dp,
-        itemPaddingValue = 4.dp,
-        headerItem = {
-            val storeInfoList = uiState.storeInfoList
-            TitleTextWithExplain(
-                title = "Goods",
-                explain = "",
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-            StoreInfoCategoryList(
-                storeInfoList = storeInfoList,
-                selectedStoreUrl = goodsState.selectedStoreUrl,
-                onClick = onCategoryClick
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        },
-        listItem = { index, modifier ->
-            GoodsItem(
-                goods = goodsList[index],
-                modifier = modifier,
-                onClick = {
-                    onGoodsClick(
-                        goodsList,
-                        goodsList.indexOf(it)
-                    )
-                }
-            )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp)
-    )
-}
-
-@Composable
 fun StoreInfoCategoryList(
     storeInfoList: List<Channel>,
     selectedStoreUrl: String,
-    modifier: Modifier = Modifier,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     LazyRow(
         modifier = modifier
@@ -130,7 +114,8 @@ fun StoreInfoCategoryList(
 fun StoreInfoCategoryItem(
     storeInfo: Channel,
     selectedStoreUrl: String,
-    onClick: (String) -> Unit = {}
+    onClick: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val imageColor = if (selectedStoreUrl == storeInfo.url) {
         colorResource(id = android.R.color.transparent)
@@ -144,11 +129,13 @@ fun StoreInfoCategoryItem(
     }
 
     Column(
-        modifier = Modifier.clickable(
+        modifier = modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null
         ) {
-            onClick(storeInfo.url)
+            if (storeInfo.url != selectedStoreUrl) { // 같은 것을 누를때는 동작 x
+                onClick(storeInfo.url)
+            }
         }
     ) {
         Image(
@@ -184,8 +171,8 @@ fun StoreInfoCategoryItem(
 @Composable
 fun GoodsItem(
     goods: Goods,
-    modifier: Modifier = Modifier,
-    onClick: (Goods) -> Unit = {}
+    onClick: (Goods) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -220,7 +207,8 @@ fun StoreInfoCategoryItemPreview() {
                 image = "",
                 type = 0
             ),
-            ""
+            "",
+            onClick = {}
         )
     }
 }

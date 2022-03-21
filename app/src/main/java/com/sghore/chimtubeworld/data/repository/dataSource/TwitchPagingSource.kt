@@ -21,9 +21,7 @@ class TwitchPagingSource(
     private val dao: Dao
 ) : PagingSource<String, Video>() {
     override fun getRefreshKey(state: PagingState<String, Video>): String? {
-        return state.anchorPosition?.let {
-            state.closestItemToPosition(it)?.currentPageKey
-        }
+        return null
     }
 
     override suspend fun load(params: LoadParams<String>): PagingSource.LoadResult<String, Video> {
@@ -86,8 +84,6 @@ class TwitchPagingSource(
                 duration = duration,
                 url = videoData.url,
                 bookmarks = bookmarks
-            ).apply {
-                this.currentPageKey = currentPage
-            }
+            )
         }
 }

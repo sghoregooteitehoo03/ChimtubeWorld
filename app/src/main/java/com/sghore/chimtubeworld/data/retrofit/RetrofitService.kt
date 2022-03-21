@@ -6,6 +6,7 @@ import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserFollowsDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.ChannelDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.PlaylistItemsDTO
+import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.PlaylistsDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.VideosDTO
 import retrofit2.Call
 import retrofit2.http.*
@@ -23,6 +24,13 @@ interface RetrofitService {
 
     @GET("videos?key=${Contents.API_KEY}&part=snippet,contentDetails,statistics")
     fun getYVideos(@Query("id") videoId: Array<String>): Call<VideosDTO>
+
+    @GET("playlists?key=${Contents.API_KEY}&part=snippet&maxResults=20")
+    suspend fun getYPlaylists(
+        @Query("channelId") channelId: String?,
+        @Query("id") playlistId: List<String>?,
+        @Query("pageToken") pageToken: String? = null
+    ): PlaylistsDTO
 
     // Twitch
     @Headers("Client-ID: ${Contents.CLIENT_ID}")

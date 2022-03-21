@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddBookmarkRoute(
@@ -19,20 +20,21 @@ fun AddBookmarkRoute(
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = uiState.errorMsg) {
-        val msg = uiState.errorMsg
-        if (msg.isNotEmpty()) {
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT)
-                .show()
+    LaunchedEffect(key1 = true) {
+        viewModel.event.collectLatest { event ->
+            when (event) {
+                is BookmarkViewModel.BookmarkEvent.ShowToastMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                        .show()
+                }
+                is BookmarkViewModel.BookmarkEvent.ChangeBookmark -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                        .show()
+                    gViewModel.bookmarkData = event.bookmark
 
-            if (uiState.completeBookmark == null) {
-                viewModel.clearMsg()
+                    navController.navigateUp()
+                }
             }
-        }
-
-        uiState.completeBookmark?.let {
-            gViewModel.bookmarkData = it
-            navController.navigateUp()
         }
     }
 

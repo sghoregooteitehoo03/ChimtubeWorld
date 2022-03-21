@@ -35,6 +35,7 @@ import com.sghore.chimtubeworld.presentation.TopAppBarNavigationItem
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkRoute
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.EditBookmarkRoute
 import com.sghore.chimtubeworld.presentation.cafeScreen.CafeRoute
+import com.sghore.chimtubeworld.presentation.playlistScreen.PlaylistRoute
 import com.sghore.chimtubeworld.presentation.storeScreen.StoreRoute
 import com.sghore.chimtubeworld.presentation.twitchScreen.TwitchRoute
 import com.sghore.chimtubeworld.presentation.videosScreen.VideosRoute
@@ -45,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val gViewModel by viewModels<GlobalViewModel>()
-    private var channelNameForToolbar = ""
+    private var videoNameForToolbar = ""
     private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,15 +86,15 @@ class MainActivity : ComponentActivity() {
                                             overflow = TextOverflow.Ellipsis
                                         )
                                     }
-                                    NavigationScreen.Videos.route -> {
+                                    NavigationScreen.Playlists.route, NavigationScreen.Videos.route -> {
                                         Text(
-                                            text = channelNameForToolbar,
+                                            text = videoNameForToolbar,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis
                                         )
                                     }
                                     else -> {
-                                        channelNameForToolbar = "" // 툴바 텍스트 초기화
+                                        videoNameForToolbar = "" // 툴바 텍스트 초기화
 
                                         Text(
                                             text = "CHIMHA",
@@ -104,7 +105,7 @@ class MainActivity : ComponentActivity() {
                                             modifier = Modifier.fillMaxWidth()
                                         )
 
-                                        if (gViewModel.bookmarkData != null) {
+                                        gViewModel.bookmarkData?.let {
                                             gViewModel.bookmarkData = null
                                         }
                                     }
@@ -124,7 +125,9 @@ class MainActivity : ComponentActivity() {
                                 when (currentRoute) {
                                     NavigationScreen.EditBookmark.route -> {
                                         IconButton(onClick = {
-                                            gViewModel.topAppBarAction = Contents.ACTION_COPY_URL
+                                            gViewModel.setEventFlow(
+                                                event = GlobalViewModel.ActionEvent.CopyVideoUrl
+                                            )
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Default.Assignment,
@@ -133,8 +136,9 @@ class MainActivity : ComponentActivity() {
                                             )
                                         }
                                         IconButton(onClick = {
-                                            gViewModel.topAppBarAction =
-                                                Contents.ACTION_DELETE_BOOKMARK
+                                            gViewModel.setEventFlow(
+                                                event = GlobalViewModel.ActionEvent.DeleteBookmark
+                                            )
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Default.Delete,
@@ -145,7 +149,9 @@ class MainActivity : ComponentActivity() {
                                     }
                                     NavigationScreen.Videos.route -> {
                                         IconButton(onClick = {
-                                            gViewModel.topAppBarAction = Contents.ACTION_SHOW_HELP
+                                            gViewModel.setEventFlow(
+                                                event = GlobalViewModel.ActionEvent.ShowHelp
+                                            )
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Default.Help,
@@ -165,13 +171,17 @@ class MainActivity : ComponentActivity() {
                         val currentRoute = currentDestination?.route
                             ?.substringBefore("/")
                             ?.substringBefore("?")
+                        val previousRoute = navController.previousBackStackEntry?.destination?.route
+                            ?.substringBefore("/")
+                            ?.substringBefore("?")
 
                         BottomNavigationBar(
                             isHide = currentRoute == NavigationScreen.AddBookmark.route || currentRoute == NavigationScreen.EditBookmark.route,
                             navController = navController,
                             bottomMenu = bottomMenu,
                             currentDestination = currentDestination,
-                            currentRoute = currentRoute
+                            currentRoute = currentRoute,
+                            previousRoute = previousRoute
                         )
                     }
                 ) { innerPadding ->
@@ -199,17 +209,43 @@ class MainActivity : ComponentActivity() {
                                 StoreRoute(onGoodsClick = ::moveViewPagerScreen)
                             }
                             composable(
+                                route = NavigationScreen.Playlists.route +
+                                        "?channelName={channelName}" +
+                                        "&channelId={channelId}" +
+                                        "&playlistId={playlistId}",
+                                arguments = listOf(
+                                    navArgument("channelName") {
+                                        type = NavType.StringType
+                                    },
+                                    navArgument("channelId") {
+                                        nullable = true
+                                        type = NavType.StringType
+                                        defaultValue = null
+                                    },
+                                    navArgument("playlistId") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) { entry ->
+                                videoNameForToolbar = entry.arguments
+                                    ?.getString("channelName")
+                                    ?: ""
+
+                                PlaylistRoute(navController = navController)
+                            }
+                            composable(
                                 route = NavigationScreen.Videos.route +
-                                        "?typeImageRes={typeImageRes}&channelName={channelName}&playlistId={playlistId}&playlistName={playlistName}",
+                                        "?typeImageRes={typeImageRes}" +
+                                        "&playlistId={playlistId}" +
+                                        "&playlistName={playlistName}",
                                 arguments = listOf(
                                     navArgument("typeImageRes") { type = NavType.IntType },
-                                    navArgument("channelName") { type = NavType.StringType },
                                     navArgument("playlistId") { type = NavType.StringType },
                                     navArgument("playlistName") { type = NavType.StringType }
                                 )
                             ) { entry ->
-                                channelNameForToolbar = entry.arguments
-                                    ?.getString("channelName")
+                                videoNameForToolbar = entry.arguments
+                                    ?.getString("playlistName")
                                     ?: ""
 
                                 VideosRoute(
@@ -231,7 +267,10 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(
-                                route = NavigationScreen.EditBookmark.route + "?typeImageRes={typeImageRes}&pos={pos}&video={video}",
+                                route = NavigationScreen.EditBookmark.route +
+                                        "?typeImageRes={typeImageRes}" +
+                                        "&pos={pos}" +
+                                        "&video={video}",
                                 arguments = listOf(
                                     navArgument("typeImageRes") { type = NavType.IntType },
                                     navArgument("pos") { type = NavType.IntType },

@@ -30,11 +30,7 @@ class WebToonViewModel @Inject constructor(
                     }
                 }
                 is Resource.Loading -> {
-                    _state.update {
-                        WebToonScreenState(
-                            isLoading = true
-                        )
-                    }
+
                 }
                 is Resource.Error -> {
                     _state.update {

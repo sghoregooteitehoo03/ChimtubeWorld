@@ -16,9 +16,7 @@ class YoutubePagingSource(
     private val dao: Dao
 ) : PagingSource<String, Video>() {
     override fun getRefreshKey(state: PagingState<String, Video>): String? {
-        return state.anchorPosition?.let {
-            state.closestItemToPosition(it)?.currentPageKey
-        }
+        return null
     }
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Video> {
@@ -82,9 +80,7 @@ class YoutubePagingSource(
                 duration = duration,
                 url = "https://www.youtube.com/watch?v=${response.id}",
                 bookmarks = bookmarks
-            ).apply {
-                this.currentPageKey = currentPageKey
-            }
+            )
         }
     }
 }

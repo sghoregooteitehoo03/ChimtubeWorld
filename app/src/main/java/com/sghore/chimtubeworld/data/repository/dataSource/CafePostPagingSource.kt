@@ -22,7 +22,6 @@ class CafePostPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {
         return try {
-            val postList = mutableListOf<Post>()
             val pageKey = params.key ?: 1
             val menuId = if (categoryId != -1) {
                 "&search.menuid=${categoryId}"
@@ -34,7 +33,7 @@ class CafePostPagingSource(
             val subUrl =
                 "https://cafe.naver.com/ArticleList.nhn?search.clubid=29646865&search.boardtype=L&search.page=${pageKey}&userDisplay=10$menuId"
 
-            CoroutineScope(Dispatchers.IO).async {
+            val postList = CoroutineScope(Dispatchers.IO).async {
                 val mainDoc = connectJsoup(mainUrl)
                 val subDoc = connectJsoup(subUrl)
 
@@ -49,7 +48,7 @@ class CafePostPagingSource(
                 if (postDocs.isEmpty()) {
                     throw NullPointerException()
                 }
-                for ((index, postDoc) in postDocs.withIndex()) {
+                postDocs.mapIndexed { index, postDoc ->
                     val imageDoc = postDoc.select("div.movie-img")
                         .select("a")
 
@@ -72,16 +71,14 @@ class CafePostPagingSource(
                         .text()
                     val isRead = dao.getReadData(id).isNotEmpty() // 읽음 여부
 
-                    postList.add(
-                        Post(
-                            id = id,
-                            title = title,
-                            userName = userName,
-                            postDate = postDate,
-                            postImage = thumbnailImage,
-                            url = url,
-                            isRead = isRead
-                        )
+                    Post(
+                        id = id,
+                        title = title,
+                        userName = userName,
+                        postDate = postDate,
+                        postImage = thumbnailImage,
+                        url = url,
+                        isRead = isRead
                     )
                 }
             }.await()

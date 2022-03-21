@@ -62,7 +62,11 @@ fun SelectBookmarkScreen(
                     Spacer(modifier = Modifier.height(12.dp))
                     BookmarkItem(
                         bookmark = null,
-                        onClick = onBookmarkClick
+                        onClick = onBookmarkClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(color = colorResource(id = R.color.gray_bright_night))
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -70,7 +74,11 @@ fun SelectBookmarkScreen(
                 items(bookmarkList) { bookmark ->
                     BookmarkItem(
                         bookmark = bookmark,
-                        onClick = onBookmarkClick
+                        onClick = onBookmarkClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(color = colorResource(id = R.color.gray_bright_night))
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -82,13 +90,11 @@ fun SelectBookmarkScreen(
 @Composable
 fun BookmarkItem(
     bookmark: Bookmark?,
-    onClick: (Long) -> Unit = {}
+    onClick: (Long) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(color = colorResource(id = R.color.gray_bright_night))
+        modifier = modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(

@@ -48,6 +48,11 @@ fun CafeScreen(
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
     val scrollState = rememberScrollState()
+    val isEnabled by remember {
+        derivedStateOf {
+            collapsingState.toolbarState.progress != 0f
+        }
+    }
 
     Surface(
         color = colorResource(id = R.color.default_background_color)
@@ -60,10 +65,10 @@ fun CafeScreen(
                 .fillMaxWidth()
                 .verticalScroll(
                     state = scrollState,
-                    enabled = collapsingState.toolbarState.progress != 0f
+                    enabled = isEnabled
                 )
                 .background(
-                    color = if (collapsingState.toolbarState.progress != 0f) {
+                    color = if (isEnabled) {
                         colorResource(id = R.color.default_background_color)
                     } else {
                         colorResource(id = R.color.gray_bright_night)
@@ -77,7 +82,8 @@ fun CafeScreen(
                         .height(48.dp)
                 )
                 CafeTopItem(
-                    uiState = uiState,
+                    cafeInfo = uiState.cafeInfo,
+                    selectedCategoryId = uiState.cafeCategoryId,
                     modifier = Modifier
                         .parallax(1f)
                         .fillMaxWidth(),
@@ -86,34 +92,52 @@ fun CafeScreen(
                 )
             }
         ) {
-            CafePostList(
-                uiState = uiState,
-                onCafePostClick = onCafePostClick
-            )
+            val postList: LazyPagingItems<Post>? = uiState.cafePosts
+                ?.collectAsLazyPagingItems() // 게시글 리스트
+
+            LazyColumn {
+                postList?.let {
+                    items(items = it) { post ->
+                        val isRead =
+                            (post?.isRead ?: false) || (uiState.readHistory[post?.id] ?: false)
+                        CafePostItem(
+                            post = post,
+                            isRead = isRead,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 12.dp, end = 12.dp),
+                            onClick = onCafePostClick
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
 fun CafeTopItem(
-    uiState: CafeScreenState,
+    cafeInfo: Channel?,
+    selectedCategoryId: Int,
     modifier: Modifier = Modifier,
     onCafeBannerClick: (String) -> Unit,
     onCafeCategoryClick: (Int) -> Unit
 ) {
     // 카테고리 리스트
-    val categoryList = listOf(
-        CafeCategory("전체", -1),
-        CafeCategory("방송일정 및 공지", 5),
-        CafeCategory("침착맨 전용", 42),
-        CafeCategory("침착맨 갤러리", 33),
-        CafeCategory("침착맨 이야기", 1),
-        CafeCategory("팬아트", 2),
-        CafeCategory("침착맨 짤", 6),
-        CafeCategory("추천영상", 55),
-        CafeCategory("해줘요", 4),
-        CafeCategory("찾아주세요", 56)
-    )
+    val categoryList = remember {
+        listOf(
+            CafeCategory("전체", -1),
+            CafeCategory("방송일정 및 공지", 5),
+            CafeCategory("침착맨 전용", 42),
+            CafeCategory("침착맨 갤러리", 33),
+            CafeCategory("침착맨 이야기", 1),
+            CafeCategory("팬아트", 2),
+            CafeCategory("침착맨 짤", 6),
+            CafeCategory("추천영상", 55),
+            CafeCategory("해줘요", 4),
+            CafeCategory("찾아주세요", 56)
+        )
+    }
 
     Column(
         modifier = modifier
@@ -125,7 +149,7 @@ fun CafeTopItem(
         )
         Spacer(modifier = Modifier.height(16.dp))
         CafeInfoBanner(
-            cafeInfo = uiState.cafeInfo,
+            cafeInfo = cafeInfo,
             modifier = Modifier.padding(start = 12.dp, end = 12.dp),
             onClick = onCafeBannerClick
         )
@@ -138,8 +162,8 @@ fun CafeTopItem(
         )
         Spacer(modifier = Modifier.height(8.dp))
         CafeCategoryList(
-            uiState = uiState,
             categoryList = categoryList,
+            selectedCategoryId = selectedCategoryId,
             onClick = onCafeCategoryClick
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -211,13 +235,11 @@ fun CafeInfoBanner(
 
 @Composable
 fun CafeCategoryList(
-    uiState: CafeScreenState,
     categoryList: List<CafeCategory>,
-    modifier: Modifier = Modifier,
-    onClick: (Int) -> Unit = {}
+    selectedCategoryId: Int,
+    onClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val cafeCategoryId = uiState.cafePostState.cafeCategoryId
-
     LazyRow(
         modifier = modifier
     ) {
@@ -225,12 +247,12 @@ fun CafeCategoryList(
             Spacer(modifier = Modifier.width(12.dp))
         }
         items(categoryList) { category ->
-            val textColor = if (category.categoryId == cafeCategoryId) {
+            val textColor = if (category.categoryId == selectedCategoryId) {
                 colorResource(id = R.color.item_color)
             } else {
                 colorResource(id = R.color.default_text_color)
             }
-            val backgroundColor = if (category.categoryId == cafeCategoryId) {
+            val backgroundColor = if (category.categoryId == selectedCategoryId) {
                 colorResource(id = R.color.gray_night)
             } else {
                 colorResource(id = R.color.item_reverse_color)
@@ -255,7 +277,9 @@ fun CafeCategoryList(
                             color = colorResource(id = R.color.item_color)
                         )
                     ) {
-                        onClick(category.categoryId)
+                        if (category.categoryId != selectedCategoryId) {
+                            onClick(category.categoryId)
+                        }
                     }
                     .padding(top = 8.dp, bottom = 8.dp, start = 10.dp, end = 10.dp),
                 contentAlignment = Alignment.Center
@@ -266,33 +290,6 @@ fun CafeCategoryList(
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
-        }
-    }
-}
-
-@Composable
-fun CafePostList(
-    uiState: CafeScreenState,
-    onCafePostClick: (Post?) -> Unit
-) {
-    val cafePostState = uiState.cafePostState
-    val postList: LazyPagingItems<Post>? =
-        cafePostState.cafePosts?.collectAsLazyPagingItems() // 게시글 리스트
-
-    LazyColumn {
-        postList?.let {
-            items(items = it) { post ->
-                val isRead =
-                    (post?.isRead ?: false) || (uiState.readHistoryState[post?.id] ?: false)
-                CafePostItem(
-                    post = post,
-                    isRead = isRead,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp, end = 12.dp),
-                    onClick = onCafePostClick
-                )
-            }
         }
     }
 }
@@ -400,11 +397,12 @@ fun CafeCategoryListPreview() {
             CafeCategory("해줘요", 4),
             CafeCategory("찾아주세요", 56)
         )
-//
-//        CafeCategoryList(
-//            categoryList = list,
-//            selectedCategoryId = -1
-//        )
+
+        CafeCategoryList(
+            categoryList = list,
+            selectedCategoryId = -1,
+            onClick = {}
+        )
     }
 }
 

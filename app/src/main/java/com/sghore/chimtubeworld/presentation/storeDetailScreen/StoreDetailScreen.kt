@@ -48,7 +48,19 @@ fun StoreDetailScreen(
                     )
                     .padding(12.dp)
             ) {
-                PreviewImage(uiState = uiState, onPreviewImageClick = onPreviewImageClick)
+                Image(
+                    painter = rememberImagePainter(data = uiState.selectedImage),
+                    contentDescription = "Goods",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(240.dp)
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                PreviewImageList(
+                    imageList = uiState.previewImages,
+                    selectedImage = uiState.selectedImage,
+                    modifier = Modifier.width(240.dp),
+                    onClick = onPreviewImageClick
+                )
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
@@ -101,29 +113,6 @@ fun StoreDetailScreen(
                 }
         )
     }
-}
-
-@Composable
-fun PreviewImage(
-    uiState: StoreDetailScreenState,
-    onPreviewImageClick: (String) -> Unit
-) {
-    val imageState = uiState.selectedImageState
-
-    Image(
-        painter = rememberImagePainter(data = imageState.selectedImage),
-        contentDescription = "Goods",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier.size(240.dp)
-    )
-    Spacer(modifier = Modifier.height(6.dp))
-
-    PreviewImageList(
-        imageList = imageState.previewImages,
-        selectedImage = imageState.selectedImage,
-        modifier = Modifier.width(240.dp),
-        onClick = onPreviewImageClick
-    )
 }
 
 @Composable

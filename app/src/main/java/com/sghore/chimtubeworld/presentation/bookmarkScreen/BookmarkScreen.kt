@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -70,7 +71,8 @@ fun BookmarkScreen(
                     onTitleChange = onTitleChange,
                     onVideoPositionChange = onVideoPositionChange,
                     onChangeBookmarkColor = onChangeBookmarkColor,
-                    onButtonClick = onButtonClick
+                    onButtonClick = onButtonClick,
+                    modifier = Modifier.padding(start = 12.dp, end = 12.dp)
                 )
             }
         }
@@ -80,10 +82,11 @@ fun BookmarkScreen(
 @Composable
 fun VideoInfo(
     video: Video?,
-    typeImage: Int
+    typeImage: Int,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Box {
             Image(
@@ -134,7 +137,7 @@ fun VideoInfo(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "${parseViewCountText(video?.viewCount ?: 0)} | ${parseUploadTimeText(video?.uploadTime ?: 0)}",
+                text = "${parseViewCountText(video?.viewCount ?: 0)} • ${parseUploadTimeText(video?.uploadTime ?: 0)}",
                 color = colorResource(id = R.color.default_text_color)
             )
         }
@@ -155,16 +158,17 @@ fun InputBookmarkInfo(
     onTitleChange: (String) -> Unit,
     onVideoPositionChange: (String) -> Unit,
     onChangeBookmarkColor: (Int) -> Unit,
-    onButtonClick: () -> Unit
+    onButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
-        modifier = Modifier.padding(start = 12.dp, end = 12.dp)
+        modifier = modifier
     ) {
         TextField(
-            value = uiState.bookmarkInfoState.bookmarkTitle,
+            value = uiState.bookmarkTitle,
             onValueChange = onTitleChange,
             maxLines = 1,
             placeholder = {
@@ -190,7 +194,7 @@ fun InputBookmarkInfo(
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
-            value = uiState.bookmarkInfoState.videoPosition,
+            value = uiState.videoPosition,
             onValueChange = onVideoPositionChange,
             maxLines = 1,
             placeholder = {
@@ -220,7 +224,7 @@ fun InputBookmarkInfo(
 
     Spacer(modifier = Modifier.height(28.dp))
     BookmarkColorList(
-        selectedColor = uiState.bookmarkInfoState.selectedColor,
+        selectedColor = uiState.selectedColor,
         onClick = onChangeBookmarkColor
     )
     Spacer(modifier = Modifier.height(56.dp))
@@ -240,7 +244,7 @@ fun InputBookmarkInfo(
                 .height(48.dp),
             colors = buttonColors,
             shape = RoundedCornerShape(8.dp),
-            enabled = uiState.bookmarkInfoState.isEnable,
+            enabled = uiState.isEnable,
             onClick = { onButtonClick() }
         ) {
             Text(
@@ -254,21 +258,26 @@ fun InputBookmarkInfo(
 @Composable
 fun BookmarkColorList(
     selectedColor: Int,
-    onClick: (Int) -> Unit = {}
+    onClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val colorList = listOf(
-        android.graphics.Color.parseColor("#FF0000"),
-        android.graphics.Color.parseColor("#FF6200"),
-        android.graphics.Color.parseColor("#FFEB00"),
-        android.graphics.Color.parseColor("#76FF00"),
-        android.graphics.Color.parseColor("#0014FF"),
-        android.graphics.Color.parseColor("#C400FF"),
-        android.graphics.Color.parseColor("#767676"),
-        android.graphics.Color.parseColor("#000000")
-    )
+    val colorList = remember {
+        listOf(
+            Color(0xFFFF0000).toArgb(),
+            Color(0xFFFF6200).toArgb(),
+            Color(0xFFFFEB00).toArgb(),
+            Color(0xFF76FF00).toArgb(),
+            Color(0xFF0014FF).toArgb(),
+            Color(0xFFC400FF).toArgb(),
+            Color(0xFF767676).toArgb(),
+            Color(0xFF000000).toArgb()
+        )
+    }
     val colorIndex = colorList.indexOf(selectedColor)
 
-    LazyRow {
+    LazyRow(
+        modifier = modifier
+    ) {
         item {
             Spacer(modifier = Modifier.width(12.dp))
         }
@@ -287,7 +296,8 @@ fun BookmarkColorList(
 fun BookmarkColorItem(
     color: Int,
     isSelected: Boolean,
-    onClick: (Int) -> Unit = {}
+    onClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val backgroundColor = if (isSelected) {
         colorResource(id = R.color.black_alpha_30)
@@ -361,7 +371,9 @@ fun VideoInfoPreview() {
 @Composable
 fun BookmarkColorListPreview() {
     MaterialTheme {
-        BookmarkColorList(selectedColor = android.graphics.Color.parseColor("#FF0000"))
+        BookmarkColorList(
+            selectedColor = android.graphics.Color.parseColor("#FF0000"),
+            {}
+        )
     }
 }
-

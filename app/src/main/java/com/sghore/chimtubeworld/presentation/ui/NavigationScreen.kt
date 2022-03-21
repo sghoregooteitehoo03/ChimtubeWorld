@@ -37,6 +37,10 @@ sealed class NavigationScreen(
         unSelectedIcon = R.drawable.store_darker
     )
 
+    object Playlists : NavigationScreen(
+        route = "Playlists"
+    )
+
     object Videos : NavigationScreen(
         route = "Videos"
     )

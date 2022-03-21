@@ -30,9 +30,11 @@ fun TwitchRoute(
         },
         onTwitchCrewChannelClick = { channelData ->
             // 동영상 리스트 화면으로 이동
-            val route =
-                NavigationScreen.Videos.route +
-                        "?typeImageRes=${R.drawable.twitch}&channelName=${channelData.name}&playlistId=${channelData.playlistId}&playlistName=${channelData.playlistName}"
+            val route = NavigationScreen.Videos.route +
+                    "?typeImageRes=${R.drawable.twitch}" +
+                    "&playlistId=${channelData.id}" +
+                    "&playlistName=${channelData.name}"
+
             navController.navigate(route = route)
         }
     )
