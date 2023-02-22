@@ -5,11 +5,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +40,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 fun CafeScreen(
     uiState: CafeScreenState,
     onCafeBannerClick: (String) -> Unit,
+    onChimhahaButtonClick: () -> Unit,
     onCafeCategoryClick: (Int) -> Unit,
     onCafePostClick: (Post?) -> Unit
 ) {
@@ -85,6 +86,7 @@ fun CafeScreen(
                         .parallax(1f)
                         .fillMaxWidth(),
                     onCafeBannerClick = onCafeBannerClick,
+                    onChimhahaButtonClick = onChimhahaButtonClick,
                     onCafeCategoryClick = onCafeCategoryClick
                 )
             }
@@ -118,6 +120,7 @@ fun CafeTopItem(
     selectedCategoryId: Int,
     modifier: Modifier = Modifier,
     onCafeBannerClick: (String) -> Unit,
+    onChimhahaButtonClick: () -> Unit,
     onCafeCategoryClick: (Int) -> Unit
 ) {
     // 카테고리 리스트
@@ -141,7 +144,7 @@ fun CafeTopItem(
     ) {
         TitleTextWithExplain(
             title = "Community",
-            explain = "침착맨 팬카페",
+            explain = "팬카페&침하하",
             modifier = Modifier.padding(top = 12.dp, start = 12.dp, end = 12.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -150,10 +153,32 @@ fun CafeTopItem(
             modifier = Modifier.padding(start = 12.dp, end = 12.dp),
             onClick = onCafeBannerClick
         )
-
+        Spacer(modifier = Modifier.height(12.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp)
+                .background(
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color(0xFF4FA5AD)
+                )
+                .clip(RoundedCornerShape(8.dp))
+                .clickable {
+                    onChimhahaButtonClick()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+                text = "👍침하하 바로가기",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+        }
         Spacer(modifier = Modifier.height(24.dp))
         TitleTextWithExplain(
-            title = "게시글",
+            title = "비상대피소",
             explain = "",
             modifier = Modifier.padding(start = 12.dp)
         )

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Resource
+import com.sghore.chimtubeworld.other.Contents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -17,7 +18,7 @@ class WebToonViewModel @Inject constructor() : ViewModel() {
             name = "이말년씨리즈",
             explains = arrayOf("2009~2012"),
             image = R.drawable.webtoon_cover_1.toString(),
-            url = "https://comic.naver.com/webtoon/list?titleId=103759",
+            url = Contents.WEBTOON_URL_1,
             type = 0
         ),
         Channel(
@@ -25,7 +26,7 @@ class WebToonViewModel @Inject constructor() : ViewModel() {
             name = "이말년씨리즈 2018",
             explains = arrayOf("2018"),
             image = R.drawable.webtoon_cover_2.toString(),
-            url = "https://comic.naver.com/webtoon/list?titleId=704595",
+            url = Contents.WEBTOON_URL_2,
             type = 0
         ),
         Channel(
@@ -33,7 +34,7 @@ class WebToonViewModel @Inject constructor() : ViewModel() {
             name = "이말년 서유기",
             explains = arrayOf("2013~2016"),
             image = R.drawable.webtoon_cover_3.toString(),
-            url = "https://comic.naver.com/webtoon/list?titleId=602921",
+            url = Contents.WEBTOON_URL_3,
             type = 0
         ),
         Channel(
@@ -41,7 +42,7 @@ class WebToonViewModel @Inject constructor() : ViewModel() {
             name = "맨 vs 던전",
             explains = arrayOf("2013"),
             image = R.drawable.webtoon_cover_4.toString(),
-            url = "https://comic.naver.com/webtoon/list?titleId=557527",
+            url = Contents.WEBTOON_URL_4,
             type = 0
         ),
         Channel(
@@ -49,7 +50,7 @@ class WebToonViewModel @Inject constructor() : ViewModel() {
             name = "본격 말년런 만화",
             explains = arrayOf("2016"),
             image = R.drawable.webtoon_cover_5.toString(),
-            url = "https://comic.naver.com/webtoon/list?titleId=687127",
+            url = Contents.WEBTOON_URL_5,
             type = 0
         )
     )

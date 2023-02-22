@@ -6,10 +6,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
 
-// TODO
-//  . 침하하 바로가기 버튼 추가
 @Composable
 fun CafeRoute(
     viewModel: CafeViewModel = hiltViewModel()
@@ -23,6 +22,12 @@ fun CafeRoute(
             openCustomTabs(
                 context = context,
                 url = url
+            )
+        },
+        onChimhahaButtonClick = {
+            openCustomTabs(
+                context = context,
+                url = Contents.CHIMHAHA_URL
             )
         },
         onCafeCategoryClick = viewModel::changeCategory,
