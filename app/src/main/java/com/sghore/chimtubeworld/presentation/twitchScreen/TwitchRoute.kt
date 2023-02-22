@@ -11,6 +11,9 @@ import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
 
+// TODO
+//  . 배도라지 멤버 모두 라이브 중인지 보여주는 기능
+//  . 침착맨 라이브 중 유튜브 트위치 선택 다이얼로그 구현
 @Composable
 fun TwitchRoute(
     navController: NavController,

@@ -8,6 +8,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sghore.chimtubeworld.other.OpenOtherApp
 
+// TODO
+//  . 침하하 바로가기 버튼 추가
 @Composable
 fun CafeRoute(
     viewModel: CafeViewModel = hiltViewModel()

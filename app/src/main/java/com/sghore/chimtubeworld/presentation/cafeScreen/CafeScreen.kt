@@ -36,9 +36,6 @@ import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
-// Todo:
-//  . Collapsing 시 렉 걸리는 버그 고치기 ㅁ
-
 @Composable
 fun CafeScreen(
     uiState: CafeScreenState,
