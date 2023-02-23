@@ -51,7 +51,7 @@ interface RetrofitService {
     @GET("streams")
     suspend fun getTUserStream(
         @Header("Authorization") accessKey: String,
-        @Query("user_login") loginId: String,
+        @Query("user_login") loginId: Array<String>,
     ): StreamDTO
 
     @Headers("Client-ID: ${Contents.CLIENT_ID}")

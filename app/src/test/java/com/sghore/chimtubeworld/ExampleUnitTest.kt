@@ -117,14 +117,13 @@ class ExampleUnitTest {
                 .build()
             val retrofit = builder.create(RetrofitService::class.java)
 
-            val playlistItems = retrofit.getTVideosFromUserId(
-                "Bearer 3u0x3d7dngj9jormp20nw4zd6b3ls0",
-                "66375105",
-                "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6MjB9fQ"
-            ).await()
+            val userList = retrofit.getTUserStream(
+                "Bearer x1v05hwct1zbc73y19ol89kz0azxdf",
+                loginId = arrayOf("rooftopcat99", "nokduro")
+            )
 
             println("끝")
-            println("res: ${playlistItems}")
+            println("res: ${userList.data}")
         }
     }
 
