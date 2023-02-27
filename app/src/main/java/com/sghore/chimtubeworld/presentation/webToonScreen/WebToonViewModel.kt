@@ -1,13 +1,10 @@
 package com.sghore.chimtubeworld.presentation.webToonScreen
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
-import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.other.Contents
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel

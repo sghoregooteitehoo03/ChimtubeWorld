@@ -1,6 +1,5 @@
 package com.sghore.chimtubeworld.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.google.firebase.firestore.FirebaseFirestore
@@ -11,7 +10,6 @@ import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.dataSource.TwitchPagingSource
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
-import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserDataDTO
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await

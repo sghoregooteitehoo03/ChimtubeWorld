@@ -7,7 +7,6 @@ import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.domain.GetGoodsListUseCase
 import com.sghore.chimtubeworld.domain.GetGoodsElementUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject

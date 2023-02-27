@@ -5,7 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
 
 @Composable

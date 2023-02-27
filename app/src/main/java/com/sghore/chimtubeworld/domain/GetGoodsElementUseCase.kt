@@ -1,7 +1,5 @@
 package com.sghore.chimtubeworld.domain
 
-import com.sghore.chimtubeworld.data.model.Channel
-import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.GoodsElement
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.data.repository.StoreRepository
