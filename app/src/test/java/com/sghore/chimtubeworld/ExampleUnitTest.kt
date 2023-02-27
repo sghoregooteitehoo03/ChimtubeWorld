@@ -12,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.await
 import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
 /**
@@ -124,6 +125,73 @@ class ExampleUnitTest {
 
             println("끝")
             println("res: ${userList.data}")
+        }
+    }
+
+    @Test
+    fun crawlingTest() {
+//        val mainUrl =
+//            "https://m.memez.kr/channel/product.php?mode=data&cateCd=002001016&cateMode=goods&page=1&pageNum=40"
+//        val response1 = Jsoup.connect(mainUrl)
+//            .userAgent("19.0.1.84.52")
+//            .method(Connection.Method.GET)
+//            .get()
+//        val list = response1.select("li.goods_prd_item11")
+//        list.forEach { it ->
+//            val image = it.select("div.img img")
+//                .attr("src")
+//                .split("?")[0]
+//            val title = it.select("li.prd_name").text()
+//            val price = it.select("li.price").text().replace("[^0-9 ]".toRegex(), "")
+//            val goodsUrl = "https://m.memez.kr" + it.select("div.goods_list_info a").attr("href")
+//                .replace("..", "")
+//
+//            println("image: $image")
+//            println("title: $title")
+//            println("price: $price")
+//            println("goodsUrl: $goodsUrl")
+//            val response2 = Jsoup.connect(goodsUrl)
+//                .userAgent("19.0.1.84.52")
+//                .method(Connection.Method.GET)
+//                .get()
+//            val previewImages = response2.select("div.goods_view div.cont_detail img")
+//                .map { it.attr("src").split("?")[0] }
+//                .toList()
+//            println("images: $previewImages")
+//        }
+        val mainUrl = "https://smartstore.naver.com/uldd"
+        val response1 = Jsoup.connect(mainUrl)
+            .userAgent("19.0.1.84.52")
+            .method(Connection.Method.GET)
+            .get()
+        val list = response1.select("li.-qHwcFXhj0")
+        list.forEach { it ->
+            val image = it.select("img._25CKxIKjAk")
+                .attr("src")
+                .split("?")[0]
+            val title = it.select("strong.QNNliuiAk3").text()
+            val priceText = it.select("strong._3a2YHGkedh span.nIAdxeTzhx").text()
+                .replace("[^0-9]".toRegex(), "")
+
+            val price = DecimalFormat("#,###").format(priceText) + "원"
+            val goodsUrl =
+                "https://smartstore.naver.com" + it.select("a._3BkKgDHq3l").attr("href")
+                    .replace("..", "")
+
+            println("image: $image")
+            println("title: $title")
+            println("price: $price")
+            println("goodsUrl: $goodsUrl")
+
+            val response2 = Jsoup.connect(goodsUrl)
+                .userAgent("19.0.1.84.52")
+                .method(Connection.Method.GET)
+                .get()
+            val previewImages = response2.select("li._30l3Wgz_b8 img")
+                .map { it.attr("src").split("?")[0] }
+                .toList()
+
+            println("images: $previewImages")
         }
     }
 

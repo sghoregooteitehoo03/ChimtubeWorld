@@ -9,8 +9,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowCircleRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,52 +43,67 @@ fun StoreDetailScreen(
         Box {
             Column(
                 modifier = Modifier
+                    .width(264.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(
                         color = colorResource(id = R.color.default_background_color)
                     )
-                    .padding(12.dp)
             ) {
                 Image(
                     painter = rememberImagePainter(data = uiState.selectedImage),
                     contentDescription = "Goods",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(240.dp)
+                    modifier = Modifier
+                        .size(264.dp)
+                        .clip(RoundedCornerShape(12.dp))
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 PreviewImageList(
                     imageList = uiState.previewImages,
                     selectedImage = uiState.selectedImage,
-                    modifier = Modifier.width(240.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp, end = 12.dp),
                     onClick = onPreviewImageClick
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = if (uiState.isLoading) {
-                        ""
-                    } else {
-                        goods?.title ?: ""
-                    },
-                    color = colorResource(id = R.color.default_text_color),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.width(240.dp)
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = if (uiState.isLoading) {
-                        ""
-                    } else {
-                        goods?.price ?: ""
-                    },
-                    color = colorResource(id = R.color.item_color),
-                    fontSize = 16.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                Row(
                     modifier = Modifier
-                        .width(240.dp)
-                )
+                        .fillMaxWidth()
+                        .padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.width(200.dp)
+                    ) {
+                        Text(
+                            text = goods?.title ?: "",
+                            color = colorResource(id = R.color.default_text_color),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = goods?.price ?: "",
+                            color = colorResource(id = R.color.item_color),
+                            fontSize = 16.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        imageVector = Icons.Default.ArrowCircleRight,
+                        contentDescription = "바로가기",
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clickable {
+                                onActionClick(goods?.url ?: "")
+                            }
+                    )
+                }
             }
 
             if (uiState.isLoading) {
@@ -97,21 +113,6 @@ fun StoreDetailScreen(
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "바로가기",
-            color = Color.White,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple()
-                ) {
-                    onActionClick(goods?.url ?: "")
-                }
-        )
     }
 }
 
@@ -142,6 +143,7 @@ fun PreviewImageList(
                 ),
                 modifier = Modifier
                     .size(60.dp)
+                    .clip(RoundedCornerShape(8.dp))
                     .clickable(
                         interactionSource = MutableInteractionSource(),
                         indication = null
