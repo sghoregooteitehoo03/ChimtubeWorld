@@ -2,9 +2,10 @@ package com.sghore.chimtubeworld.presentation.storeScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sghore.chimtubeworld.data.model.GoodsElement
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.domain.GetGoodsListUseCase
-import com.sghore.chimtubeworld.domain.GetStoreInfoListUseCase
+import com.sghore.chimtubeworld.domain.GetGoodsElementUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -12,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StoreViewModel @Inject constructor(
-    private val getStoreInfoListUseCase: GetStoreInfoListUseCase,
+    private val getGoodsElementUseCase: GetGoodsElementUseCase,
     private val getGoodsListUseCase: GetGoodsListUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(StoreScreenState(isLoading = true))
@@ -26,7 +27,7 @@ class StoreViewModel @Inject constructor(
 
     // 스토어의 정보를 가져옴
     fun getStoreInfo() {
-        getStoreInfoListUseCase().onEach { resource ->
+        getGoodsElementUseCase().onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
                     val storeInfoList = resource.data ?: emptyList()
@@ -36,7 +37,7 @@ class StoreViewModel @Inject constructor(
                             storeInfoList = storeInfoList
                         )
                     }
-                    changeCategory(url = storeInfoList[0].url)
+                    changeCategory(goodsElement = storeInfoList[0])
                 }
                 is Resource.Loading -> {}
                 is Resource.Error -> {
@@ -51,20 +52,18 @@ class StoreViewModel @Inject constructor(
     }
 
     // 스토어의 카테고리를 변경함
-    fun changeCategory(url: String) {
+    fun changeCategory(goodsElement: GoodsElement) {
         job?.cancel() // 이전 작업이 존재하면 취소함
 
         _state.update {
             it.copy(
-                selectedStoreUrl = url,
+                selectedStoreUrl = goodsElement.channelUrl,
                 goodsList = emptyList()
             )
         }
-        job = getGoodsListUseCase(url).onEach { goods ->
+        job = getGoodsListUseCase(goodsElement).onEach { goods ->
             _state.update {
-                it.copy(
-                    goodsList = goods
-                )
+                it.copy(goodsList = goods)
             }
         }.launchIn(viewModelScope)
     }

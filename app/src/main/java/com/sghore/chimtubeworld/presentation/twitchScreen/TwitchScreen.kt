@@ -1,9 +1,6 @@
 package com.sghore.chimtubeworld.presentation.twitchScreen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -39,7 +36,7 @@ import com.sghore.chimtubeworld.util.parseFollowText
 @Composable
 fun TwitchScreen(
     uiState: TwitchScreenState,
-    onMainChannelClick: (Channel?) -> Unit,
+    onMainChannelClick: () -> Unit,
     onTwitchCrewChannelClick: (Channel) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -87,7 +84,7 @@ fun TwitchScreen(
 @Composable
 fun MainChannelInfo(
     mainChannel: Channel?,
-    onClick: (Channel?) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val colorFilter = if (mainChannel?.isOnline == true) {
@@ -109,7 +106,7 @@ fun MainChannelInfo(
                     color = colorResource(id = R.color.item_color)
                 )
             ) {
-                onClick(mainChannel)
+                onClick()
             }
     ) {
         Image(
@@ -222,17 +219,31 @@ fun TwitchCrewChannelItem(
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = rememberImagePainter(
-                data = channel?.image
-            ),
-            contentDescription = channel?.id,
-            modifier = Modifier
-                .size(80.dp)
-                .aspectRatio(1f)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
+        Box(
+            modifier = Modifier.size(80.dp),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            Image(
+                painter = rememberImagePainter(
+                    data = channel?.image
+                ),
+                contentDescription = channel?.id,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .aspectRatio(1f)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+            if (channel?.isOnline == true) {
+                Canvas(modifier = Modifier.size(20.dp), onDraw = {
+                    drawCircle(
+                        color = Color.Green,
+                        center = center,
+                        radius = size.minDimension / 2f
+                    )
+                })
+            }
+        }
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = channel?.name ?: "",

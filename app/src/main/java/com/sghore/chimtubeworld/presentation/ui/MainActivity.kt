@@ -197,7 +197,7 @@ class MainActivity : ComponentActivity() {
                                 YoutubeRoute(navController = navController)
                             }
                             composable(route = NavigationScreen.Twitch.route) {
-                                TwitchRoute(navController = navController)
+                                TwitchRoute()
                             }
                             composable(route = NavigationScreen.WebToon.route) {
                                 WebToonRoute()

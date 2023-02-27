@@ -9,5 +9,5 @@ data class Goods(
     val price: String,
     val thumbnailImage: String,
     val url: String,
-    val type: String
+    val previewImageQuery: String
 ) : Parcelable

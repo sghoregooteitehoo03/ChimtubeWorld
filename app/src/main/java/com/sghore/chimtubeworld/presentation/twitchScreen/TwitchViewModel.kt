@@ -41,4 +41,10 @@ class TwitchViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
+
+    fun setDialog(isDialogOpen: Boolean) {
+        _state.update {
+            it.copy(isDialogOpen = isDialogOpen)
+        }
+    }
 }

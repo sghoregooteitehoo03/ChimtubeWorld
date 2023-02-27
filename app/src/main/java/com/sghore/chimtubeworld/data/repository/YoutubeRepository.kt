@@ -6,7 +6,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.data.db.Dao
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.LinkInfo
-import com.sghore.chimtubeworld.data.model.Playlist
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.dataSource.PlaylistsPagingSource
 import com.sghore.chimtubeworld.data.repository.dataSource.YoutubePagingSource

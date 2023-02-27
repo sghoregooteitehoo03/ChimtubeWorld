@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
@@ -21,19 +20,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.Goods
+import com.sghore.chimtubeworld.data.model.GoodsElement
 import com.sghore.chimtubeworld.presentation.RowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 
 @Composable
 fun StoreScreen(
     uiState: StoreScreenState,
-    onCategoryClick: (String) -> Unit,
+    onCategoryClick: (GoodsElement) -> Unit,
     onGoodsClick: (List<Goods>, Int) -> Unit
 ) {
     Box(
@@ -88,9 +86,9 @@ fun StoreScreen(
 
 @Composable
 fun StoreInfoCategoryList(
-    storeInfoList: List<Channel>,
+    storeInfoList: List<GoodsElement>,
     selectedStoreUrl: String,
-    onClick: (String) -> Unit,
+    onClick: (GoodsElement) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -112,17 +110,17 @@ fun StoreInfoCategoryList(
 
 @Composable
 fun StoreInfoCategoryItem(
-    storeInfo: Channel,
+    storeInfo: GoodsElement,
     selectedStoreUrl: String,
-    onClick: (String) -> Unit,
+    onClick: (GoodsElement) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val imageColor = if (selectedStoreUrl == storeInfo.url) {
+    val imageColor = if (selectedStoreUrl == storeInfo.channelUrl) {
         colorResource(id = android.R.color.transparent)
     } else {
         colorResource(id = R.color.black_alpha_50)
     }
-    val textColor = if (selectedStoreUrl == storeInfo.url) {
+    val textColor = if (selectedStoreUrl == storeInfo.channelUrl) {
         colorResource(id = R.color.item_color)
     } else {
         colorResource(id = R.color.default_text_color)
@@ -133,14 +131,14 @@ fun StoreInfoCategoryItem(
             interactionSource = remember { MutableInteractionSource() },
             indication = null
         ) {
-            if (storeInfo.url != selectedStoreUrl) { // 같은 것을 누를때는 동작 x
-                onClick(storeInfo.url)
+            if (storeInfo.channelUrl != selectedStoreUrl) { // 같은 것을 누를때는 동작 x
+                onClick(storeInfo)
             }
         }
     ) {
         Image(
-            painter = rememberImagePainter(data = storeInfo.image),
-            contentDescription = storeInfo.name,
+            painter = rememberImagePainter(data = storeInfo.channelImage),
+            contentDescription = storeInfo.channelName,
             contentScale = ContentScale.Crop,
             colorFilter = ColorFilter.tint(
                 color = imageColor,
@@ -158,7 +156,7 @@ fun StoreInfoCategoryItem(
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = storeInfo.name,
+            text = storeInfo.channelName,
             color = textColor,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -190,25 +188,6 @@ fun GoodsItem(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .aspectRatio(1f)
-        )
-    }
-}
-
-@Preview
-@Composable
-fun StoreInfoCategoryItemPreview() {
-    MaterialTheme {
-        StoreInfoCategoryItem(
-            storeInfo = Channel(
-                id = "",
-                name = "M드로메다",
-                explains = arrayOf(),
-                url = "",
-                image = "",
-                type = 0
-            ),
-            "",
-            onClick = {}
         )
     }
 }

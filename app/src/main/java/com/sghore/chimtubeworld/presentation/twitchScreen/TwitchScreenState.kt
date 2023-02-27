@@ -6,5 +6,6 @@ data class TwitchScreenState(
     val mainChannelInfo: Channel? = null,
     val channels: List<Channel?> = emptyList(),
     val isLoading: Boolean = false,
+    val isDialogOpen: Boolean = false,
     val errorMsg: String = ""
 )

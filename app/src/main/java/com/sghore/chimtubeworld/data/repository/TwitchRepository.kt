@@ -1,6 +1,5 @@
 package com.sghore.chimtubeworld.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.google.firebase.firestore.FirebaseFirestore
@@ -11,7 +10,6 @@ import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.dataSource.TwitchPagingSource
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
-import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserDataDTO
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await
@@ -72,39 +70,50 @@ class TwitchRepository @Inject constructor(
         val retrofitService = getRetrofit()
 
         // Twitch API를 통해 채널의 정보를 가져옴
-        val result = retrofitService.getTUserInfo(
+        val userInfoResult = retrofitService.getTUserInfo(
             accessKey,
             channelLinkList.map { it.id }.toTypedArray()
         )
+        val liveInfoResult = retrofitService.getTUserStream(
+            accessKey = accessKey,
+            loginId = channelLinkList.map { it.id }.toTypedArray()
+        )
         // 채널 아이디 리스트
-        val channelIdList = result.data.map { it.login }
+        val userResultIdList = userInfoResult.data.map { it.login }
+        val liveResultIdList = liveInfoResult.data.map { it.user_login }
 
         return channelLinkList.map { linkInfo ->
-            // API에서 넘어온 데이터가 linkInfo와 일치하는 데이터의 Index값
-            val index = channelIdList.indexOf(linkInfo.id)
-            val userData = result.data[index]
+            // linkInfo 데이터와 동일한 API결과정보의 위치를 가져옴
+            val userResultPos = userResultIdList.indexOf(linkInfo.id)
+            val liveResultPos = liveResultIdList.indexOf(linkInfo.id)
+
+            val isOnline = liveResultPos != -1 // 스트리머의 온라인 여부
+            val userData = userInfoResult.data[userResultPos]
+            val channelData = Channel(
+                id = userData.id,
+                playlistId = userData.id,
+                playlistName = linkInfo.playlistName,
+                name = userData.displayName,
+                explains = arrayOf(linkInfo.explain),
+                url = linkInfo.url,
+                image = userData.profile_image_url,
+                thumbnailImage = if (isOnline) {
+                    liveInfoResult.data[liveResultPos].thumbnailUrl
+                        .replace("{width}", "1920")
+                        .replace("{height}", "1080")
+                } else {
+                    userData.offline_image_url
+                },
+                type = linkInfo.type,
+                isOnline = isOnline
+            )
 
             if (linkInfo.type == 0) { // 침착맨 채널의 정보일 때
-                getTwitchUserState(
-                    retrofitService,
-                    accessKey,
-                    userData,
-                    linkInfo
-                )
-            } else {
-                Channel(
-                    id = userData.id,
-                    playlistId = userData.id,
-                    playlistName = linkInfo.playlistName,
-                    name = userData.displayName,
-                    explains = arrayOf(linkInfo.explain),
-                    url = linkInfo.url,
-                    image = userData.profile_image_url,
-                    thumbnailImage = userData.offline_image_url,
-                    type = linkInfo.type,
-                    isOnline = false
-                )
-            }
+                val followData = retrofitService.getTUserFollows(accessKey, channelData.id) // 팔로우 수
+
+                // 팔로우 수만 추가된 정보를 반환
+                channelData.copy(explains = channelData.explains.plus(followData.total.toString()))
+            } else channelData
         }
     }
 
@@ -154,47 +163,6 @@ class TwitchRepository @Inject constructor(
                 url = response.url
             )
         }
-    }
-
-    // 침착맨의 팔로워 방송여부 등을 가져옴
-    private suspend fun getTwitchUserState(
-        retrofitService: RetrofitService,
-        accessKey: String,
-        userInfo: UserDataDTO,
-        linkInfo: LinkInfo
-    ): Channel {
-        val followData = retrofitService.getTUserFollows(accessKey, userInfo.id) // 팔로우 수
-        val streamData = retrofitService.getTUserStream(accessKey, userInfo.login) // 방송 데이터
-        val isOnline: Boolean // 방송 여부
-
-        // 썸네일
-        val thumbnailImage = if (streamData.data.isEmpty()) {
-            // 방송이 오프라인 일 때
-            isOnline = false
-            userInfo.offline_image_url
-        } else {
-            // 방송이 온라인 일 때
-            isOnline = true
-            streamData.data[0].thumbnailUrl
-                .replace("{width}", "1920")
-                .replace("{height}", "1080")
-        }
-
-        val channelData = Channel(
-            id = userInfo.id,
-            playlistId = userInfo.id,
-            playlistName = linkInfo.playlistName,
-            name = userInfo.displayName,
-            explains = arrayOf(linkInfo.explain, followData.total.toString()),
-            url = linkInfo.url,
-            image = userInfo.profile_image_url,
-            thumbnailImage = thumbnailImage,
-            type = linkInfo.type,
-            isOnline = isOnline
-        )
-
-        Log.i("Check", "data: $channelData")
-        return channelData
     }
 
     private fun getRetrofit() =

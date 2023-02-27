@@ -1,8 +1,6 @@
 package com.sghore.chimtubeworld.presentation.webToonScreen
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sghore.chimtubeworld.other.Contents
@@ -12,11 +10,10 @@ import com.sghore.chimtubeworld.other.OpenOtherApp
 fun WebToonRoute(
     viewModel: WebToonViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
 
     WebToonScreen(
-        uiState = uiState,
+        webToonInfos = viewModel.webToonInfos,
         onWebToonClick = {
             OpenOtherApp(context = context)
                 .openNaverWebToon(
