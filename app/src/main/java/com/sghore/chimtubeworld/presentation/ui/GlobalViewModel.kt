@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 class GlobalViewModel : ViewModel() {
     var bookmarkData: Bookmark? = null // 북마크 데이터
 
+
     private val _eventFlow = MutableSharedFlow<ActionEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 

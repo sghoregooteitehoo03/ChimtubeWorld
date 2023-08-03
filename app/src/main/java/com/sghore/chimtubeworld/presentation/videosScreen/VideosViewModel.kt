@@ -95,7 +95,7 @@ class VideosViewModel @Inject constructor(
                             video
                         }
                     }
-                }
+                }?.cachedIn(viewModelScope)
             )
         }
     }

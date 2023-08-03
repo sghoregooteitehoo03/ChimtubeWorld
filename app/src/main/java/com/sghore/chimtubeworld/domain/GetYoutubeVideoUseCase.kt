@@ -10,12 +10,9 @@ import javax.inject.Inject
 class GetYoutubeVideoUseCase @Inject constructor(
     private val repository: YoutubeRepository
 ) {
-    operator fun invoke(videoUrl: String, baseUrl: String): Flow<Resource<Video>> = flow {
+    operator fun invoke(videoUrl: String): Flow<Resource<Video>> = flow {
         try {
-            val videoData = repository.getVideo(
-                url = videoUrl,
-                baseUrl = baseUrl
-            )
+            val videoData = repository.getVideo(url = videoUrl)
             emit(Resource.Success<Video>(videoData))
         } catch (e: Exception) {
             e.printStackTrace()

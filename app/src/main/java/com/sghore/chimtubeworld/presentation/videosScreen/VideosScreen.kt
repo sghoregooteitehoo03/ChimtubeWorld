@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
@@ -39,6 +38,7 @@ fun VideosScreen(
     onBookmarkClick: (Video, Int) -> Unit,
 ) {
     val videoList: LazyPagingItems<Video>? = uiState.videos?.collectAsLazyPagingItems()
+    videoList?.retry()
     val isLoading by remember {
         derivedStateOf {
             videoList?.loadState?.refresh is LoadState.Loading
@@ -48,9 +48,9 @@ fun VideosScreen(
     LazyColumn {
         videoList?.let {
             if (!isLoading) {
-                items(items = it) { video ->
+                items(count = it.itemCount) { index ->
                     VideoItem(
-                        video = video,
+                        video = it[index],
                         onVideoClick = onVideoClick,
                         onBookmarkClick = onBookmarkClick
                     )

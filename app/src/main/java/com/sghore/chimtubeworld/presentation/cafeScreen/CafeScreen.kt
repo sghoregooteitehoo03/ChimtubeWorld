@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.CafeCategory
@@ -94,9 +93,11 @@ fun CafeScreen(
 
             LazyColumn {
                 postList?.let {
-                    items(items = it) { post ->
+                    items(count = it.itemCount) { index ->
+                        val post = it[index]
                         val isRead =
                             (post?.isRead ?: false) || (uiState.readHistory[post?.id] ?: false)
+
                         CafePostItem(
                             post = post,
                             isRead = isRead,

@@ -16,6 +16,9 @@ import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
 import kotlinx.coroutines.flow.collectLatest
 
+// TODO:
+//  . 재생목록 생성 오류 픽스 O
+//  . 새로고침 오류 픽스 O
 @Composable
 fun VideosRoute(
     viewModel: VideosViewModel = hiltViewModel(),
@@ -41,6 +44,7 @@ fun VideosRoute(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+
                 is GlobalViewModel.ActionEvent.CopyVideoUrl -> {}
                 is GlobalViewModel.ActionEvent.DeleteBookmark -> {}
             }

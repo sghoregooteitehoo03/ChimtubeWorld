@@ -9,8 +9,6 @@ import org.jsoup.Jsoup
 import org.junit.Test
 import org.junit.Assert.*
 import retrofit2.Retrofit
-import retrofit2.await
-import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
@@ -198,9 +196,8 @@ class ExampleUnitTest {
     //    -32399000 -> 00:01
     @Test
     fun test() {
-        val test = "109ace"
-        val a = test.split("|")
-        testLoop(a.toMutableList())
+        val test = "hi"
+        print("${test.substringAfter("Hello")}\n")
     }
 
     fun testLoop(list: MutableList<String>) {

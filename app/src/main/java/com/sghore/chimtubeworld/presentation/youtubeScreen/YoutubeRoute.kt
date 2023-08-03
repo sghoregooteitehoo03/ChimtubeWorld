@@ -19,10 +19,15 @@ fun YoutubeRoute(
         onChannelClick = { channelData ->
             val route = if (channelData.type == 0) {
                 NavigationScreen.Playlists.route +
-                        "?channelName=${channelData.name}&channelId=${channelData.id.split("|")[0]}&playlistId=${channelData.playlistId}"
+                        "?channelName=${channelData.name}" +
+                        "&channelId=${channelData.id.split("|")[0]}" +
+                        "&playlistId=${channelData.playlistId}" +
+                        "&type=${channelData.type}"
             } else {
                 NavigationScreen.Playlists.route +
-                        "?channelName=${channelData.name}&playlistId=${channelData.playlistId}"
+                        "?channelName=${channelData.name}" +
+                        "&playlistId=${channelData.playlistId}" +
+                        "&type=${channelData.type}"
             }
 
             navController.navigate(route = route)
