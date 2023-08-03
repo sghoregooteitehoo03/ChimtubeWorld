@@ -8,6 +8,9 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     signingConfigs {
         release {
@@ -20,9 +23,11 @@ android {
         applicationId "com.sghore.chimtubeworld"
         minSdk 21
         targetSdk 33
-        versionCode 5
-        versionName "1.4.0"
+        versionCode 6
+        versionName "1.4.1"
 
+        buildConfigField "String", "YOUTUBE_API_KEY", properties['youtube_api_key']
+        buildConfigField "String", "TWITCH_CLIENT_ID", properties['twitch_client_id']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

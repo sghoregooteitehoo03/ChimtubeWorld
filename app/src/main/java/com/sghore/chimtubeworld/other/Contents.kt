@@ -17,9 +17,6 @@ object Contents {
     const val WEBTOON_URL_4 = "https://comic.naver.com/webtoon/list?titleId=557527"
     const val WEBTOON_URL_5 = "https://comic.naver.com/webtoon/list?titleId=687127"
 
-    const val API_KEY = "AIzaSyB8j8ygmIn8EzSqY6sqtm2uykCks6szHws"
-    const val CLIENT_ID = "sjed0ihpu7s6ha5tgv82l7kjh4o571"
-
     const val COLLECTION_YOUTUBE_LINK = "YoutubeLink"
     const val COLLECTION_TWITCH_LINK = "TwitchLink"
     const val COLLECTION_GOODS_ELEMENT = "goodsElement"
