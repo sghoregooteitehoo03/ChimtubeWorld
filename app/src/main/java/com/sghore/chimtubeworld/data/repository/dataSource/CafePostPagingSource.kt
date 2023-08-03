@@ -97,7 +97,7 @@ class CafePostPagingSource(
     // Jsoup을 통해 카페글의 HTML을 가져옴
     private fun connectJsoup(url: String) =
         Jsoup.connect(url)
-            .userAgent("19.0.1.84.52")
+            .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
             .header(
                 "accept",
                 "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"

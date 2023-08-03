@@ -29,7 +29,7 @@ class BookmarkViewModel @Inject constructor(
         data class ChangeBookmark(val message: String, val bookmark: Bookmark) : BookmarkEvent()
     }
 
-    private val baseYoutubeUrl = "youtu.be"
+    private val baseYoutubeUrl = "youtube.com"
     private val baseTwitchUrl = "www.twitch.tv"
 
     private val _state = MutableStateFlow(BookmarkScreenState(isLoading = true))
@@ -68,7 +68,7 @@ class BookmarkViewModel @Inject constructor(
 
         val videoFlow = if (baseUrl == baseYoutubeUrl) {
             videoTypeImage = R.drawable.youtube
-            getYoutubeVideoUseCase(videoUrl, baseUrl)
+            getYoutubeVideoUseCase(videoUrl)
         } else {
             videoTypeImage = R.drawable.twitch
             getTwitchVideoUseCase(videoUrl, baseUrl)

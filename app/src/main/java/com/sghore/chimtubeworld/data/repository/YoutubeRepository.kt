@@ -7,10 +7,12 @@ import com.sghore.chimtubeworld.data.db.Dao
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.LinkInfo
 import com.sghore.chimtubeworld.data.model.Video
-import com.sghore.chimtubeworld.data.repository.dataSource.PlaylistsPagingSource
+import com.sghore.chimtubeworld.data.repository.dataSource.MainPlaylistPagingSource
+import com.sghore.chimtubeworld.data.repository.dataSource.SubPlaylistPagingSource
 import com.sghore.chimtubeworld.data.repository.dataSource.YoutubePagingSource
 import com.sghore.chimtubeworld.other.Contents
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
+import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.PlaylistsDTO
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await
@@ -36,16 +38,40 @@ class YoutubeRepository @Inject constructor(
             )
         }.flow
 
-    // 유튜브 재생목록을 페이징하여 가져옴
-    fun getPlaylists(
+    // 유튜브 재생목록을 가져옴
+    suspend fun getPlaylist(
+        channelId: String?,
+        playlistId: List<String>?,
+        pageToken: String? = null
+    ): PlaylistsDTO {
+        val retrofitService = getRetrofit()
+
+        return retrofitService.getYPlaylists(
+            channelId = channelId,
+            playlistId = playlistId,
+            pageToken = pageToken
+        )
+    }
+
+    // 메인채널의 재생목록을 페이징하여 가져옴
+    fun getPagingMainPlaylist(
         channelId: String?,
         playlistId: List<String>
     ) = Pager(PagingConfig(pageSize = 10)) {
-        val retrofitService = getRetrofit()
-        PlaylistsPagingSource(
+        MainPlaylistPagingSource(
             channelId = channelId,
             playlistId = playlistId.toMutableList(),
-            retrofitService = retrofitService
+            getPlaylist = ::getPlaylist
+        )
+    }.flow
+
+    // 서브채널의 재생목록을 페이징하여 가져옴
+    fun getPagingSubPlaylist(
+        playlistId: List<String>
+    ) = Pager(PagingConfig(pageSize = 5)) {
+        SubPlaylistPagingSource(
+            playlistId = playlistId.toMutableList(),
+            getPlaylist = ::getPlaylist
         )
     }.flow
 
@@ -101,8 +127,9 @@ class YoutubeRepository @Inject constructor(
     }
 
     // 유튜브에서 영상 정보를 가져옴
-    suspend fun getVideo(url: String, baseUrl: String): Video {
-        val videoId = url.substringAfter("https://${baseUrl}/")
+    suspend fun getVideo(url: String): Video {
+        val videoId = url.substringAfter("https://youtube.com/watch?v=")
+            .substringBefore("&")
         if (videoId.isEmpty()) { // 오류 발생 시
             throw NullPointerException()
         }

@@ -30,12 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Playlist
 import com.valentinilk.shimmer.shimmer
-
 
 @Composable
 fun PlaylistScreen(
@@ -52,9 +52,9 @@ fun PlaylistScreen(
     LazyColumn(contentPadding = PaddingValues(top = 12.dp, start = 12.dp, end = 12.dp)) {
         playlists?.let {
             if (!isLoading) {
-                items(items = it) { playlist ->
+                items(count = it.itemCount) { index ->
                     PlaylistItem(
-                        playlist = playlist,
+                        playlist = it[index],
                         onClick = onPlaylistClick,
                         modifier = Modifier.padding(bottom = 12.dp)
                     )

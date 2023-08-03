@@ -26,7 +26,7 @@ class CafeRepository @Inject constructor(
     suspend fun getCafeInfo(): Channel {
         return CoroutineScope(Dispatchers.IO).async {
             val doc = Jsoup.connect(Contents.CAFE_MAIN_URL)
-                .userAgent("19.0.1.84.52")
+                .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
                 .get()
 
             // 카페 운영진의 이미지

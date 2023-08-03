@@ -10,8 +10,6 @@ object Contents {
     const val YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3/"
     const val TWITCH_API_URL = "https://api.twitch.tv/helix/"
     const val CAFE_MAIN_URL = "https://cafe.naver.com/zilioner"
-    const val STORE_MUCH_MERCH_URL = "https://much-merch.com"
-    const val STORE_NAVER_URL = "https://smartstore.naver.com"
     const val CHIMHAHA_URL = "https://chimhaha.net/"
     const val WEBTOON_URL_1 = "https://comic.naver.com/webtoon/list?titleId=103759"
     const val WEBTOON_URL_2 = "https://comic.naver.com/webtoon/list?titleId=704595"
