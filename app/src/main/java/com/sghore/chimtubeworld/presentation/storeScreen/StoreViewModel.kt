@@ -2,69 +2,50 @@ package com.sghore.chimtubeworld.presentation.storeScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sghore.chimtubeworld.data.model.GoodsElement
-import com.sghore.chimtubeworld.data.model.Resource
-import com.sghore.chimtubeworld.domain.GetGoodsListUseCase
-import com.sghore.chimtubeworld.domain.GetGoodsElementUseCase
+import androidx.paging.cachedIn
+import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.data.model.GoodsChannelInfo
+import com.sghore.chimtubeworld.domain.GetProductsUseCase
+import com.sghore.chimtubeworld.other.Contents
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class StoreViewModel @Inject constructor(
-    private val getGoodsElementUseCase: GetGoodsElementUseCase,
-    private val getGoodsListUseCase: GetGoodsListUseCase
+    private val getProductsUseCase: GetProductsUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(StoreScreenState(isLoading = true))
     val state: StateFlow<StoreScreenState> = _state
 
-    private var job: Job? = null
-
     init {
-        getStoreInfo()
-    }
-
-    // 스토어의 정보를 가져옴
-    fun getStoreInfo() {
-        getGoodsElementUseCase().onEach { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    val storeInfoList = resource.data ?: emptyList()
-
-                    _state.update {
-                        StoreScreenState(
-                            storeInfoList = storeInfoList
-                        )
-                    }
-                    changeCategory(goodsElement = storeInfoList[0])
-                }
-                is Resource.Loading -> {}
-                is Resource.Error -> {
-                    _state.update {
-                        StoreScreenState(
-                            errorMsg = resource.errorMsg ?: ""
-                        )
-                    }
-                }
-            }
-        }.launchIn(viewModelScope)
+        _state.update {
+            StoreScreenState(
+                storeInfoList = listOf(
+                    GoodsChannelInfo(
+                        channelImage = R.drawable.marple,
+                        channelName = "침착맨",
+                        baseUrl = Contents.MARPLESHOP_BASE_URL
+                    ),
+                    GoodsChannelInfo(
+                        channelImage = R.drawable.naver,
+                        channelName = "얼렁뚱땅 상점",
+                        baseUrl = Contents.NAVERSTORE_BASE_URL
+                    )
+                ),
+                selectedStoreUrl = Contents.MARPLESHOP_BASE_URL,
+                goodsList = getProductsUseCase(Contents.MARPLESHOP_BASE_URL).cachedIn(viewModelScope)
+            )
+        }
     }
 
     // 스토어의 카테고리를 변경함
-    fun changeCategory(goodsElement: GoodsElement) {
-        job?.cancel() // 이전 작업이 존재하면 취소함
-
+    fun changeCategory(selectedChannelUrl: String) {
         _state.update {
             it.copy(
-                selectedStoreUrl = goodsElement.channelUrl,
-                goodsList = emptyList()
+                goodsList = getProductsUseCase(selectedChannelUrl).cachedIn(viewModelScope),
+                selectedStoreUrl = selectedChannelUrl
             )
         }
-        job = getGoodsListUseCase(goodsElement).onEach { goods ->
-            _state.update {
-                it.copy(goodsList = goods)
-            }
-        }.launchIn(viewModelScope)
     }
 }

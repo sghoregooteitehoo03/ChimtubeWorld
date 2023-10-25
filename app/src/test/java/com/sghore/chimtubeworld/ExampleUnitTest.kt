@@ -24,11 +24,15 @@ class ExampleUnitTest {
         assertEquals(4, 2 + 2)
     }
 
+    // https://m.smartstore.naver.com/i/v2/channels/2sWE0AL94Vk9OXepZUdEC/categories/ALL/products?categorySearchType=DISPCATG&sortType=RECENT&page=1&pageSize=20
+    // id, name, sale price, representativeImageUrl, optionalImageUrls
+    // https://marpple.shop/kr/@api/renewal/stores/calmdownman/product/list?cate_list_id=all&page=0
+    // id, _.base_product.name, price,thumbnails.value.url
     @Test
     fun retrofitTest() {
         runBlocking {
             val builder = Retrofit.Builder()
-                .baseUrl(Contents.YOUTUBE_API_URL)
+                .baseUrl("https://marpple.shop/kr/@api/renewal/stores/calmdownman/product/")
                 .client(OkHttpClient.Builder().apply {
                     readTimeout(2, TimeUnit.MINUTES)
                 }.build())
@@ -36,13 +40,7 @@ class ExampleUnitTest {
                 .build()
             val retrofit = builder.create(RetrofitService::class.java)
 
-            val result = retrofit.getYPlaylists(
-                channelId = null,
-                playlistId = listOf(
-                    "PLif_jr7pPZABQ2BIQoX_IG4kJ46hUJJJA",
-                    "PLif_jr7pPZACAXuOjNHP_FDKuOQ30Gj5l"
-                )
-            )
+            val result = retrofit.getProductsFromMarple(page = 0)
 
             println("result: $result")
             println("끝")

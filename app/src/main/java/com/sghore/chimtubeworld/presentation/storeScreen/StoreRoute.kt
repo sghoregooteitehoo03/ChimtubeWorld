@@ -9,7 +9,7 @@ import com.sghore.chimtubeworld.data.model.Goods
 @Composable
 fun StoreRoute(
     viewModel: StoreViewModel = hiltViewModel(),
-    onGoodsClick: (List<Goods>, Int) -> Unit
+    onGoodsClick: (List<Goods?>, Int) -> Unit
 ) {
     val uiState by viewModel.state.collectAsState()
 

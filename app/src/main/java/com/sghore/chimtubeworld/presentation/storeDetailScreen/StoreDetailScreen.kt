@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Goods
+import java.text.DecimalFormat
 
 @Composable
 fun StoreDetailScreen(
@@ -83,7 +83,7 @@ fun StoreDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = goods?.price ?: "",
+                            text = DecimalFormat("#,###원").format(goods?.price ?: 0),
                             color = colorResource(id = R.color.item_color),
                             fontSize = 16.sp,
                             maxLines = 1,
@@ -102,13 +102,6 @@ fun StoreDetailScreen(
                             }
                     )
                 }
-            }
-
-            if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = colorResource(id = R.color.item_color)
-                )
             }
         }
     }

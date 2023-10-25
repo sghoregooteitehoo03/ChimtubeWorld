@@ -28,11 +28,14 @@ class ViewPagerActivity : AppCompatActivity(), View.OnClickListener {
 
             lifecycleOwner = this@ViewPagerActivity
         }
+
+        val bundle = intent.extras
+
         // 굿즈 리스트
-        val goodsList = intent.getParcelableArrayExtra(Contents.KEY_GOODS_LIST)
+        val goodsList = bundle?.getParcelableArray(Contents.KEY_GOODS_LIST)
             ?.toList()
         // 선택된 굿즈 위치
-        val selectedPos = intent.getIntExtra(Contents.KEY_SELECTED_POS, 0)
+        val selectedPos = bundle?.getInt(Contents.KEY_SELECTED_POS, 0) ?: 0
 
         if (goodsList == null) {
             finish()
@@ -76,6 +79,7 @@ class ViewPagerActivity : AppCompatActivity(), View.OnClickListener {
             R.id.close_pager_btn -> {
                 finish()
             }
+
             else -> {}
         }
     }

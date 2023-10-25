@@ -18,21 +18,23 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Goods
-import com.sghore.chimtubeworld.data.model.GoodsElement
-import com.sghore.chimtubeworld.presentation.RowList
+import com.sghore.chimtubeworld.data.model.GoodsChannelInfo
+import com.sghore.chimtubeworld.presentation.PagingRowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 
 @Composable
 fun StoreScreen(
     uiState: StoreScreenState,
-    onCategoryClick: (GoodsElement) -> Unit,
-    onGoodsClick: (List<Goods>, Int) -> Unit
+    onCategoryClick: (String) -> Unit,
+    onGoodsClick: (List<Goods?>, Int) -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
@@ -43,52 +45,54 @@ fun StoreScreen(
                 color = colorResource(id = R.color.item_color)
             )
         } else {
-            val goodsList = uiState.goodsList
-            RowList(
-                list = goodsList,
-                spanCount = 3,
-                contentPaddingValue = 0.dp,
-                itemPaddingValue = 4.dp,
-                headerItem = {
-                    TitleTextWithExplain(
-                        title = "Goods",
-                        explain = "",
-                        modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
-                    )
+            val goodsList = uiState.goodsList?.collectAsLazyPagingItems()
+            goodsList?.let {
+                PagingRowList(
+                    list = goodsList,
+                    spanCount = 3,
+                    contentPaddingValue = 0.dp,
+                    itemPaddingValue = 4.dp,
+                    headerItem = {
+                        TitleTextWithExplain(
+                            title = "Goods",
+                            explain = "",
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                        )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-                    StoreInfoCategoryList(
-                        storeInfoList = uiState.storeInfoList,
-                        selectedStoreUrl = uiState.selectedStoreUrl,
-                        onClick = onCategoryClick
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                },
-                listItem = { index, modifier ->
-                    GoodsItem(
-                        goods = goodsList[index],
-                        modifier = modifier,
-                        onClick = {
-                            onGoodsClick(
-                                goodsList,
-                                goodsList.indexOf(it)
-                            )
-                        }
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp)
-            )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        StoreInfoCategoryList(
+                            storeInfoList = uiState.storeInfoList,
+                            selectedStoreUrl = uiState.selectedStoreUrl,
+                            onClick = onCategoryClick
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    },
+                    listItem = { index, modifier ->
+                        GoodsItem(
+                            goods = goodsList[index],
+                            modifier = modifier,
+                            onClick = {
+                                onGoodsClick(
+                                    goodsList.itemSnapshotList,
+                                    goodsList.itemSnapshotList.indexOf(it)
+                                )
+                            }
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp, end = 12.dp)
+                )
+            }
         }
     }
 }
 
 @Composable
 fun StoreInfoCategoryList(
-    storeInfoList: List<GoodsElement>,
+    storeInfoList: List<GoodsChannelInfo>,
     selectedStoreUrl: String,
-    onClick: (GoodsElement) -> Unit,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -110,17 +114,17 @@ fun StoreInfoCategoryList(
 
 @Composable
 fun StoreInfoCategoryItem(
-    storeInfo: GoodsElement,
+    storeInfo: GoodsChannelInfo,
     selectedStoreUrl: String,
-    onClick: (GoodsElement) -> Unit,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val imageColor = if (selectedStoreUrl == storeInfo.channelUrl) {
+    val imageColor = if (selectedStoreUrl == storeInfo.baseUrl) {
         colorResource(id = android.R.color.transparent)
     } else {
         colorResource(id = R.color.black_alpha_50)
     }
-    val textColor = if (selectedStoreUrl == storeInfo.channelUrl) {
+    val textColor = if (selectedStoreUrl == storeInfo.baseUrl) {
         colorResource(id = R.color.item_color)
     } else {
         colorResource(id = R.color.default_text_color)
@@ -131,13 +135,13 @@ fun StoreInfoCategoryItem(
             interactionSource = remember { MutableInteractionSource() },
             indication = null
         ) {
-            if (storeInfo.channelUrl != selectedStoreUrl) { // 같은 것을 누를때는 동작 x
-                onClick(storeInfo)
+            if (storeInfo.baseUrl != selectedStoreUrl) { // 같은 것을 누를때는 동작 x
+                onClick(storeInfo.baseUrl)
             }
         }
     ) {
         Image(
-            painter = rememberImagePainter(data = storeInfo.channelImage),
+            painter = painterResource(id = storeInfo.channelImage),
             contentDescription = storeInfo.channelName,
             contentScale = ContentScale.Crop,
             colorFilter = ColorFilter.tint(
@@ -168,8 +172,8 @@ fun StoreInfoCategoryItem(
 
 @Composable
 fun GoodsItem(
-    goods: Goods,
-    onClick: (Goods) -> Unit,
+    goods: Goods?,
+    onClick: (Goods?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -183,8 +187,8 @@ fun GoodsItem(
             }
     ) {
         Image(
-            painter = rememberImagePainter(data = goods.thumbnailImage),
-            contentDescription = goods.title,
+            painter = rememberImagePainter(data = goods?.thumbnailImage ?: ""),
+            contentDescription = goods?.title ?: "",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .aspectRatio(1f)

@@ -310,18 +310,21 @@ class MainActivity : ComponentActivity() {
         moveFragment(intent)
     }
 
-    private fun moveViewPagerScreen(goodsList: List<Goods>, selectedPos: Int) {
+    private fun moveViewPagerScreen(goodsList: List<Goods?>, selectedPos: Int) {
+        val bundle = Bundle().apply {
+            putParcelableArray(
+                Contents.KEY_GOODS_LIST,
+                goodsList.toTypedArray()
+            )
+            putInt(
+                Contents.KEY_SELECTED_POS,
+                selectedPos
+            )
+        }
         startActivity(
             Intent(this@MainActivity, ViewPagerActivity::class.java)
                 .apply {
-                    this.putExtra(
-                        Contents.KEY_GOODS_LIST,
-                        goodsList.toTypedArray()
-                    )
-                    this.putExtra(
-                        Contents.KEY_SELECTED_POS,
-                        selectedPos
-                    )
+                    this.putExtras(bundle)
                     this.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }
         )

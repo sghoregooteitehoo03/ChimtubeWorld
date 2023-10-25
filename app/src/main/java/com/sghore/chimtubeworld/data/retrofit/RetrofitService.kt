@@ -1,7 +1,7 @@
 package com.sghore.chimtubeworld.data.retrofit
 
 import com.sghore.chimtubeworld.BuildConfig
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.data.retrofit.dto.naverAPI.ProductsDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.StreamDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserFollowsDTO
@@ -42,10 +42,10 @@ interface RetrofitService {
     ): UserDTO
 
     @Headers("Client-ID: ${BuildConfig.TWITCH_CLIENT_ID}")
-    @GET("users/follows?first=1")
+    @GET("channels/followers")
     suspend fun getTUserFollows(
         @Header("Authorization") accessKey: String,
-        @Query("to_id") id: String,
+        @Query("broadcaster_id") id: String,
     ): UserFollowsDTO
 
     @Headers("Client-ID: ${BuildConfig.TWITCH_CLIENT_ID}")
@@ -69,4 +69,11 @@ interface RetrofitService {
         @Header("Authorization") accessKey: String,
         @Query("id") videoId: String
     ): Call<com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.VideosDTO>
+
+    // Product
+    @GET("products?categorySearchType=DISPCATG&sortType=RECENT&pageSize=20")
+    suspend fun getProductsFromNaver(@Query("page") page: Int): ProductsDTO
+
+    @GET("list?cate_list_id=all")
+    suspend fun getProductsFromMarple(@Query("page") page: Int): List<com.sghore.chimtubeworld.data.retrofit.dto.marpleAPI.ProductsDTO>
 }

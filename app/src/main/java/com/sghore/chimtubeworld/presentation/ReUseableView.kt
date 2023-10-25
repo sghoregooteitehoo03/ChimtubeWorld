@@ -16,6 +16,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.paging.compose.LazyPagingItems
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
 
@@ -80,6 +81,42 @@ fun <T> RowList(
 }
 
 @Composable
+fun <T : Any> PagingRowList(
+    list: LazyPagingItems<T>,
+    spanCount: Int,
+    contentPaddingValue: Dp,
+    itemPaddingValue: Dp,
+    headerItem: @Composable () -> Unit,
+    listItem: @Composable (Int, Modifier) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(contentPaddingValue)
+    ) {
+        val itemCount = if (list.itemCount % spanCount == 0) {
+            list.itemCount / spanCount
+        } else {
+            list.itemCount / spanCount + 1
+        }
+
+        item {
+            headerItem()
+        }
+
+        items(itemCount) { index ->
+            RowItemCollocate(
+                rowIndex = index,
+                list = list.itemSnapshotList.items,
+                spanCount = spanCount,
+                paddingValue = itemPaddingValue,
+                content = listItem,
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Composable
 fun <T> RowItemCollocate(
     rowIndex: Int,
     list: List<T>,
@@ -119,6 +156,7 @@ fun TopAppBarNavigationItem(
         NavigationScreen.AddBookmark.route, NavigationScreen.EditBookmark.route -> {
             content
         }
+
         else -> null
     }
 }
@@ -144,12 +182,14 @@ fun BottomNavigationBar(
                         menu.route == NavigationScreen.Youtube.route
                                 && previousRoute == NavigationScreen.Youtube.route
                     }
+
                     NavigationScreen.Videos.route -> {
                         (menu.route == NavigationScreen.Youtube.route
                                 && previousRoute == NavigationScreen.Playlists.route) ||
-                        (menu.route == NavigationScreen.Twitch.route
-                                && previousRoute == NavigationScreen.Twitch.route)
+                                (menu.route == NavigationScreen.Twitch.route
+                                        && previousRoute == NavigationScreen.Twitch.route)
                     }
+
                     else -> {
                         currentDestination?.hierarchy?.any { it.route == menu.route } == true
                     }
