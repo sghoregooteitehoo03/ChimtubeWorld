@@ -2,10 +2,11 @@ package com.sghore.chimtubeworld.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -47,7 +48,6 @@ import com.sghore.chimtubeworld.presentation.webToonScreen.WebToonRoute
 import com.sghore.chimtubeworld.presentation.youtubeScreen.YoutubeRoute
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: 화면전환 애니메이션 적용 X
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val gViewModel by viewModels<GlobalViewModel>()
@@ -202,6 +202,8 @@ class MainActivity : ComponentActivity() {
                         NavHost(
                             navController = navController,
                             startDestination = NavigationScreen.Youtube.route,
+                            enterTransition = { EnterTransition.None },
+                            exitTransition = { ExitTransition.None }
                         ) {
                             composable(route = NavigationScreen.Youtube.route) {
                                 YoutubeRoute(navController = navController)
