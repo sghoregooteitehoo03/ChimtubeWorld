@@ -95,6 +95,7 @@ fun StoreDetailScreen(
                     Icon(
                         imageVector = Icons.Default.ArrowCircleRight,
                         contentDescription = "바로가기",
+                        tint = colorResource(id = R.color.item_color),
                         modifier = Modifier
                             .size(32.dp)
                             .clickable {

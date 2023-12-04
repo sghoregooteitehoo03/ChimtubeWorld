@@ -8,8 +8,14 @@ import kotlinx.coroutines.flow.Flow
 
 data class StoreScreenState(
     val storeInfoList: List<GoodsChannelInfo> = listOf(),
-    val selectedStoreUrl: String = "",
-    val goodsList: Flow<PagingData<Goods>>? = null,
+    val selectedProductType: ProductType = ProductType.MarpleProduct,
+    val marpleGoodsList: Flow<PagingData<Goods>>? = null,
+    val naverGoodsList: Flow<PagingData<Goods>>? = null,
     val isLoading: Boolean = false,
     val errorMsg: String = ""
 )
+
+sealed interface ProductType {
+    data object MarpleProduct : ProductType
+    data object NaverProduct : ProductType
+}

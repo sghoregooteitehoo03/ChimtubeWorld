@@ -18,10 +18,7 @@ class NaverProductPagingSource(
             val key = params.key ?: 1
 
             val productsData = retrofitService.getProductsFromNaver(key)
-            if (productsData.simpleProducts.isEmpty()) {
-                throw IndexOutOfBoundsException()
-            }
-1
+
             val goods = productsData.simpleProducts.map {
                 Goods(
                     title = it.name,
@@ -35,7 +32,11 @@ class NaverProductPagingSource(
             LoadResult.Page(
                 data = goods,
                 prevKey = null,
-                nextKey = key + 1
+                nextKey = if (productsData.simpleProducts.isNotEmpty()) {
+                    key + 1
+                } else {
+                    null
+                }
             )
         } catch (e: Exception) {
             e.printStackTrace()

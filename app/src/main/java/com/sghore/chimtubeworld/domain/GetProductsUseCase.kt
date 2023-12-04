@@ -1,25 +1,21 @@
 package com.sghore.chimtubeworld.domain
 
 import com.sghore.chimtubeworld.data.repository.StoreRepository
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.presentation.storeScreen.ProductType
 import javax.inject.Inject
 
 class GetProductsUseCase @Inject constructor(
     private val storeRepository: StoreRepository
 ) {
 
-    operator fun invoke(baseUrl: String) =
-        when (baseUrl) {
-            Contents.MARPLESHOP_BASE_URL -> {
+    operator fun invoke(productType: ProductType) =
+        when (productType) {
+            ProductType.MarpleProduct -> {
                 storeRepository.getProductsFromMarple()
             }
 
-            Contents.NAVERSTORE_BASE_URL -> {
+            ProductType.NaverProduct -> {
                 storeRepository.getProductsFromNaver()
-            }
-
-            else -> {
-                storeRepository.getProductsFromMarple()
             }
         }
 }

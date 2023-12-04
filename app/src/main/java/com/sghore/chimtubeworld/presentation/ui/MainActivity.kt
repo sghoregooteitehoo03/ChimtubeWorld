@@ -47,6 +47,7 @@ import com.sghore.chimtubeworld.presentation.webToonScreen.WebToonRoute
 import com.sghore.chimtubeworld.presentation.youtubeScreen.YoutubeRoute
 import dagger.hilt.android.AndroidEntryPoint
 
+// TODO: 화면전환 애니메이션 적용 X
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val gViewModel by viewModels<GlobalViewModel>()
