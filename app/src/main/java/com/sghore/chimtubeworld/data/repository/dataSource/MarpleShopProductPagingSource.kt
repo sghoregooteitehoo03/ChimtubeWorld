@@ -18,14 +18,10 @@ class MarpleShopProductPagingSource(
             val key = params.key ?: 0
 
             val productsData = retrofitService.getProductsFromMarple(key)
-            if (productsData.isEmpty()) {
-                throw IndexOutOfBoundsException()
-            }
-
             val goods = productsData.map {
                 Goods(
-                    title = it.productInfo.baseProduct.name,
-                    price = it.price * 10,
+                    title = it.productInfo.baseProduct.name ?: it.name,
+                    price = if (it.price != 0) it.price * 10 else it.profit,
                     thumbnailImage = "https://" + it.thumbnails.value[0].url,
                     previewImages = it.thumbnails.value.map { "https://" + it.url },
                     url = Contents.MARPLESHOP_BASE_URL + it.id
@@ -35,7 +31,11 @@ class MarpleShopProductPagingSource(
             LoadResult.Page(
                 data = goods,
                 prevKey = null,
-                nextKey = key + 1
+                nextKey = if (productsData.isNotEmpty()) {
+                    key + 1
+                } else {
+                    null
+                }
             )
         } catch (e: Exception) {
             e.printStackTrace()

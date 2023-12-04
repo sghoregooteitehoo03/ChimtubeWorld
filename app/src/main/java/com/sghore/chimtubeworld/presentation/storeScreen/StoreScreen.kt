@@ -33,7 +33,7 @@ import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 @Composable
 fun StoreScreen(
     uiState: StoreScreenState,
-    onCategoryClick: (String) -> Unit,
+    onCategoryClick: (ProductType) -> Unit,
     onGoodsClick: (List<Goods?>, Int) -> Unit
 ) {
     Box(
@@ -45,7 +45,16 @@ fun StoreScreen(
                 color = colorResource(id = R.color.item_color)
             )
         } else {
-            val goodsList = uiState.goodsList?.collectAsLazyPagingItems()
+            val goodsList = when (uiState.selectedProductType) {
+                ProductType.MarpleProduct -> {
+                    uiState.marpleGoodsList?.collectAsLazyPagingItems()
+                }
+
+                ProductType.NaverProduct -> {
+                    uiState.naverGoodsList?.collectAsLazyPagingItems()
+                }
+            }
+
             goodsList?.let {
                 PagingRowList(
                     list = goodsList,
@@ -62,7 +71,7 @@ fun StoreScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         StoreInfoCategoryList(
                             storeInfoList = uiState.storeInfoList,
-                            selectedStoreUrl = uiState.selectedStoreUrl,
+                            selectedProductType = uiState.selectedProductType,
                             onClick = onCategoryClick
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -91,8 +100,8 @@ fun StoreScreen(
 @Composable
 fun StoreInfoCategoryList(
     storeInfoList: List<GoodsChannelInfo>,
-    selectedStoreUrl: String,
-    onClick: (String) -> Unit,
+    selectedProductType: ProductType,
+    onClick: (ProductType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -104,7 +113,7 @@ fun StoreInfoCategoryList(
         items(storeInfoList) { storeInfo ->
             StoreInfoCategoryItem(
                 storeInfo = storeInfo,
-                selectedStoreUrl = selectedStoreUrl,
+                selectedProductType = selectedProductType,
                 onClick = onClick
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -115,16 +124,16 @@ fun StoreInfoCategoryList(
 @Composable
 fun StoreInfoCategoryItem(
     storeInfo: GoodsChannelInfo,
-    selectedStoreUrl: String,
-    onClick: (String) -> Unit,
+    selectedProductType: ProductType,
+    onClick: (ProductType) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val imageColor = if (selectedStoreUrl == storeInfo.baseUrl) {
+    val imageColor = if (selectedProductType == storeInfo.productType) {
         colorResource(id = android.R.color.transparent)
     } else {
         colorResource(id = R.color.black_alpha_50)
     }
-    val textColor = if (selectedStoreUrl == storeInfo.baseUrl) {
+    val textColor = if (selectedProductType == storeInfo.productType) {
         colorResource(id = R.color.item_color)
     } else {
         colorResource(id = R.color.default_text_color)
@@ -135,8 +144,8 @@ fun StoreInfoCategoryItem(
             interactionSource = remember { MutableInteractionSource() },
             indication = null
         ) {
-            if (storeInfo.baseUrl != selectedStoreUrl) { // 같은 것을 누를때는 동작 x
-                onClick(storeInfo.baseUrl)
+            if (storeInfo.productType != selectedProductType) { // 같은 것을 누를때는 동작 x
+                onClick(storeInfo.productType)
             }
         }
     ) {
