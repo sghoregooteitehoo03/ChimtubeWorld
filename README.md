@@ -27,3 +27,24 @@
 ![스크린샷](https://github.com/sghoregooteitehoo03/ChimtubeWorld/blob/master/image/screenshot.png)
 
 ## 아키텍쳐 및 라이브러리
+- Jetpack
+  - ViewModel
+  - Paging3
+  - Navigation
+  - Browser
+  - Room
+  - Compose
+    
+- Retrofit
+
+- Firebase
+
+- Jsoup
+
+- Coil
+
+- Custom
+  - [compose-collapsing-toolbar](https://github.com/onebone/compose-collapsing-toolbar)
+  - [compose-shimmer](https://github.com/valentinilk/compose-shimmer)
+
+## API
