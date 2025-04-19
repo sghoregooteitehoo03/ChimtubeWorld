@@ -4,14 +4,16 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sghore.chimtubeworld.data.model.Post
 import com.sghore.chimtubeworld.data.db.Dao
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import com.sghore.chimtubeworld.data.retrofit.CafeRetrofitService
+import com.sghore.chimtubeworld.other.Constants
 import org.jsoup.Connection
 import org.jsoup.Jsoup
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class CafePostPagingSource(
     private val categoryId: Int,
+    private val retrofitService: CafeRetrofitService,
     private val dao: Dao
 ) :
     PagingSource<Int, Post>() {
@@ -23,65 +25,31 @@ class CafePostPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {
         return try {
             val pageKey = params.key ?: 1
-            val menuId = if (categoryId != -1) {
-                "&search.menuid=${categoryId}"
-            } else {
-                ""
+            val posts = retrofitService.getCafePosts(categoryId, pageKey)
+
+            if (posts.result.articleList.isEmpty())
+                throw NullPointerException()
+
+            val postList = posts.result.articleList.map {
+                val isRead = dao.getReadData(it.item.articleId).isNotEmpty() // 읽음 여부
+
+                Post(
+                    id = it.item.articleId,
+                    title = if (it.item.headName != null) {
+                        "[${it.item.headName}] "
+                    } else {
+                        ""
+                    } + it.item.subject,
+                    userName = it.item.writerInfo.nickName,
+                    postDate = SimpleDateFormat(
+                        "yyyy.MM.dd.",
+                        Locale.KOREA
+                    ).format(it.item.writeDateTimestamp),
+                    postImage = it.item.representImage ?: "",
+                    url = Constants.CAFE_MAIN_URL + "/${it.item.articleId}",
+                    isRead = isRead
+                )
             }
-            val mainUrl =
-                "https://cafe.naver.com/ArticleList.nhn?search.clubid=29646865&search.boardtype=C&search.page=${pageKey}&userDisplay=10$menuId"
-            val subUrl =
-                "https://cafe.naver.com/ArticleList.nhn?search.clubid=29646865&search.boardtype=L&search.page=${pageKey}&userDisplay=10$menuId"
-
-            val postList = CoroutineScope(Dispatchers.IO).async {
-                val mainDoc = connectJsoup(mainUrl)
-                val subDoc = connectJsoup(subUrl)
-
-                val postDocs = mainDoc.select("div#main-area") // 게시글 모음
-                    .select("ul.article-movie-sub li")
-                val titleDocs = subDoc.select("div.article-board") // 게시글의 제목(말머리 포함) 모음
-                    .select("tbody tr")
-                    .filter {
-                        it.attr("class").isEmpty() && it.select("td.td_article").isNotEmpty()
-                    }
-
-                if (postDocs.isEmpty()) {
-                    throw NullPointerException()
-                }
-                postDocs.mapIndexed { index, postDoc ->
-                    val imageDoc = postDoc.select("div.movie-img")
-                        .select("a")
-
-                    val url = "https://m.cafe.naver.com" + titleDocs[index] // 게시글 url
-                        .select("a.article")
-                        .attr("href")
-                    val id = url.substringAfter("articleid=")
-                        .substringBefore("&")
-                        .toInt() // 게시글 아이디
-                    val title = titleDocs[index] // 제목
-                        .select("a.article")
-                        .text()
-                    val thumbnailImage = imageDoc.select("img") // 이미지
-                        .attr("src")
-                    val userName = postDoc.select("td.p-nick") // 유저 이름
-                        .select("a")
-                        .text()
-                    val postDate = postDoc.select("div.date_num") // 포스팅 날짜
-                        .select("span.date")
-                        .text()
-                    val isRead = dao.getReadData(id).isNotEmpty() // 읽음 여부
-
-                    Post(
-                        id = id,
-                        title = title,
-                        userName = userName,
-                        postDate = postDate,
-                        postImage = thumbnailImage,
-                        url = url,
-                        isRead = isRead
-                    )
-                }
-            }.await()
 
             LoadResult.Page(
                 data = postList,

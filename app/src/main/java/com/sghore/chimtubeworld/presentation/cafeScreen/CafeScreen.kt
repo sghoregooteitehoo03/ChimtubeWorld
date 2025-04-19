@@ -94,7 +94,7 @@ fun CafeScreen(
                     items(count = it.itemCount) { index ->
                         val post = it[index]
                         val isRead =
-                            (post?.isRead ?: false) || (uiState.readHistory[post?.id] ?: false)
+                            (post?.isRead == true) || (uiState.readHistory[post?.id] == true)
 
                         CafePostItem(
                             post = post,
@@ -123,7 +123,7 @@ fun CafeTopItem(
     // 카테고리 리스트
     val categoryList = remember {
         listOf(
-            CafeCategory("전체", -1),
+            CafeCategory("전체", 0),
             CafeCategory("방송일정 및 공지", 5),
             CafeCategory("침착맨 전용", 42),
             CafeCategory("침착맨 갤러리", 33),
@@ -388,7 +388,7 @@ fun CafeInfoBannerPreview() {
 fun CafeCategoryListPreview() {
     MaterialTheme {
         val list = listOf(
-            CafeCategory("전체", -1),
+            CafeCategory("전체", 0),
             CafeCategory("방송일정 및 공지", 5),
             CafeCategory("침착맨 전용", 42),
             CafeCategory("침착맨 갤러리", 33),

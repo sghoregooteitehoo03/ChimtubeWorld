@@ -6,20 +6,27 @@ import com.sghore.chimtubeworld.data.repository.dataSource.CafePostPagingSource
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.ReadHistory
 import com.sghore.chimtubeworld.data.db.Dao
+import com.sghore.chimtubeworld.data.retrofit.CafeRetrofitService
 import com.sghore.chimtubeworld.other.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.jsoup.Jsoup
+import retrofit2.Retrofit
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 class CafeRepository @Inject constructor(
-    private val dao: Dao
+    private val dao: Dao,
+    private val retrofitBuilder: Retrofit.Builder,
 ) {
     fun getCafePosts(categoryId: Int) =
         Pager(PagingConfig(10)) {
-            CafePostPagingSource(categoryId, dao)
+            CafePostPagingSource(
+                categoryId = categoryId,
+                retrofitService = getRetrofit(),
+                dao = dao
+            )
         }.flow
 
     // 침착맨 팬카페의 정보를 가져옴
@@ -61,4 +68,9 @@ class CafeRepository @Inject constructor(
             dao.insertReadData(ReadHistory(articleId = articleId))
         }
     }
+
+    private fun getRetrofit() =
+        retrofitBuilder.baseUrl(Constants.NAVER_CAFE_API_URL)
+            .build()
+            .create(CafeRetrofitService::class.java)
 }

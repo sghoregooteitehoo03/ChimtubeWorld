@@ -8,6 +8,7 @@ import com.sghore.chimtubeworld.domain.GetCafeInfoUseCase
 import com.sghore.chimtubeworld.domain.GetCafePostsUseCase
 import com.sghore.chimtubeworld.domain.InsertCafeHistoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,11 +34,12 @@ class CafeViewModel @Inject constructor(
                     _state.update {
                         CafeScreenState(
                             cafeInfo = resource.data,
-                            cafePosts = getCafePostsUseCase(cafeCategoryId = -1)
+                            cafePosts = getCafePostsUseCase(cafeCategoryId = 0)
                                 .cachedIn(viewModelScope)
                         )
                     }
                 }
+
                 is Resource.Loading -> {}
                 is Resource.Error -> {
                     _state.update {
@@ -62,7 +64,7 @@ class CafeViewModel @Inject constructor(
     }
 
     // 히스토리 저장
-    fun readPost(post: Post) = viewModelScope.launch {
+    fun readPost(post: Post) = viewModelScope.launch(Dispatchers.IO) {
         if (!post.isRead) { // 읽지 않은 게시글일 경우
             _state.update {
                 it.copy(

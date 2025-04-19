@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 data class CafeScreenState(
     val cafeInfo: Channel? = null,
-    var cafeCategoryId: Int = -1,
+    var cafeCategoryId: Int = 0,
     var cafePosts: Flow<PagingData<Post>>? = null,
     var readHistory: Map<Int, Boolean> = mapOf(),
     val errorMsg: String = ""
