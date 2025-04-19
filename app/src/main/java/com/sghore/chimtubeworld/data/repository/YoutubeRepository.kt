@@ -10,7 +10,7 @@ import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.dataSource.MainPlaylistPagingSource
 import com.sghore.chimtubeworld.data.repository.dataSource.SubPlaylistPagingSource
 import com.sghore.chimtubeworld.data.repository.dataSource.YoutubePagingSource
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.PlaylistsDTO
 import kotlinx.coroutines.tasks.await
@@ -77,7 +77,7 @@ class YoutubeRepository @Inject constructor(
 
     // 채널의 Id 및 API에서 가져오지 못하는 부가설명을 가져옴
     suspend fun getChannelLinkData() =
-        store.collection(Contents.COLLECTION_YOUTUBE_LINK)
+        store.collection(Constants.COLLECTION_YOUTUBE_LINK)
             .get()
             .await()
             .map { document ->
@@ -164,7 +164,7 @@ class YoutubeRepository @Inject constructor(
     }
 
     private fun getRetrofit() =
-        retrofitBuilder.baseUrl(Contents.YOUTUBE_API_URL)
+        retrofitBuilder.baseUrl(Constants.YOUTUBE_API_URL)
             .build()
             .create(RetrofitService::class.java)
 }

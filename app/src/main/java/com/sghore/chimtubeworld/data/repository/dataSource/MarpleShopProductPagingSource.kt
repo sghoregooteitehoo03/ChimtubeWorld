@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 
 class MarpleShopProductPagingSource(
     private val retrofitService: RetrofitService
@@ -24,7 +24,7 @@ class MarpleShopProductPagingSource(
                     price = if (it.price != 0) it.price * 10 else it.profit,
                     thumbnailImage = "https://" + it.thumbnails.value[0].url,
                     previewImages = it.thumbnails.value.map { "https://" + it.url },
-                    url = Contents.MARPLESHOP_BASE_URL + it.id
+                    url = Constants.MARPLESHOP_BASE_URL + it.id
                 )
             }
 

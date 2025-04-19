@@ -8,7 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.databinding.ActivityViewPagerBinding
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.presentation.ui.adapter.StoreDetailPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,10 +32,10 @@ class ViewPagerActivity : AppCompatActivity(), View.OnClickListener {
         val bundle = intent.extras
 
         // 굿즈 리스트
-        val goodsList = bundle?.getParcelableArray(Contents.KEY_GOODS_LIST)
+        val goodsList = bundle?.getParcelableArray(Constants.KEY_GOODS_LIST)
             ?.toList()
         // 선택된 굿즈 위치
-        val selectedPos = bundle?.getInt(Contents.KEY_SELECTED_POS, 0) ?: 0
+        val selectedPos = bundle?.getInt(Constants.KEY_SELECTED_POS, 0) ?: 0
 
         if (goodsList == null) {
             finish()
@@ -47,7 +47,7 @@ class ViewPagerActivity : AppCompatActivity(), View.OnClickListener {
             )
 
             setViewPager(binding.goodsPager, selectedPos)
-            intent.removeExtra(Contents.KEY_GOODS_LIST) // 데이터 포맷
+            intent.removeExtra(Constants.KEY_GOODS_LIST) // 데이터 포맷
         }
     }
 

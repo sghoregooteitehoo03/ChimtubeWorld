@@ -1,14 +1,12 @@
 package com.sghore.chimtubeworld.presentation.youtubeScreen
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -97,15 +95,7 @@ fun MainYoutubeChannelItem(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .background(colorResource(id = R.color.gray_bright_night))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    bounded = true,
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
-                onClick(channel!!)
-            }
+            .clickable { onClick(channel!!) }
             .padding(16.dp)
     ) {
         Image(
@@ -176,16 +166,11 @@ fun SubYoutubeChannelItem(
     onClick: (Channel) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier
-        .clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = rememberRipple(
-                bounded = true,
-                color = colorResource(id = R.color.item_color)
-            )
-        ) {
-            onClick(channel!!)
-        }) {
+    Column(
+        modifier = modifier
+            .clickable {
+                onClick(channel!!)
+            }) {
         Image(
             painter = rememberImagePainter(
                 data = channel?.image

@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.db.Dao
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.VideosDataDTO
 import kotlinx.coroutines.tasks.await
@@ -29,7 +29,7 @@ class TwitchPagingSource(
             val pageKey = params.key ?: "" // 페이지 키
 
             // 동영상 리스트
-            val document = store.collection(Contents.COLLECTION_TWITCH_LINK)
+            val document = store.collection(Constants.COLLECTION_TWITCH_LINK)
                 .document("-1")
                 .get()
                 .await()

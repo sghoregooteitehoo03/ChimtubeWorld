@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.other.OpenOtherApp
 
 @Composable
@@ -34,7 +34,7 @@ fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
         onTwitchCrewChannelClick = { channel ->
             // 트위치 채널로 이동
             OpenOtherApp(context).openTwitch(
-                packageName = Contents.TWITCH_CHANNEL_PACKAGE_NAME + channel.name,
+                packageName = Constants.TWITCH_CHANNEL_PACKAGE_NAME + channel.name,
                 url = channel.url
             )
         }
@@ -58,7 +58,7 @@ fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
                     explain = "유튜브에서 보기",
                     onClick = {
                         OpenOtherApp(context).openYoutube(
-                            packageName = (Contents.YOUTUBE_PACKAGE_NAME),
+                            packageName = (Constants.YOUTUBE_PACKAGE_NAME),
                             url = "https://www.youtube.com/@calmdownman_data/featured" // 침착맨 라이브 채널 주소
                         )
                         viewModel.setDialog(false)
@@ -74,7 +74,7 @@ fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
                     explain = "트위치에서 보기",
                     onClick = {
                         OpenOtherApp(context).openTwitch(
-                            packageName = (Contents.TWITCH_CHANNEL_PACKAGE_NAME + channel?.name),
+                            packageName = (Constants.TWITCH_CHANNEL_PACKAGE_NAME + channel?.name),
                             url = uiState.mainChannelInfo?.url ?: ""
                         )
                         viewModel.setDialog(false)

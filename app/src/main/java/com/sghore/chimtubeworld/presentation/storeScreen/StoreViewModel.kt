@@ -6,7 +6,7 @@ import androidx.paging.cachedIn
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.GoodsChannelInfo
 import com.sghore.chimtubeworld.domain.GetProductsUseCase
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -25,13 +25,13 @@ class StoreViewModel @Inject constructor(
                     GoodsChannelInfo(
                         channelImage = R.drawable.marple,
                         channelName = "침착맨",
-                        baseUrl = Contents.MARPLESHOP_BASE_URL,
+                        baseUrl = Constants.MARPLESHOP_BASE_URL,
                         productType = ProductType.MarpleProduct
                     ),
                     GoodsChannelInfo(
                         channelImage = R.drawable.naver,
                         channelName = "얼렁뚱땅 상점",
-                        baseUrl = Contents.NAVERSTORE_BASE_URL,
+                        baseUrl = Constants.NAVERSTORE_BASE_URL,
                         productType = ProductType.NaverProduct
                     )
                 ),

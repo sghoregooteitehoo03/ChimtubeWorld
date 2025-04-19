@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 
 class NaverProductPagingSource(
     private val retrofitService: RetrofitService
@@ -25,7 +25,7 @@ class NaverProductPagingSource(
                     price = it.salePrice,
                     thumbnailImage = it.representativeImageUrl,
                     previewImages = listOf(it.representativeImageUrl) + it.optionalImageUrls,
-                    url = Contents.NAVERSTORE_BASE_URL + it.id
+                    url = Constants.NAVERSTORE_BASE_URL + it.id
                 )
             }
 

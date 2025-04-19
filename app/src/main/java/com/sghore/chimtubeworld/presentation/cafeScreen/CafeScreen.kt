@@ -1,13 +1,11 @@
 package com.sghore.chimtubeworld.presentation.cafeScreen
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -208,10 +206,7 @@ fun CafeInfoBanner(
             .clip(
                 RoundedCornerShape(12.dp)
             )
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple()
-            ) {
+            .clickable {
                 onClick(cafeInfo?.url ?: "")
             },
         contentAlignment = Alignment.Center
@@ -291,13 +286,7 @@ fun CafeCategoryList(
                         shape = RoundedCornerShape(22.dp)
                     )
                     .clip(RoundedCornerShape(22.dp))
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(
-                            bounded = true,
-                            color = colorResource(id = R.color.item_color)
-                        )
-                    ) {
+                    .clickable {
                         if (category.categoryId != selectedCategoryId) {
                             onClick(category.categoryId)
                         }
@@ -330,15 +319,7 @@ fun CafePostItem(
 
     Box(
         modifier = Modifier
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    bounded = true,
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
-                onClick(post)
-            }
+            .clickable { onClick(post) }
     ) {
         Row(
             modifier = modifier

@@ -2,6 +2,7 @@ package com.sghore.chimtubeworld.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -34,7 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import com.plcoding.cryptocurrencyappyt.presentation.ui.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Goods
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.presentation.BottomNavigationBar
 import com.sghore.chimtubeworld.presentation.TopAppBarNavigationItem
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkRoute
@@ -185,6 +186,7 @@ class MainActivity : ComponentActivity() {
                             ?.substringBefore("/")
                             ?.substringBefore("?")
 
+
                         BottomNavigationBar(
                             isHide = currentRoute == NavigationScreen.AddBookmark.route || currentRoute == NavigationScreen.EditBookmark.route,
                             navController = navController,
@@ -316,11 +318,11 @@ class MainActivity : ComponentActivity() {
     private fun moveViewPagerScreen(goodsList: List<Goods?>, selectedPos: Int) {
         val bundle = Bundle().apply {
             putParcelableArray(
-                Contents.KEY_GOODS_LIST,
+                Constants.KEY_GOODS_LIST,
                 goodsList.toTypedArray()
             )
             putInt(
-                Contents.KEY_SELECTED_POS,
+                Constants.KEY_SELECTED_POS,
                 selectedPos
             )
         }

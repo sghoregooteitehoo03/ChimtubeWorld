@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import com.sghore.chimtubeworld.data.model.Video
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.other.OpenOtherApp
 
 @Composable
@@ -51,7 +51,7 @@ private fun openApplication(
     url: String,
     packageName: String
 ) {
-    if (packageName == Contents.YOUTUBE_PACKAGE_NAME) {
+    if (packageName == Constants.YOUTUBE_PACKAGE_NAME) {
         OpenOtherApp(context).openYoutube(
             packageName,
             url

@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -99,13 +98,7 @@ fun MainChannelInfo(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    bounded = true,
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
+            .clickable {
                 onClick()
             }
     ) {
@@ -208,13 +201,7 @@ fun TwitchCrewChannelItem(
 ) {
     Column(
         modifier = modifier
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    bounded = true,
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
+            .clickable {
                 onClick(channel!!)
             },
         horizontalAlignment = Alignment.CenterHorizontally

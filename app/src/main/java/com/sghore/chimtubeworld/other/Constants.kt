@@ -1,6 +1,6 @@
 package com.sghore.chimtubeworld.other
 
-object Contents {
+object Constants {
     const val YOUTUBE_PACKAGE_NAME = "com.google.android.youtube"
     const val TWITCH_CHANNEL_PACKAGE_NAME = "twitch://stream/"
     const val TWITCH_VIDEO_PACKAGE_NAME = "twitch://video/"

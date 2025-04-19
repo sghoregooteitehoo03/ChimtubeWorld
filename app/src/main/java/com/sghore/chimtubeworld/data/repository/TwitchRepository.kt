@@ -8,7 +8,7 @@ import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.LinkInfo
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.dataSource.TwitchPagingSource
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
@@ -38,7 +38,7 @@ class TwitchRepository @Inject constructor(
 
     // Twitch Id 및 설명을 가져옴
     suspend fun getChannelLinkData() =
-        store.collection(Contents.COLLECTION_TWITCH_LINK)
+        store.collection(Constants.COLLECTION_TWITCH_LINK)
             .whereNotEqualTo("explain", "")
             .get()
             .await()
@@ -56,7 +56,7 @@ class TwitchRepository @Inject constructor(
 
     // Api 키를 가져옴
     suspend fun getTwitchAccessKey() =
-        "Bearer " + store.collection(Contents.COLLECTION_TWITCH_LINK) // API 요청 키
+        "Bearer " + store.collection(Constants.COLLECTION_TWITCH_LINK) // API 요청 키
             .document("-1")
             .get()
             .await()["AUTH"]
@@ -166,7 +166,7 @@ class TwitchRepository @Inject constructor(
     }
 
     private fun getRetrofit() =
-        retrofitBuilder.baseUrl(Contents.TWITCH_API_URL)
+        retrofitBuilder.baseUrl(Constants.TWITCH_API_URL)
             .build()
             .create(RetrofitService::class.java)
 }

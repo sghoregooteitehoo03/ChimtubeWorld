@@ -3,7 +3,6 @@ package com.sghore.chimtubeworld.presentation.playlistScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,7 +11,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlaylistPlay
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -30,8 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemContentType
-import androidx.paging.compose.itemKey
 import coil.compose.rememberImagePainter
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Playlist
@@ -85,14 +81,7 @@ fun PlaylistItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
-                onClick(playlist!!)
-            }
+            .clickable { onClick(playlist!!) }
     ) {
         Image(
             painter = rememberImagePainter(

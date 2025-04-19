@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Video
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.presentation.selectBookmarkScreen.SelectBookmarkDialog
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
@@ -93,7 +93,7 @@ private fun playVideo(
 ) {
     val packageName = if (typeImageRes == R.drawable.youtube) {
         // Youtube 패키지
-        val youtubePackage = Contents.YOUTUBE_PACKAGE_NAME
+        val youtubePackage = Constants.YOUTUBE_PACKAGE_NAME
         if (video.bookmarks.isEmpty()) {
             // 북마크가 없으면 바로 실행
             OpenOtherApp(context)
@@ -103,7 +103,7 @@ private fun playVideo(
         youtubePackage
     } else {
         // Twitch Video 패키지
-        val twitchPackage = Contents.TWITCH_VIDEO_PACKAGE_NAME + video.id
+        val twitchPackage = Constants.TWITCH_VIDEO_PACKAGE_NAME + video.id
         if (video.bookmarks.isEmpty()) {
             // 북마크가 없으면 바로 실행
             OpenOtherApp(context)
