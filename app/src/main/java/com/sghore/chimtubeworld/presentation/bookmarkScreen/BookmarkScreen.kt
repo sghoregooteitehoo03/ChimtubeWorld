@@ -1,7 +1,6 @@
 package com.sghore.chimtubeworld.presentation.bookmarkScreen
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -27,7 +26,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.util.parseUploadTimeText
@@ -36,6 +35,7 @@ import com.sghore.chimtubeworld.util.parseViewCountText
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.Duration
+import androidx.core.graphics.toColorInt
 
 @Composable
 fun BookmarkScreen(
@@ -89,8 +89,8 @@ fun VideoInfo(
         modifier = modifier.fillMaxWidth()
     ) {
         Box {
-            Image(
-                painter = rememberImagePainter(data = video?.thumbnail),
+            AsyncImage(
+                model = video?.thumbnail,
                 contentDescription = video?.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.aspectRatio(16 / 9f)
@@ -306,7 +306,7 @@ fun BookmarkColorItem(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(
                 color = backgroundColor,
                 shape = RoundedCornerShape(4.dp)
@@ -317,12 +317,7 @@ fun BookmarkColorItem(
                 top = 4.dp,
                 bottom = 4.dp
             )
-            .clickable(
-                interactionSource = MutableInteractionSource(),
-                indication = null
-            ) {
-                onClick(color)
-            },
+            .clickable { onClick(color) },
         contentAlignment = Alignment.Center
     ) {
         Box(
@@ -372,7 +367,7 @@ fun VideoInfoPreview() {
 fun BookmarkColorListPreview() {
     MaterialTheme {
         BookmarkColorList(
-            selectedColor = android.graphics.Color.parseColor("#FF0000"),
+            selectedColor = "#FF0000".toColorInt(),
             {}
         )
     }

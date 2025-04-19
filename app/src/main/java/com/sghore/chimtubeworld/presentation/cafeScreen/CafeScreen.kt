@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.CafeCategory
 import com.sghore.chimtubeworld.data.model.Channel
@@ -222,8 +222,8 @@ fun CafeInfoBanner(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = rememberImagePainter(data = cafeInfo?.image),
+            AsyncImage(
+                model = cafeInfo?.image,
                 contentDescription = cafeInfo?.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -348,8 +348,8 @@ fun CafePostItem(
             }
             Spacer(modifier = Modifier.width(4.dp))
             if ((post?.postImage ?: "").isNotEmpty()) {
-                Image(
-                    painter = rememberImagePainter(data = post?.postImage),
+                AsyncImage(
+                    model = post?.postImage,
                     contentDescription = post?.postImage,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

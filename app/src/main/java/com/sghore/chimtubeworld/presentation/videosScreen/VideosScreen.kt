@@ -1,7 +1,6 @@
 package com.sghore.chimtubeworld.presentation.videosScreen
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -21,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.data.model.Video
@@ -77,8 +76,8 @@ fun VideoItem(
             }
     ) {
         Box {
-            Image(
-                painter = rememberImagePainter(data = video?.thumbnail),
+            AsyncImage(
+                model = video?.thumbnail,
                 contentDescription = video?.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.aspectRatio(16 / 9f)

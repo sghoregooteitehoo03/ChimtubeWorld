@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.data.model.GoodsChannelInfo
@@ -191,8 +191,8 @@ fun GoodsItem(
                 onClick(goods)
             }
     ) {
-        Image(
-            painter = rememberImagePainter(data = goods?.thumbnailImage ?: ""),
+        AsyncImage(
+            model = goods?.thumbnailImage,
             contentDescription = goods?.title ?: "",
             contentScale = ContentScale.Crop,
             modifier = Modifier

@@ -1,9 +1,7 @@
 package com.sghore.chimtubeworld.presentation.storeDetailScreen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -23,7 +21,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Goods
 import java.text.DecimalFormat
@@ -47,8 +45,8 @@ fun StoreDetailScreen(
                         color = colorResource(id = R.color.default_background_color)
                     )
             ) {
-                Image(
-                    painter = rememberImagePainter(data = uiState.selectedImage),
+                AsyncImage(
+                    model = uiState.selectedImage,
                     contentDescription = "Goods",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -125,8 +123,8 @@ fun PreviewImageList(
                 colorResource(id = R.color.black_alpha_50)
             }
 
-            Image(
-                painter = rememberImagePainter(data = image),
+            AsyncImage(
+                model = image,
                 contentDescription = "GoodsPreview",
                 contentScale = ContentScale.Crop,
                 colorFilter = ColorFilter.tint(
@@ -136,12 +134,7 @@ fun PreviewImageList(
                 modifier = Modifier
                     .size(60.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable(
-                        interactionSource = MutableInteractionSource(),
-                        indication = null
-                    ) {
-                        onClick(image)
-                    }
+                    .clickable { onClick(image) }
             )
             Spacer(modifier = Modifier.width(6.dp))
         }

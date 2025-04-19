@@ -1,7 +1,6 @@
 package com.sghore.chimtubeworld.presentation.twitchScreen
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,7 +8,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.presentation.RowList
@@ -102,10 +100,8 @@ fun MainChannelInfo(
                 onClick()
             }
     ) {
-        Image(
-            painter = rememberImagePainter(
-                data = mainChannel?.thumbnailImage
-            ),
+        AsyncImage(
+            model = mainChannel?.thumbnailImage,
             contentDescription = mainChannel?.id,
             modifier = Modifier
                 .fillMaxWidth()
@@ -117,10 +113,8 @@ fun MainChannelInfo(
         Spacer(modifier = Modifier.height(12.dp))
         Row {
             Box {
-                Image(
-                    painter = rememberImagePainter(
-                        data = mainChannel?.image
-                    ),
+                AsyncImage(
+                    model = mainChannel?.image,
                     contentDescription = "침착맨 프로필",
                     modifier = Modifier
                         .size(64.dp)
@@ -210,10 +204,8 @@ fun TwitchCrewChannelItem(
             modifier = Modifier.size(80.dp),
             contentAlignment = Alignment.BottomEnd
         ) {
-            Image(
-                painter = rememberImagePainter(
-                    data = channel?.image
-                ),
+            AsyncImage(
+                model = channel?.image,
                 contentDescription = channel?.id,
                 modifier = Modifier
                     .fillMaxSize()
