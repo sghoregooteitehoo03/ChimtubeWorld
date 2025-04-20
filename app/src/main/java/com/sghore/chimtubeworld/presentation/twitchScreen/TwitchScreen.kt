@@ -14,10 +14,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +48,7 @@ fun TwitchScreen(
                 itemPaddingValue = 12.dp,
                 headerItem = {
                     TitleTextWithExplain(
-                        title = "Twitch Live",
+                        title = "CHZZK Live",
                         explain = "침착맨 생방송 채널"
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -60,7 +58,7 @@ fun TwitchScreen(
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     TitleTextWithExplain(
-                        title = "Twitch Crew",
+                        title = "BEDORAGE",
                         explain = "스트리머 크루 배도라지"
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -161,20 +159,13 @@ fun MainChannelInfo(
                 modifier = Modifier.height(60.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                Row {
-                    Text(
-                        text = mainChannel?.name ?: "",
-                        color = colorResource(id = R.color.item_color),
-                        fontSize = 18.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Image(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_twitch_bedge),
-                        contentDescription = "TwitchBedge"
-                    )
-                }
+                Text(
+                    text = mainChannel?.name ?: "",
+                    color = colorResource(id = R.color.item_color),
+                    fontSize = 18.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = parseFollowText(mainChannel?.explains?.get(1)),

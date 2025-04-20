@@ -14,12 +14,7 @@ class GetTwitchChannelUseCase @Inject constructor(
     operator fun invoke(): Flow<Resource<List<Channel>>> = flow {
         try {
             val channelLinkData = repository.getChannelLinkData() // 채널 링크 데이터
-            val accessKey = repository.getTwitchAccessKey() // 액세스 키
-
-            val channels = repository.getTwitchUserInfo(
-                channelLinkData,
-                accessKey
-            )
+            val channels = repository.getTwitchUserInfo(channelLinkData)
             emit(Resource.Success<List<Channel>>(channels))
         } catch (e: Exception) {
             e.printStackTrace()

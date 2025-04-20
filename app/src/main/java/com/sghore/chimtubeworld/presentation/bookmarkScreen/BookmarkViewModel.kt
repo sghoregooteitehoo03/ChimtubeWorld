@@ -7,7 +7,6 @@ import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.data.model.Resource
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.BookmarkRepository
-import com.sghore.chimtubeworld.domain.GetTwitchVideoUseCase
 import com.sghore.chimtubeworld.domain.GetYoutubeVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -19,7 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class BookmarkViewModel @Inject constructor(
     private val getYoutubeVideoUseCase: GetYoutubeVideoUseCase,
-    private val getTwitchVideoUseCase: GetTwitchVideoUseCase,
     private val repository: BookmarkRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -28,9 +26,6 @@ class BookmarkViewModel @Inject constructor(
         data class ShowToastMessage(val message: String) : BookmarkEvent()
         data class ChangeBookmark(val message: String, val bookmark: Bookmark) : BookmarkEvent()
     }
-
-    private val baseYoutubeUrl = "youtube.com"
-    private val baseTwitchUrl = "www.twitch.tv"
 
     private val _state = MutableStateFlow(BookmarkScreenState(isLoading = true))
     private val _event = MutableSharedFlow<BookmarkEvent>()
@@ -63,16 +58,9 @@ class BookmarkViewModel @Inject constructor(
 
     // 넘겨온 영상 url을 통해 영상 정보를 가져옴
     fun getVideoData(videoUrl: String) {
-        val baseUrl = getBaseUrl(videoUrl)
         var videoTypeImage = -1
 
-        val videoFlow = if (baseUrl == baseYoutubeUrl) {
-            videoTypeImage = R.drawable.youtube
-            getYoutubeVideoUseCase(videoUrl)
-        } else {
-            videoTypeImage = R.drawable.twitch
-            getTwitchVideoUseCase(videoUrl, baseUrl)
-        }
+        val videoFlow = getYoutubeVideoUseCase(videoUrl)
 
         videoFlow.onEach { resource ->
             when (resource) {
@@ -84,6 +72,7 @@ class BookmarkViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is Resource.Loading -> {}
                 is Resource.Error -> {
                     _state.update {

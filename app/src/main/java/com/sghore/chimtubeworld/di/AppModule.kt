@@ -28,9 +28,17 @@ object AppModule {
     @Provides
     fun provideRetrofit() =
         Retrofit.Builder()
-            .client(OkHttpClient.Builder().apply {
-                readTimeout(2, TimeUnit.MINUTES)
-            }.build())
+            .client(
+                OkHttpClient.Builder().apply {
+                    readTimeout(1, TimeUnit.MINUTES)
+                    addInterceptor { chain ->
+                        val request = chain.request().newBuilder()
+                            .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                            .build()
+                        chain.proceed(request)
+                    }
+                }.build()
+            )
             .addConverterFactory(GsonConverterFactory.create())
 
     @Singleton

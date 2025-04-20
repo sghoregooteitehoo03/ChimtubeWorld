@@ -1,9 +1,6 @@
 package com.sghore.chimtubeworld.data.retrofit
 
 import com.sghore.chimtubeworld.BuildConfig
-import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.StreamDTO
-import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserDTO
-import com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.UserFollowsDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.ChannelDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.PlaylistItemsDTO
 import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.PlaylistsDTO
@@ -31,41 +28,4 @@ interface RetrofitService {
         @Query("id") playlistId: List<String>?,
         @Query("pageToken") pageToken: String? = null
     ): PlaylistsDTO
-
-    // Twitch
-    @Headers("Client-ID: ${BuildConfig.TWITCH_CLIENT_ID}")
-    @GET("users")
-    suspend fun getTUserInfo(
-        @Header("Authorization") accessKey: String,
-        @Query("login") loginId: Array<String>
-    ): UserDTO
-
-    @Headers("Client-ID: ${BuildConfig.TWITCH_CLIENT_ID}")
-    @GET("channels/followers")
-    suspend fun getTUserFollows(
-        @Header("Authorization") accessKey: String,
-        @Query("broadcaster_id") id: String,
-    ): UserFollowsDTO
-
-    @Headers("Client-ID: ${BuildConfig.TWITCH_CLIENT_ID}")
-    @GET("streams")
-    suspend fun getTUserStream(
-        @Header("Authorization") accessKey: String,
-        @Query("user_login") loginId: Array<String>,
-    ): StreamDTO
-
-    @Headers("Client-ID: ${BuildConfig.TWITCH_CLIENT_ID}")
-    @GET("videos")
-    fun getTVideosFromUserId(
-        @Header("Authorization") accessKey: String,
-        @Query("user_id") userId: String,
-        @Query("after") afterPage: String
-    ): Call<com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.VideosDTO>
-
-    @Headers("Client-ID: ${BuildConfig.TWITCH_CLIENT_ID}")
-    @GET("videos")
-    fun getTVideoFromVideoId(
-        @Header("Authorization") accessKey: String,
-        @Query("id") videoId: String
-    ): Call<com.sghore.chimtubeworld.data.retrofit.dto.twitchAPI.VideosDTO>
 }

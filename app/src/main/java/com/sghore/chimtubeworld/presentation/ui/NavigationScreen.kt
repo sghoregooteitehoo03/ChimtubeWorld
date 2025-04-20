@@ -15,8 +15,8 @@ sealed class NavigationScreen(
 
     object Twitch : NavigationScreen(
         route = "Twitch",
-        selectedIcon = R.drawable.twitch,
-        unSelectedIcon = R.drawable.twitch_darker
+        selectedIcon = R.drawable.chzzk,
+        unSelectedIcon = R.drawable.chzzk_darker
     )
 
     object WebToon : NavigationScreen(

@@ -34,7 +34,6 @@ class VideosViewModel @Inject constructor(
             _state.update {
                 VideosScreenState(
                     getVideosUseCase(
-                        typeImageRes = typeImageRes,
                         channelId = playlistId.split("|")[0] // 플레이리스트의 아이디 리스트
                     ).cachedIn(viewModelScope)
                 )
