@@ -1,14 +1,12 @@
 package com.sghore.chimtubeworld.presentation.videosScreen
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
 import com.sghore.chimtubeworld.data.model.Video
@@ -73,19 +71,13 @@ fun VideoItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
+            .clickable {
                 onVideoClick(video!!)
             }
-    )
-    {
+    ) {
         Box {
-            Image(
-                painter = rememberImagePainter(data = video?.thumbnail),
+            AsyncImage(
+                model = video?.thumbnail,
                 contentDescription = video?.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.aspectRatio(16 / 9f)
@@ -197,12 +189,7 @@ fun BookmarkItem(
             .background(
                 color = colorResource(id = R.color.gray_bright_night)
             )
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
+            .clickable {
                 onClick()
             }
             .padding(top = 6.dp, bottom = 6.dp, start = 4.dp, end = 4.dp),

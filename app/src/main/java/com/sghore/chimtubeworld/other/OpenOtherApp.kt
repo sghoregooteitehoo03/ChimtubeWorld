@@ -3,7 +3,6 @@ package com.sghore.chimtubeworld.other
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
@@ -19,7 +18,7 @@ class OpenOtherApp(
             // 앱으로 영상 실행
             context.startActivity(
                 Intent(Intent.ACTION_VIEW)
-                    .setData(Uri.parse(url))
+                    .setData(url.toUri())
                     .setPackage(packageName)
             )
         } else { // 해당 패키지가 휴대폰에 설치되어 있지 않을 때
@@ -57,7 +56,7 @@ class OpenOtherApp(
         try {
             CustomTabsIntent.Builder()
                 .build()
-                .launchUrl(context, Uri.parse(url))
+                .launchUrl(context, url.toUri())
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(context, "크롬 브라우저가 존재하지 않습니다.", Toast.LENGTH_SHORT)
@@ -71,6 +70,7 @@ class OpenOtherApp(
             context.packageManager.getPackageInfo(packageName, 0)
             true
         } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
             false
         }
     }

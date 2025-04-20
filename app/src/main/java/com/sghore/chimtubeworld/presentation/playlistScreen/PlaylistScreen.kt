@@ -1,9 +1,7 @@
 package com.sghore.chimtubeworld.presentation.playlistScreen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,8 +9,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlaylistPlay
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.icons.automirrored.filled.PlaylistPlay
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -30,9 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemContentType
-import androidx.paging.compose.itemKey
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Playlist
 import com.valentinilk.shimmer.shimmer
@@ -85,19 +80,10 @@ fun PlaylistItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
-                onClick(playlist!!)
-            }
+            .clickable { onClick(playlist!!) }
     ) {
-        Image(
-            painter = rememberImagePainter(
-                data = playlist?.thumbnailImage
-            ),
+        AsyncImage(
+            model = playlist?.thumbnailImage,
             contentDescription = "playlistImage",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -134,7 +120,7 @@ fun PlaylistItem(
             )
             Spacer(modifier = Modifier.width(18.dp))
             Icon(
-                imageVector = Icons.Default.PlaylistPlay,
+                imageVector = Icons.AutoMirrored.Filled.PlaylistPlay,
                 contentDescription = "Playlist",
                 tint = Color.White,
                 modifier = Modifier.size(24.dp)

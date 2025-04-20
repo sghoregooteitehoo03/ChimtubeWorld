@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.other.OpenOtherApp
 
 @Composable
@@ -33,15 +33,12 @@ fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
         onMainChannelClick = { viewModel.setDialog(true) },
         onTwitchCrewChannelClick = { channel ->
             // 트위치 채널로 이동
-            OpenOtherApp(context).openTwitch(
-                packageName = Contents.TWITCH_CHANNEL_PACKAGE_NAME + channel.name,
-                url = channel.url
-            )
+            OpenOtherApp(context).openCustomTabs(url = channel.url)
         }
     )
 
     if (uiState.isDialogOpen) {
-        val channel = uiState.mainChannelInfo
+        uiState.mainChannelInfo
         Dialog(onDismissRequest = { viewModel.setDialog(false) }) {
             Row(
                 modifier = Modifier
@@ -58,8 +55,8 @@ fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
                     explain = "유튜브에서 보기",
                     onClick = {
                         OpenOtherApp(context).openYoutube(
-                            packageName = (Contents.YOUTUBE_PACKAGE_NAME),
-                            url = "https://www.youtube.com/@calmdownman_data/featured" // 침착맨 라이브 채널 주소
+                            packageName = (Constants.YOUTUBE_PACKAGE_NAME),
+                            url = "https://www.youtube.com/@ChimChakMan_Data" // 침착맨 라이브 채널 주소
                         )
                         viewModel.setDialog(false)
                     }
@@ -70,11 +67,10 @@ fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
                         .size(120.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(color = colorResource(id = R.color.gray_bright_night)),
-                    image = painterResource(id = R.drawable.twitch),
-                    explain = "트위치에서 보기",
+                    image = painterResource(id = R.drawable.chzzk),
+                    explain = "치지직에서 보기",
                     onClick = {
-                        OpenOtherApp(context).openTwitch(
-                            packageName = (Contents.TWITCH_CHANNEL_PACKAGE_NAME + channel?.name),
+                        OpenOtherApp(context).openCustomTabs(
                             url = uiState.mainChannelInfo?.url ?: ""
                         )
                         viewModel.setDialog(false)

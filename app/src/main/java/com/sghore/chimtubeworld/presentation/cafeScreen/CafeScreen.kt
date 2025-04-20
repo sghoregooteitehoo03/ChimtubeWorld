@@ -1,13 +1,11 @@
 package com.sghore.chimtubeworld.presentation.cafeScreen
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.CafeCategory
 import com.sghore.chimtubeworld.data.model.Channel
@@ -96,7 +94,7 @@ fun CafeScreen(
                     items(count = it.itemCount) { index ->
                         val post = it[index]
                         val isRead =
-                            (post?.isRead ?: false) || (uiState.readHistory[post?.id] ?: false)
+                            (post?.isRead == true) || (uiState.readHistory[post?.id] == true)
 
                         CafePostItem(
                             post = post,
@@ -125,7 +123,7 @@ fun CafeTopItem(
     // 카테고리 리스트
     val categoryList = remember {
         listOf(
-            CafeCategory("전체", -1),
+            CafeCategory("전체", 0),
             CafeCategory("방송일정 및 공지", 5),
             CafeCategory("침착맨 전용", 42),
             CafeCategory("침착맨 갤러리", 33),
@@ -208,10 +206,7 @@ fun CafeInfoBanner(
             .clip(
                 RoundedCornerShape(12.dp)
             )
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple()
-            ) {
+            .clickable {
                 onClick(cafeInfo?.url ?: "")
             },
         contentAlignment = Alignment.Center
@@ -227,8 +222,8 @@ fun CafeInfoBanner(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = rememberImagePainter(data = cafeInfo?.image),
+            AsyncImage(
+                model = cafeInfo?.image,
                 contentDescription = cafeInfo?.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -291,13 +286,7 @@ fun CafeCategoryList(
                         shape = RoundedCornerShape(22.dp)
                     )
                     .clip(RoundedCornerShape(22.dp))
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(
-                            bounded = true,
-                            color = colorResource(id = R.color.item_color)
-                        )
-                    ) {
+                    .clickable {
                         if (category.categoryId != selectedCategoryId) {
                             onClick(category.categoryId)
                         }
@@ -330,15 +319,7 @@ fun CafePostItem(
 
     Box(
         modifier = Modifier
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(
-                    bounded = true,
-                    color = colorResource(id = R.color.item_color)
-                )
-            ) {
-                onClick(post)
-            }
+            .clickable { onClick(post) }
     ) {
         Row(
             modifier = modifier
@@ -367,8 +348,8 @@ fun CafePostItem(
             }
             Spacer(modifier = Modifier.width(4.dp))
             if ((post?.postImage ?: "").isNotEmpty()) {
-                Image(
-                    painter = rememberImagePainter(data = post?.postImage),
+                AsyncImage(
+                    model = post?.postImage,
                     contentDescription = post?.postImage,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -407,7 +388,7 @@ fun CafeInfoBannerPreview() {
 fun CafeCategoryListPreview() {
     MaterialTheme {
         val list = listOf(
-            CafeCategory("전체", -1),
+            CafeCategory("전체", 0),
             CafeCategory("방송일정 및 공지", 5),
             CafeCategory("침착맨 전용", 42),
             CafeCategory("침착맨 갤러리", 33),

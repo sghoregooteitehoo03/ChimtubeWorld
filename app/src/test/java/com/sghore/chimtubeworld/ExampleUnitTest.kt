@@ -1,7 +1,7 @@
 package com.sghore.chimtubeworld
 
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
-import com.sghore.chimtubeworld.other.Contents
+import com.sghore.chimtubeworld.other.Constants
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import org.jsoup.Connection
@@ -106,7 +106,7 @@ class ExampleUnitTest {
     fun getVideosTest() {
         runBlocking {
             val builder = Retrofit.Builder()
-                .baseUrl(Contents.TWITCH_API_URL)
+                .baseUrl(Constants.TWITCH_API_URL)
                 .client(OkHttpClient.Builder().apply {
                     readTimeout(2, TimeUnit.MINUTES)
                 }.build())
