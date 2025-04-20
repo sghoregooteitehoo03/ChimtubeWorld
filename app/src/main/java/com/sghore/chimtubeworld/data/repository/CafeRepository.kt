@@ -6,7 +6,7 @@ import com.sghore.chimtubeworld.data.repository.dataSource.CafePostPagingSource
 import com.sghore.chimtubeworld.data.model.Channel
 import com.sghore.chimtubeworld.data.model.ReadHistory
 import com.sghore.chimtubeworld.data.db.Dao
-import com.sghore.chimtubeworld.data.retrofit.CafeRetrofitService
+import com.sghore.chimtubeworld.data.retrofit.NaverRetrofitService
 import com.sghore.chimtubeworld.other.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,5 +72,5 @@ class CafeRepository @Inject constructor(
     private fun getRetrofit() =
         retrofitBuilder.baseUrl(Constants.NAVER_CAFE_API_URL)
             .build()
-            .create(CafeRetrofitService::class.java)
+            .create(NaverRetrofitService::class.java)
 }

@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sghore.chimtubeworld.data.model.Post
 import com.sghore.chimtubeworld.data.db.Dao
-import com.sghore.chimtubeworld.data.retrofit.CafeRetrofitService
+import com.sghore.chimtubeworld.data.retrofit.NaverRetrofitService
 import com.sghore.chimtubeworld.other.Constants
 import org.jsoup.Connection
 import org.jsoup.Jsoup
@@ -13,7 +13,7 @@ import java.util.Locale
 
 class CafePostPagingSource(
     private val categoryId: Int,
-    private val retrofitService: CafeRetrofitService,
+    private val retrofitService: NaverRetrofitService,
     private val dao: Dao
 ) :
     PagingSource<Int, Post>() {

@@ -2,7 +2,6 @@ package com.sghore.chimtubeworld.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -34,8 +33,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.plcoding.cryptocurrencyappyt.presentation.ui.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Goods
-import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.presentation.BottomNavigationBar
 import com.sghore.chimtubeworld.presentation.TopAppBarNavigationItem
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkRoute
@@ -220,7 +217,7 @@ class MainActivity : ComponentActivity() {
                                 CafeRoute()
                             }
                             composable(route = NavigationScreen.Store.route) {
-                                StoreRoute(onGoodsClick = ::moveViewPagerScreen)
+                                StoreRoute()
                             }
                             composable(
                                 route = NavigationScreen.Playlists.route +
@@ -313,26 +310,6 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         moveFragment(intent)
-    }
-
-    private fun moveViewPagerScreen(goodsList: List<Goods?>, selectedPos: Int) {
-        val bundle = Bundle().apply {
-            putParcelableArray(
-                Constants.KEY_GOODS_LIST,
-                goodsList.toTypedArray()
-            )
-            putInt(
-                Constants.KEY_SELECTED_POS,
-                selectedPos
-            )
-        }
-        startActivity(
-            Intent(this@MainActivity, ViewPagerActivity::class.java)
-                .apply {
-                    this.putExtras(bundle)
-                    this.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                }
-        )
     }
 
     // fragment 이동

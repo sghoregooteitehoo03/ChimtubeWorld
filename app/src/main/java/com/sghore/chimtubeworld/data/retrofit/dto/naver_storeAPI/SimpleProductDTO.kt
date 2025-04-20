@@ -1,6 +1,4 @@
-package com.sghore.chimtubeworld.data.retrofit.dto.naverAPI
-
-import com.google.gson.annotations.SerializedName
+package com.sghore.chimtubeworld.data.retrofit.dto.naver_storeAPI
 
 data class SimpleProductDTO(
     val id: String,

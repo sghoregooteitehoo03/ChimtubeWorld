@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface CafeRetrofitService {
+interface NaverRetrofitService {
     @GET("cafe-web/cafe-boardlist-api/v1/cafes/29646865/menus/{categoryId}/articles")
     suspend fun getCafePosts(
         @Path("categoryId") categoryId: Int,
