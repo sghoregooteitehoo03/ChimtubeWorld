@@ -44,7 +44,7 @@ fun BookmarkScreen(
     onTitleChange: (String) -> Unit,
     onVideoPositionChange: (String) -> Unit,
     onChangeBookmarkColor: (Int) -> Unit,
-    onButtonClick: () -> Unit = {}
+    onButtonClick: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -83,7 +83,7 @@ fun BookmarkScreen(
 fun VideoInfo(
     video: Video?,
     typeImage: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -126,7 +126,7 @@ fun VideoInfo(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Image(
-                    painter = painterResource(id = typeImage),
+                    painter = painterResource(id = R.drawable.youtube),
                     contentDescription = "typeImage"
                 )
             }
@@ -159,7 +159,7 @@ fun InputBookmarkInfo(
     onVideoPositionChange: (String) -> Unit,
     onChangeBookmarkColor: (Int) -> Unit,
     onButtonClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -259,7 +259,7 @@ fun InputBookmarkInfo(
 fun BookmarkColorList(
     selectedColor: Int,
     onClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val colorList = remember {
         listOf(
@@ -297,7 +297,7 @@ fun BookmarkColorItem(
     color: Int,
     isSelected: Boolean,
     onClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val backgroundColor = if (isSelected) {
         colorResource(id = R.color.black_alpha_30)
