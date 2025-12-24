@@ -13,6 +13,7 @@ import com.sghore.chimtubeworld.data.repository.dataSource.YoutubePagingSource
 import com.sghore.chimtubeworld.other.Constants
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.PlaylistsDTO
+import com.sghore.chimtubeworld.util.getVideoId
 import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.await
@@ -24,7 +25,7 @@ import kotlin.time.Duration
 class YoutubeRepository @Inject constructor(
     private val store: FirebaseFirestore,
     private val retrofitBuilder: Retrofit.Builder,
-    private val dao: Dao
+    private val dao: Dao,
 ) {
 
     // 유튜브 영상을 페이징하여 가져옴
@@ -42,7 +43,7 @@ class YoutubeRepository @Inject constructor(
     suspend fun getPlaylist(
         channelId: String?,
         playlistId: List<String>?,
-        pageToken: String? = null
+        pageToken: String? = null,
     ): PlaylistsDTO {
         val retrofitService = getRetrofit()
 
@@ -56,7 +57,7 @@ class YoutubeRepository @Inject constructor(
     // 메인채널의 재생목록을 페이징하여 가져옴
     fun getPagingMainPlaylist(
         channelId: String?,
-        playlistId: List<String>
+        playlistId: List<String>,
     ) = Pager(PagingConfig(pageSize = 10)) {
         MainPlaylistPagingSource(
             channelId = channelId,
@@ -67,7 +68,7 @@ class YoutubeRepository @Inject constructor(
 
     // 서브채널의 재생목록을 페이징하여 가져옴
     fun getPagingSubPlaylist(
-        playlistId: List<String>
+        playlistId: List<String>,
     ) = Pager(PagingConfig(pageSize = 5)) {
         SubPlaylistPagingSource(
             playlistId = playlistId.toMutableList(),
@@ -128,11 +129,8 @@ class YoutubeRepository @Inject constructor(
 
     // 유튜브에서 영상 정보를 가져옴
     suspend fun getVideo(url: String): Video {
-        val videoId = url.substringAfter("https://youtube.com/watch?v=")
-            .substringBefore("&")
-        if (videoId.isEmpty()) { // 오류 발생 시
-            throw NullPointerException()
-        }
+        val videoId = getVideoId(url) ?: // 오류 발생 시
+        throw NullPointerException()
 
         val retrofit = getRetrofit()
         val videoData = retrofit.getYVideos(arrayOf(videoId))
