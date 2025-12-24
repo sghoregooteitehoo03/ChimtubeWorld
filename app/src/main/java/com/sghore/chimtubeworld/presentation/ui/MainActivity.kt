@@ -1,5 +1,6 @@
 package com.sghore.chimtubeworld.presentation.ui
 
+import android.app.ComponentCaller
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -319,8 +320,8 @@ class MainActivity : ComponentActivity() {
     }
 
     // 새로운 인텐트가 들어올 때
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
+    override fun onNewIntent(intent: Intent, caller: ComponentCaller) {
+        super.onNewIntent(intent, caller)
         moveFragment(intent)
     }
 
