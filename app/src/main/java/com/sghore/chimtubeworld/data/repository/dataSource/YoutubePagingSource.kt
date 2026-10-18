@@ -2,8 +2,9 @@ package com.sghore.chimtubeworld.data.repository.dataSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.sghore.chimtubeworld.data.model.Video
-import com.sghore.chimtubeworld.data.db.Dao
+import com.sghore.chimtubeworld.core.model.Video
+import com.sghore.chimtubeworld.core.database.dao.Dao
+import com.sghore.chimtubeworld.data.mapper.toDomain
 import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import retrofit2.await
 import java.text.SimpleDateFormat
@@ -58,7 +59,7 @@ class YoutubePagingSource(
             .await()
 
         return videosResponse.items.map { response ->
-            val bookmarks = dao.getBookmarks(response.id) // 해당 영상 아이디에 해당하는 북마크를 가져옴
+            val bookmarks = dao.getBookmarks(response.id).map { it.toDomain() } // 해당 영상 아이디에 해당하는 북마크를 가져옴
             val dateFormat = SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss'Z'",
                 Locale.KOREA

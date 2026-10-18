@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.data.model
+package com.sghore.chimtubeworld.core.model
 
 data class Video(
     val id: String,

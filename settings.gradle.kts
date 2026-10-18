@@ -21,3 +21,4 @@ rootProject.name = "ChimtubeWorld"
 include(":app")
 include(":core:common")
 include(":core:model")
+include(":core:database")

@@ -1,7 +1,7 @@
 package com.sghore.chimtubeworld.presentation.bookmarkScreen
 
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.core.model.Video
 
 data class BookmarkScreenState(
     val videoData: Video? = null,

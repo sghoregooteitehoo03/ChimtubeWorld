@@ -1,7 +1,8 @@
 package com.sghore.chimtubeworld.data.repository
 
-import com.sghore.chimtubeworld.data.model.Bookmark
-import com.sghore.chimtubeworld.data.db.Dao
+import com.sghore.chimtubeworld.core.model.Bookmark
+import com.sghore.chimtubeworld.core.database.dao.Dao
+import com.sghore.chimtubeworld.data.mapper.toEntity
 import javax.inject.Inject
 
 class BookmarkRepository @Inject constructor(
@@ -9,12 +10,12 @@ class BookmarkRepository @Inject constructor(
 ) {
     // 북마크 추가
     suspend fun addBookmark(bookmark: Bookmark) {
-        dao.insertBookmark(bookmark)
+        dao.insertBookmark(bookmark.toEntity())
     }
 
     // 북마크 삭제
     suspend fun deleteBookmark(bookmark: Bookmark) {
-        dao.deleteBookmark(bookmark)
+        dao.deleteBookmark(bookmark.toEntity())
     }
 
     // 북마크의 아이디를 조회함

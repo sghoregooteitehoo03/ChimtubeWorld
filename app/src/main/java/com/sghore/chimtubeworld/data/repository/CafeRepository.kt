@@ -4,8 +4,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.sghore.chimtubeworld.data.repository.dataSource.CafePostPagingSource
 import com.sghore.chimtubeworld.core.model.Channel
-import com.sghore.chimtubeworld.data.model.ReadHistory
-import com.sghore.chimtubeworld.data.db.Dao
+import com.sghore.chimtubeworld.core.database.entity.ReadHistoryEntity
+import com.sghore.chimtubeworld.core.database.dao.Dao
 import com.sghore.chimtubeworld.data.retrofit.NaverRetrofitService
 import com.sghore.chimtubeworld.core.common.Constants
 import kotlinx.coroutines.CoroutineScope
@@ -65,7 +65,7 @@ class CafeRepository @Inject constructor(
 
     suspend fun readPost(articleId: Int) {
         if (dao.getReadData(articleId).isEmpty()) { // 데이터가 없을 때 insert 작업
-            dao.insertReadData(ReadHistory(articleId = articleId))
+            dao.insertReadData(ReadHistoryEntity(articleId = articleId))
         }
     }
 

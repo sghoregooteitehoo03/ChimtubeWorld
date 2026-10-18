@@ -2,7 +2,7 @@ package com.sghore.chimtubeworld.presentation.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sghore.chimtubeworld.data.model.Bookmark
+import com.sghore.chimtubeworld.core.model.Bookmark
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch

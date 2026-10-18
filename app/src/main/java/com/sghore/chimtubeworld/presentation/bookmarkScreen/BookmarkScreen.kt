@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.common.parseUploadTimeText
 import com.sghore.chimtubeworld.core.common.parseVideoDurationText
 import com.sghore.chimtubeworld.core.common.parseViewCountText

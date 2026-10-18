@@ -8,7 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.common.Constants
 import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.presentation.selectBookmarkScreen.SelectBookmarkDialog

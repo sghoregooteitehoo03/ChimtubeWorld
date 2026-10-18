@@ -3,10 +3,10 @@ package com.sghore.chimtubeworld.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sghore.chimtubeworld.data.db.Dao
+import com.sghore.chimtubeworld.core.database.dao.Dao
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.model.LinkInfo
-import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.data.repository.dataSource.MainPlaylistPagingSource
 import com.sghore.chimtubeworld.data.repository.dataSource.SubPlaylistPagingSource
 import com.sghore.chimtubeworld.data.repository.dataSource.YoutubePagingSource

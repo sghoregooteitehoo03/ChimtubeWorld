@@ -22,8 +22,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Bookmark
-import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.core.model.Bookmark
+import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.common.parseUploadTimeText
 import com.sghore.chimtubeworld.core.common.parseVideoDurationText
 import com.sghore.chimtubeworld.core.common.parseViewCountText

@@ -3,8 +3,8 @@ package com.sghore.chimtubeworld.presentation.videosScreen
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.sghore.chimtubeworld.data.model.Bookmark
-import com.sghore.chimtubeworld.data.model.Video
+import com.sghore.chimtubeworld.core.model.Bookmark
+import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.domain.GetVideosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

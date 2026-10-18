@@ -35,6 +35,7 @@ android {
 dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
+    implementation(project(":core:database"))
 
     // AndroidX Core
     implementation(libs.androidx.core.ktx)
@@ -65,11 +66,6 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
-
-    // Room: schemaLocation을 추가하는 convention은 아직 적용하지 않는다.
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.runtime)
 
     // Firebase
     implementation(libs.firebase.firestore.ktx)

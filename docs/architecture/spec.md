@@ -4,10 +4,11 @@
 
 ChimtubeWorld의 기존 기능과 배포 호환성을 유지하며 화면 기능을 `feature`, 공유 계약과 기반 기능을 `core`로 분리한다.
 
-- 현재 등록된 모듈은 `:app`, `:core:common`, `:core:model`이다. KTS·버전 카탈로그·버전 업그레이드·build-logic 도입 후 Step 4에서 공통 코드와 순수 모델을 추출했다.
-- 현재 의존성은 app → common·model이며 두 core 모듈은 다른 프로젝트 모듈에 의존하지 않는다. `Bookmark`·`ReadHistory`와 이 Entity를 참조하는 `Video`는 Step 5의 entity/model 분리까지 app에 유지한다. `OpenOtherApp`도 Step 9까지 app에 유지한다.
+- 현재 등록된 모듈은 `:app`, `:core:common`, `:core:model`, `:core:database`다. Step 4의 공통 코드·순수 모델 추출에 이어 Step 5에서 Room Database·DAO·Entity·DI를 추출했다.
+- 현재 의존성은 app → common·model·database이며 세 core 모듈은 다른 프로젝트 모듈에 의존하지 않는다. `Bookmark`·`Video`는 순수 모델로 model에, `BookmarkEntity`·`ReadHistoryEntity`는 database에 둔다. 읽음 기록은 데이터 계층 내부에서만 사용하므로 별도 `ReadHistory` 모델은 없다.
+- repository와 `BookmarkEntity` ↔ `Bookmark` mapper는 Step 7까지 app의 data 패키지에 둔다. Firestore·Retrofit provider는 app의 `AppModule`에 유지하고 Room provider만 database로 옮겼다. `OpenOtherApp`은 Step 9까지 app에 유지한다.
 - 앱은 여전히 Material 2, Navigation Compose 문자열 route, 화면별 `*ScreenState`와 개별 함수 호출을 사용한다. Compose convention의 Material 3 추가는 UI 전환을 뜻하지 않는다.
-- **마이그레이션 진행 중 — 대상 모듈 생성 후 적용**: common·model 외의 아래 모듈 지도와 MVI 규칙은 목표 구조다. 의존성은 추출된 모듈부터 적용한다. 데이터·식별자 보존 기준과 기존 상태는 [기준선](../migration/baseline.md), 동작 확인은 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다.
+- **마이그레이션 진행 중 — 대상 모듈 생성 후 적용**: common·model·database 외의 아래 core·feature 모듈 지도와 MVI 규칙은 목표 구조다. 의존성은 추출된 모듈부터 적용한다. 데이터·식별자 보존 기준과 기존 상태는 [기준선](../migration/baseline.md), 동작 확인은 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다. database의 빌드·identity hash·덮어 설치 검증은 [database 문서](../modules/core/database.md#빌드-설정과-스키마-보존)에 따른다.
 - 모듈 이동과 로직 재작성은 분리한다. core 추출, Material 3 전환, Navigation 3 전환, feature 이동, MVI·테스트 적용은 각 후속 단계에서 수행한다.
 
 ## 아키텍처
@@ -22,11 +23,11 @@ ChimtubeWorld의 기존 기능과 배포 호환성을 유지하며 화면 기능
 
 | 목표 모듈 | 책임 |
 | --- | --- |
-| `:app` | 앱 조립과 top-level navigation. 현재 common·model 추출분 외의 구현 포함 |
+| `:app` | 앱 조립과 top-level navigation. 현재 common·model·database 추출분 외의 구현 포함 |
 | `:core:common` | 공통 결과 래퍼·유틸·상수 추출 완료. dispatcher는 후속 도입 |
-| `:core:model` | 공유 순수 모델 6개 추출 완료. Video는 entity/model 분리 후 이동 |
+| `:core:model` | Bookmark·Video를 포함한 공유 순수 모델 8개 |
 | `:core:network` | Retrofit API·DTO·remote datasource |
-| `:core:database` | Room Entity·DAO·Database |
+| `:core:database` | Room Entity 2개·DAO·Database·Room Hilt 제공 모듈 추출. 기존 v2 스키마 유지 |
 | `:core:domain` | repository contract·비즈니스 규칙 |
 | `:core:data` | repository 구현·mapper·Firestore·PagingSource·Jsoup |
 | `:core:testing` | 테스트 전용 Fake·fixture·Main dispatcher 도구 |
