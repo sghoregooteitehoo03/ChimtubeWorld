@@ -19,4 +19,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.jsoup)
+
+    testImplementation(project(":core:testing"))
 }

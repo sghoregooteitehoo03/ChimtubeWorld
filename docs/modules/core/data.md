@@ -42,9 +42,28 @@ domain repository contract의 구현, remote/local 저장소 조합, data 타입
 
 app ViewModel은 domain repository 계약을 직접 사용하고 data는 Hilt 그래프 조립을 위해 의존한다. app의 직접 database·network 의존성과 OkHttp·Retrofit·Gson converter·Firestore·Jsoup·coroutines-play-services·Paging runtime 의존성은 제거했다. Room 직접 의존성은 Step 5에서 이미 제거됐다. UI의 paging-compose와 navigation 인자 직렬화에 사용하는 Gson 직접 의존성은 유지한다. 기존 converter가 제공하던 Gson 2.13.1과 같은 버전을 사용한다.
 
+## 단위 테스트
+
+Step 8에서 `src/test`에 JUnit 4·`runTest` 기반 테스트를 추가했다. internal 구현체와 mapper는 같은 모듈 테스트에서 직접 사용하며 production 접근 제한자·쿼리·동작은 변경하지 않는다.
+
+| 테스트 클래스 | 검증 범위 |
+| --- | --- |
+| `BookmarkRepositoryImplTest` | 모델 → Entity 전체 필드, insert/delete 인자·실패, 내용 기반 ID 조회와 응답 ID·실패 |
+| `CafeRepositoryImplTest` | 읽음 기록 없음·있음 분기, 조회 실패 시 저장하지 않음, 저장 실패 전파 |
+| `BookmarkMapperTest` | Entity → model 모든 필드, null ID 왕복 변환·새 인스턴스 |
+| `CafePostPagingSourceTest` | 카테고리·page·limit, 말머리·이미지 null 처리·읽음 상태·날짜·URL, 증가 key, 원격/DAO 실패와 빈 응답의 기존 Error 정책 |
+| `YoutubePagingSourceTest` | playlist → 영상 ID 요청, 응답 ID 기반 model·북마크 전체 필드 변환, 기존 시간 보정·토큰, 빈 응답과 원격/DAO 실패 |
+| `MainPlaylistPagingSourceTest` | 최근 업로드 → 채널 재생목록 전환, 제목·썸네일 변환, 빈 문자열 토큰 정규화·마지막 null key·실패 |
+| `SubPlaylistPagingSourceTest` | 10개 ID 구간·나머지 구간 요청, 변환·기존 nextKey, 빈 목록·실패 |
+
+- `datasource/`의 `FakeCafeRemoteDataSource`·`FakeYoutubeRemoteDataSource`와 `SpyDao`, `model/NetworkFixtures`는 data 테스트 전용이다. `:core:testing`에서는 공유 순수 모델 fixture만 소비한다.
+- Spy는 저장·삭제 시도와 성공을 구분하며 SQL·실제 Room을 검증하지 않는다. Cafe 생성자의 dispatcher는 `StandardTestDispatcher(testScheduler)`를 전달한다.
+- PagingSource는 `paging-common`의 공개 `LoadParams`와 `LoadResult`만으로 직접 테스트한다. 전체 Pager·UI 스크롤·refresh anchor 테스트는 포함하지 않는다.
+- 제외: Jsoup에 직접 연결하는 `getCafeInfo()`와 사용되지 않는 private Jsoup helper, Firestore에 직접 결합된 두 `getChannels()`. `YoutubeRepositoryImpl.getVideo()`도 Firestore 생성자 의존성으로 직접 테스트하지 않으며 같은 영상 변환 경로는 YoutubePagingSource에서 검증한다. 새 production 경계·mock framework는 추가하지 않는다. 자세한 경계는 [테스트 가이드](../../development/testing.md#현재-테스트-예제와-경계)를 따른다.
+
 ## 구현과 검증 참고
 
 - [현재 소스](../../../core/data/src/main/java/com/sghore/chimtubeworld/core/data)
 - [domain 계약](domain.md)
 - 참고 템플릿: `.ai-work/reference/AndroidComposeTemplate/core/data`의 repository 구현·mapper·DataModule·Gradle 설정.
-- 컴파일·조립 검증: `./gradlew :core:domain:compileDebugKotlin :core:data:compileDebugKotlin :app:assembleDebug`.
+- 단위 테스트·조립 검증: `./gradlew :core:testing:testDebugUnitTest :core:data:testDebugUnitTest :app:assembleDebug`. 실행 결과는 별도 확인하며 테스트 추가만으로 통과를 의미하지 않는다.

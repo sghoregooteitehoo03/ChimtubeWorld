@@ -118,6 +118,7 @@ androidx-browser = { group = "androidx.browser", name = "browser", version.ref =
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 
 # Test
+androidx-paging-testing = { group = "androidx.paging", name = "paging-testing", version.ref = "paging" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

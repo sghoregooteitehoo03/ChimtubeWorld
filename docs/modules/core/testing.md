@@ -1,6 +1,6 @@
 # :core:testing
 
-**마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. 공통 테스트 도구는 아직 구현하지 않았다. [마이그레이션 기준선](../../migration/baseline.md)을 확인한다.
+Step 8에서 공통 테스트 도구를 구현했다. namespace와 package는 `com.sghore.chimtubeworld.core.testing`이다. production 소비자는 없으며 현재 `:core:data`의 로컬 테스트에서 fixture를 사용한다.
 
 ## 역할
 
@@ -28,10 +28,27 @@ JUnit 4 로컬 unit test에서 재사용하는 domain 계약 기반 Fake, 샘플
 ## 사용 기준
 
 - 각 테스트는 새 Fake 인스턴스를 사용한다. 성공·데이터 없음·실패·재시도 응답을 명시적으로 설정한다.
-- `responseDelayMillis`는 음수가 아닌 지연이다. `runTest`의 가상 시간으로 제어하며 실제 시간을 기다리지 않는다.
-- 응답과 지연은 조회 시작 시 고정된다. 대기 중 `setResult`나 `setError`로 설정을 바꿔도 진행 중인 응답은 바뀌지 않는다. `requestedIds`에는 실패·취소된 요청도 기록된다.
+- 메서드별 `<operation>ResponseDelayMillis`는 음수가 아닌 지연이다. `runTest`의 가상 시간으로 제어하며 실제 시간을 기다리지 않는다.
+- 응답과 지연은 메서드 호출 시작 시 고정된다. 대기 중 결과·오류·지연 설정을 바꿔도 진행 중인 응답은 바뀌지 않는다. Paging은 Flow를 반환할 때 고정하며 수집 시 지연 후 방출한다. 호출 이후 수집 전에 설정을 바꿔도 기존 Flow에는 적용하지 않는다. 요청 기록에는 실패·취소된 호출도 포함한다.
 - ViewModel은 JUnit Rule이 Main을 교체한 뒤 테스트 본문에서 생성한다. `runTest(mainDispatcherRule.testDispatcher)`로 같은 scheduler를 사용한다.
 - 추가 dispatcher가 필요하면 Rule의 `testDispatcher.scheduler`를 전달한다. 테스트 종료 시에도 남는 작업은 테스트에서 취소하고 정리한다.
 - Rule은 테스트 성공·실패와 무관하게 종료 시 `Dispatchers.resetMain()`을 호출한다. instrumentation test의 실제 Main을 교체하는 용도로 사용하지 않는다.
 
-작성 방법은 [테스트 가이드](../../development/testing.md)를 따른다. 공통 Fake·fixture·MainDispatcherRule은 후속 단계에서 도입하며 아직 구현이 없다.
+## 실제 구성
+
+| 파일 | 제공하는 계약과 설정 |
+| --- | --- |
+| `repository/FakeBookmarkRepository.kt` | `add`·`delete`·`itemId`별 결과·오류·지연, `addRequests`·`deleteRequests`·`itemIdRequests` |
+| `repository/FakeCafeRepository.kt` | `posts`·`info`·`read`별 결과·오류·지연, 카테고리·읽은 게시글 ID 기록, `infoCallCount` |
+| `repository/FakeTwitchRepository.kt` | `channels` 결과·오류·지연, `channelsCallCount` |
+| `repository/FakeYoutubeRepository.kt` | `videos`·`mainPlaylist`·`subPlaylist`·`channels`·`video`별 결과·오류·지연, 채널·목록 ID·URL 기록과 `channelsCallCount` |
+| `model/ChimtubeFixtures.kt` | `channel`, `video`, `playlist`, `post`, `bookmark`, `linkInfo`, `cafeCategory`, `goodsChannelInfo` |
+| `rule/MainDispatcherRule.kt` | 템플릿과 같은 JUnit 4 Rule. 기본 `StandardTestDispatcher`, 시작 시 Main 교체·종료 시 복원 |
+
+- 각 operation은 `set<Operation>Result(...)`, `set<Operation>Error(Throwable)`로 설정한다. Unit 메서드의 성공 설정은 인자 없이 호출한다. 각 메서드의 설정은 다른 메서드에 영향을 주지 않는다.
+- Paging setter는 `List<Model>` 또는 `Flow<PagingData<Model>>`을 받는다. 목록은 복사 후 `PagingData.from`으로 제공하며 기본 응답은 빈 목록이다. 사용자 지정 Flow는 해당 Flow의 방출을 따른다. Flow 참조 선택은 고정하지만 그 Flow 자체의 이후 방출까지 복제·동결하지는 않는다.
+- ID가 없는 채널·카페 정보 조회는 호출 횟수를 기록한다. 재생목록 ID 입력과 요청 기록의 바깥 목록은 복사해 외부 목록 변경에서 격리한다.
+- fixture는 호출마다 새 모델을 생성한다. `Channel.explains` 배열과 `Video.bookmarks` 입력 목록도 복사한다. 모델 내부의 기존 가변성은 유지한다.
+- 자체 테스트는 네 Fake의 실패·복구·호출 시 설정 고정·가상 지연·인자 기록, 대표 suspend/Paging 취소·격리, fixture 인스턴스 격리, Rule의 scheduler 공유를 확인한다. Paging snapshot 검증용 `paging-testing`은 이 모듈의 `testImplementation`에만 둔다.
+
+[현재 구현](../../../core/testing/src/main/java/com/sghore/chimtubeworld/core/testing)과 [자체 테스트](../../../core/testing/src/test/java/com/sghore/chimtubeworld/core/testing)를 참고한다. 작성 방법은 [테스트 가이드](../../development/testing.md)를 따른다.

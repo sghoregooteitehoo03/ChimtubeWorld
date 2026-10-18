@@ -2,11 +2,11 @@
 
 검증 범위와 완료 보고는 [quality.md](quality.md), 공통 도구의 책임은 [core/testing.md](../modules/core/testing.md)를 따른다.
 
-**마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. 현재 공통 Fake·fixture·MainDispatcherRule과 feature 테스트는 아직 도입하지 않았다. 아래는 향후 테스트 작성 규칙이다. 현재 동작 확인은 [마이그레이션 기준선](../migration/baseline.md)과 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다.
+Step 8에서 `:core:testing`의 Fake·fixture·MainDispatcherRule과 `:core:data`의 repository·mapper·PagingSource 로컬 테스트를 추가했다. feature의 ViewModel·Compose 테스트는 후속 MVI 단계에서 적용한다. 수동 동작 확인은 [마이그레이션 기준선](../migration/baseline.md)과 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다.
 
 ## 테스트 위치와 대상
 
-| 대상 | 목표 위치 | 확인할 계약 |
+| 대상 | 위치 | 확인할 계약 |
 | --- | --- | --- |
 | ViewModel | feature impl의 src/test | onEvent·uiState·sideEffect·조회 인자 |
 | Repository | core data의 src/test | 요청 인자·DTO 변환·Entity 저장·실패 전파 |
@@ -34,6 +34,37 @@
 - 실제 시간 대기나 Thread.sleep을 사용하지 않는다.
 - ViewModelStore에 ViewModel을 등록하고 After에서 clear한다. 별도 수집은 backgroundScope 또는 명시적 취소로 정리한다. Rule은 종료 시 Main을 복원한다.
 
+## 현재 테스트 예제와 경계
+
+공통 Fake는 domain 계약을 구현하며 메서드별 설정을 사용한다. 예를 들어 `FakeYoutubeRepository`의 단일 영상 조회는 다음처럼 실제 시간 대기 없이 확인한다.
+
+```kotlin
+@Test
+fun `요청 URL을 기록하고 설정한 영상을 반환한다`() = runTest {
+    val expected = video(id = "response-video")
+    val repository = FakeYoutubeRepository().apply {
+        setVideoResult(expected)
+        videoResponseDelayMillis = 1_000L
+    }
+    val response = async { repository.getVideo("requested-url") }
+    runCurrent()
+    assertFalse(response.isCompleted)
+    assertEquals(listOf("requested-url"), repository.videoRequests)
+    advanceUntilIdle()
+    assertSame(expected, response.await())
+}
+```
+
+위 코드는 `core.testing.model.video`, `FakeYoutubeRepository`, JUnit 4·coroutines-test의 API를 사용하며 시간 제어 함수에는 `@OptIn(ExperimentalCoroutinesApi::class)`을 적용한다. Main을 사용하는 테스트는 `@get:Rule val mainDispatcherRule = MainDispatcherRule()`을 선언하고 `runTest(mainDispatcherRule.testDispatcher)`로 실행한다. 실제 [Fake 테스트](../../core/testing/src/test/java/com/sghore/chimtubeworld/core/testing/repository)와 [Rule 테스트](../../core/testing/src/test/java/com/sghore/chimtubeworld/core/testing/rule/MainDispatcherRuleTest.kt)를 참고한다.
+
+- [BookmarkRepositoryImplTest](../../core/data/src/test/java/com/sghore/chimtubeworld/core/data/repository/BookmarkRepositoryImplTest.kt)는 Entity 저장·삭제 인자, 내용 기반 ID 조회와 DAO 실패 전파를 확인한다. `Bookmark.equals`는 ID만 비교하므로 [BookmarkMapperTest](../../core/data/src/test/java/com/sghore/chimtubeworld/core/data/mapper/BookmarkMapperTest.kt)와 영상 북마크 변환 테스트는 모든 모델 필드를 별도로 비교한다.
+- [CafeRepositoryImplTest](../../core/data/src/test/java/com/sghore/chimtubeworld/core/data/repository/CafeRepositoryImplTest.kt)는 `StandardTestDispatcher(testScheduler)`를 생성자에 전달하고 읽음 기록이 없을 때만 저장하는 정책과 조회·저장 실패를 확인한다.
+- data의 `datasource/FakeCafeRemoteDataSource`, `FakeYoutubeRemoteDataSource`, `SpyDao`는 data의 `src/test`에만 둔다. Spy의 시도 목록과 성공 목록을 구분하며 Room SQL·충돌 정책·실제 DB 영속성은 검증하지 않는다.
+- [PagingSource 테스트](../../core/data/src/test/java/com/sghore/chimtubeworld/core/data/repository/dataSource)는 네 source를 직접 생성하고 `paging-common`의 `LoadParams.Refresh`·`Append`로 `load()` 결과를 확인한다. Main/Sub playlist는 Fake의 공개 suspend 메서드 참조를 기존 callback 생성자에 전달한다. private helper나 production 가시성 변경이 필요하지 않다. 요청 ID와 응답 ID를 다르게 설정하고 DTO·북마크 매핑, 기존 key·빈 응답·Error 처리를 확인한다. Pager 전체 수명·UI 스크롤·refresh anchor는 이번 범위에서 검증하지 않는다.
+- 공통 Fake의 Paging 응답은 `paging-testing`의 `asSnapshot()`으로 목록을 확인한다. 이 라이브러리는 `:core:testing` 자체 테스트에만 추가하며 production 의존성은 늘리지 않는다.
+- `CafeRepositoryImpl.getCafeInfo()`는 Jsoup 정적 연결로 실제 웹을 읽고 주입 가능한 HTML 경계가 없어 제외한다. `CafePostPagingSource`의 사용되지 않는 private Jsoup helper도 제외한다. 이 source의 `load()`는 RemoteDataSource와 DAO만 사용하므로 테스트한다.
+- Twitch·YouTube repository의 `getChannels()`는 Firestore 쿼리·Task·문서 변환을 직접 수행한다. 현재 경계로 서버 없이 Fake를 주입할 수 없어 제외한다. `YoutubeRepositoryImpl.getVideo()` 직접 테스트도 Firestore 생성자 의존성 때문에 이번 구성에서는 제외하며 영상 DTO 변환은 `YoutubePagingSource.load()`에서 확인한다. Firestore mock framework나 새 production 추상화는 도입하지 않는다.
+
 ## State와 side effect
 
 - uiState.value에서 로딩·성공·빈 응답·예외·재시도를 서로 다른 조건으로 확인한다. 문구보다 의미를 검증한다.
@@ -52,9 +83,10 @@
 
 ## 실행과 결과
 
-대상 모듈 생성 후 실제 경로로 바꿔 실행한다.
+현재 core 테스트와 app 조립은 아래 첫 명령으로 검증한다. feature 명령은 대상 모듈 생성 후 실제 경로로 바꿔 사용한다.
 
 ```shell
+./gradlew :core:testing:testDebugUnitTest :core:data:testDebugUnitTest :app:assembleDebug
 ./gradlew :feature:<name>:impl:testDebugUnitTest :core:data:testDebugUnitTest
 ./gradlew :feature:<name>:impl:assembleDebugAndroidTest
 # 실행 가능한 기기 또는 에뮬레이터가 있을 때
