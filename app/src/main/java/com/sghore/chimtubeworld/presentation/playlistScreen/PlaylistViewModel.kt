@@ -4,8 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.sghore.chimtubeworld.domain.GetPagingMainPlaylistUseCase
-import com.sghore.chimtubeworld.domain.GetPagingSubPlaylistUseCase
+import com.sghore.chimtubeworld.core.domain.repository.YoutubeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,8 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlaylistViewModel @Inject constructor(
-    private val getPagingMainPlaylistUseCase: GetPagingMainPlaylistUseCase,
-    private val getPagingSubPlaylistUseCase: GetPagingSubPlaylistUseCase,
+    private val repository: YoutubeRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _state = MutableStateFlow(PlaylistScreenState())
@@ -39,7 +37,7 @@ class PlaylistViewModel @Inject constructor(
     fun getPagingMainPlaylist(channelId: String?, playlistId: List<String>) {
         _state.update {
             it.copy(
-                playlists = getPagingMainPlaylistUseCase(
+                playlists = repository.getPagingMainPlaylist(
                     channelId = channelId,
                     playlistId = playlistId
                 ).cachedIn(viewModelScope)
@@ -50,7 +48,7 @@ class PlaylistViewModel @Inject constructor(
     fun getPagingSubPlaylist(playlistId: List<String>) {
         _state.update {
             it.copy(
-                playlists = getPagingSubPlaylistUseCase(
+                playlists = repository.getPagingSubPlaylist(
                     playlistId = playlistId
                 ).cachedIn(viewModelScope)
             )

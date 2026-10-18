@@ -5,7 +5,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.model.Video
-import com.sghore.chimtubeworld.domain.GetVideosUseCase
+import com.sghore.chimtubeworld.core.domain.repository.YoutubeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VideosViewModel @Inject constructor(
-    private val getVideosUseCase: GetVideosUseCase,
+    private val repository: YoutubeRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _state = MutableStateFlow(VideosScreenState())
@@ -33,7 +33,7 @@ class VideosViewModel @Inject constructor(
 
             _state.update {
                 VideosScreenState(
-                    getVideosUseCase(
+                    repository.getVideos(
                         channelId = playlistId.split("|")[0] // 플레이리스트의 아이디 리스트
                     ).cachedIn(viewModelScope)
                 )

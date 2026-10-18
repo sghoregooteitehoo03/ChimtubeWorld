@@ -3,14 +3,16 @@ package com.sghore.chimtubeworld.presentation.twitchScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sghore.chimtubeworld.core.common.Resource
-import com.sghore.chimtubeworld.domain.GetTwitchChannelUseCase
+import com.sghore.chimtubeworld.core.common.suspendRunCatching
+import com.sghore.chimtubeworld.core.domain.repository.TwitchRepository
+import com.sghore.chimtubeworld.core.model.Channel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class TwitchViewModel @Inject constructor(
-    private val getTwitchChannelUseCase: GetTwitchChannelUseCase
+    private val repository: TwitchRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(TwitchScreenState(isLoading = true))
     val state: StateFlow<TwitchScreenState> = _state.asStateFlow()
@@ -19,8 +21,19 @@ class TwitchViewModel @Inject constructor(
         getTwitchUserInfo()
     }
 
+    private fun loadChannels(): Flow<Resource<List<Channel>>> = flow {
+        suspendRunCatching {
+            val channels = repository.getChannels()
+            emit(Resource.Success<List<Channel>>(channels))
+        }.onFailure { e ->
+            if (e !is Exception) throw e
+            e.printStackTrace()
+            emit(Resource.Error<List<Channel>>("데이터를 불러오는데 오류가 발생하였습니다."))
+        }
+    }
+
     fun getTwitchUserInfo() {
-        getTwitchChannelUseCase().onEach { resource ->
+        loadChannels().onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
                     _state.update {

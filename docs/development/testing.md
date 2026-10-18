@@ -29,6 +29,7 @@
 
 - MainDispatcherRule이 Main을 교체한 뒤 ViewModel을 생성한다. 테스트 필드 초기화에서 생성하지 않는다.
 - runTest에 Rule의 testDispatcher를 전달한다. 추가 dispatcher도 같은 testScheduler를 사용한다.
+- `@IoDispatcher` 등을 주입받는 repository를 직접 생성할 때는 생성자의 dispatcher 인자에 같은 testScheduler의 test dispatcher를 전달한다. 현재 `CafeRepositoryImpl`의 `ioDispatcher`가 이에 해당하며 Hilt graph 없이 검증할 수 있다. ViewModel은 dispatcher를 주입받지 않으므로 MainDispatcherRule만 적용한다.
 - StandardTestDispatcher에서 runCurrent로 현재 작업을 실행하고 로딩 상태를 확인한 후 advanceUntilIdle로 완료한다. 정확한 지연 경계는 advanceTimeBy 뒤 runCurrent로 실행한다.
 - 실제 시간 대기나 Thread.sleep을 사용하지 않는다.
 - ViewModelStore에 ViewModel을 등록하고 After에서 clear한다. 별도 수집은 backgroundScope 또는 명시적 취소로 정리한다. Rule은 종료 시 Main을 복원한다.

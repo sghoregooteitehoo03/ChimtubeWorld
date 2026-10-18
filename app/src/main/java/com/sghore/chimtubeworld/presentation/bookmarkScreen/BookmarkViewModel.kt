@@ -5,9 +5,10 @@ import com.google.gson.Gson
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.common.Resource
+import com.sghore.chimtubeworld.core.common.suspendRunCatching
 import com.sghore.chimtubeworld.core.model.Video
-import com.sghore.chimtubeworld.data.repository.BookmarkRepository
-import com.sghore.chimtubeworld.domain.GetYoutubeVideoUseCase
+import com.sghore.chimtubeworld.core.domain.repository.BookmarkRepository
+import com.sghore.chimtubeworld.core.domain.repository.YoutubeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookmarkViewModel @Inject constructor(
-    private val getYoutubeVideoUseCase: GetYoutubeVideoUseCase,
+    private val youtubeRepository: YoutubeRepository,
     private val repository: BookmarkRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -56,11 +57,22 @@ class BookmarkViewModel @Inject constructor(
         }
     }
 
+    private fun loadVideo(videoUrl: String): Flow<Resource<Video>> = flow {
+        suspendRunCatching {
+            val videoData = youtubeRepository.getVideo(url = videoUrl)
+            emit(Resource.Success<Video>(videoData))
+        }.onFailure { e ->
+            if (e !is Exception) throw e
+            e.printStackTrace()
+            emit(Resource.Error<Video>("데이터를 불러오는데 오류가 발생하였습니다."))
+        }
+    }
+
     // 넘겨온 영상 url을 통해 영상 정보를 가져옴
     fun getVideoData(videoUrl: String) {
         var videoTypeImage = -1
 
-        val videoFlow = getYoutubeVideoUseCase(videoUrl)
+        val videoFlow = loadVideo(videoUrl)
 
         videoFlow.onEach { resource ->
             when (resource) {

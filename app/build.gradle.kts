@@ -35,8 +35,8 @@ android {
 dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
-    implementation(project(":core:database"))
-    implementation(project(":core:network"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:data"))
 
     // AndroidX Core
     implementation(libs.androidx.core.ktx)
@@ -53,7 +53,6 @@ dependencies {
 
     // Kotlin Coroutines
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.coroutines.play.services)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -61,15 +60,9 @@ dependencies {
 
     // Paging
     implementation(libs.androidx.paging.compose)
-    implementation(libs.androidx.paging.runtime.ktx)
 
-    // Network
-    implementation(libs.okhttp)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-
-    // Firebase
-    implementation(libs.firebase.firestore.ktx)
+    // JSON navigation arguments
+    implementation(libs.gson)
 
     // Image
     implementation(libs.coil.compose)
@@ -87,5 +80,4 @@ dependencies {
 
     // Web/Parsing
     implementation(libs.androidx.browser)
-    implementation(libs.jsoup)
 }
