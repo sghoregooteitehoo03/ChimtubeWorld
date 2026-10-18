@@ -1,10 +1,9 @@
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.android.application.convention)
+    alias(libs.plugins.android.application.compose)
+    alias(libs.plugins.android.hilt)
     alias(libs.plugins.google.services)
 }
 
@@ -13,21 +12,12 @@ val properties = Properties().apply {
 }
 
 android {
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
-
     defaultConfig {
         applicationId = "com.sghore.chimtubeworld"
-        minSdk = 24
-        targetSdk = 36
         versionCode = 10
         versionName = "1.4.5"
 
         buildConfigField("String", "YOUTUBE_API_KEY", properties.getProperty("youtube_api_key"))
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -37,12 +27,7 @@ android {
         }
     }
     buildFeatures {
-        compose = true
         buildConfig = true
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
     namespace = "com.sghore.chimtubeworld"
 }
@@ -52,20 +37,11 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     // Compose
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.androidx.compose.ui)
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.compose.ui.tooling.preview)
 
     // Hilt
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
 
     // Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -87,7 +63,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
 
-    // Room
+    // Room: schemaLocation을 추가하는 convention은 아직 적용하지 않는다.
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
@@ -112,9 +88,4 @@ dependencies {
     // Web/Parsing
     implementation(libs.androidx.browser)
     implementation(libs.jsoup)
-
-    // Test
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
-    testImplementation(libs.junit)
 }
