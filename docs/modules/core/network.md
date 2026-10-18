@@ -1,32 +1,47 @@
 # :core:network
 
-**마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. 현재 구현은 `:app`에 있다. [마이그레이션 기준선](../../migration/baseline.md)을 확인한다.
+## 역할과 현재 상태
 
-## 역할
+Step 6에서 Retrofit 서비스·전체 DTO·OkHttp/Retrofit DI와 API별 RemoteDataSource를 추출했다. namespace와 패키지는 `com.sghore.chimtubeworld.core.network`다.
 
-Retrofit 기반 API, DTO, remote datasource, 네트워크 객체 Hilt 제공을 담당한다.
+- `retrofit/`: 기존 `RetrofitService`(YouTube), `NaverRetrofitService`(Cafe·Chzzk)의 endpoint 정의.
+- `dto/`: `youtubeAPI`, `naver_cafeAPI`, `naver_chzzkAPI`, `naver_storeAPI` 응답 DTO. 필드 이름·기본값·직렬화 매핑을 유지한다.
+- `datasource/`: API별 공개 contract와 internal 구현체.
+- `di/`: 네트워크 객체 제공, Naver 서비스 qualifier, datasource Hilt binding.
 
-## 포함 대상
+템플릿의 Moshi 대신 기존 **Gson과 `GsonConverterFactory.create()`**를 유지한다. Moshi codegen이나 새 JSON 변환 정책은 도입하지 않는다.
 
-- Retrofit endpoint를 정의하는 API interface.
-- 네트워크 응답 전용 DTO. 기존 Gson converter와 응답 필드 매핑을 유지한다.
-- API 호출을 감싸는 remote datasource contract와 구현체.
-- OkHttpClient, Retrofit, API, datasource를 제공하는 Hilt module.
+## API별 서비스와 datasource
 
-## 제외 대상
+| API | base URL | internal 서비스 | 공개 datasource와 메서드 |
+| --- | --- | --- | --- |
+| YouTube | `https://www.googleapis.com/youtube/v3/` | `RetrofitService` | `YoutubeRemoteDataSource`: `getYChannelInfo`, `getYPlaylistItems`, `getYVideos`, `getYPlaylists` |
+| Naver Cafe | `https://apis.naver.com/` | `@NaverCafe NaverRetrofitService` | `CafeRemoteDataSource`: `getCafePosts` |
+| Chzzk | `https://api.chzzk.naver.com/service/` | `@Chzzk NaverRetrofitService` | `ChzzkRemoteDataSource`: `getChannelInfo`, `getChannelMoreInfo` |
 
-- domain model, mapper, repository 구현, Room 접근, feature UI state.
-- remote/local 선택, caching, fallback 같은 repository 정책.
+`NetworkModule`은 API별로 별도의 Retrofit을 생성해 준비된 singleton 서비스를 제공한다. 공유 mutable `Retrofit.Builder`는 노출하지 않는다. base URL은 다른 프로젝트 모듈에 의존하지 않도록 이 모듈 내부에서 관리하며, 기존 `Constants`의 URL과 동일하게 유지한다.
+
+세 서비스는 하나의 singleton OkHttpClient를 공유한다. 기존과 동일하게 `readTimeout(1, TimeUnit.MINUTES)`와 요청의 `User-Agent`를 `Mozilla/5.0 (Windows NT 10.0; Win64; x64)`로 설정하는 interceptor를 사용하며, 그 외 timeout은 기본값을 유지한다. 로깅 interceptor는 추가하지 않는다.
+
+`RemoteDataSourceModule`이 각 contract를 구현체에 Hilt binding한다. datasource는 요청 인자를 그대로 전달하고 DTO를 반환한다. 기존 `Call` 반환 메서드인 `getYPlaylistItems`·`getYVideos`의 `await()`만 구현체 내부로 이동했다. 예외를 잡거나 변환하지 않으며 기존 repository·PagingSource의 오류 처리와 paging 정책을 유지한다.
+
+## API 키와 빌드 설정
+
+- `sg.android.library`, `sg.android.hilt` convention을 적용한다.
+- `buildFeatures.buildConfig = true`를 켜고 root `local.properties`의 `youtube_api_key`를 app과 같은 `Properties.load`·`buildConfigField("String", "YOUTUBE_API_KEY", ...)` 방식으로 읽는다. 속성 값의 따옴표 처리도 app과 동일하다.
+- YouTube `@GET` 문자열은 network 자체의 `BuildConfig.YOUTUBE_API_KEY`를 참조한다. 생성된 Java 상수이므로 annotation의 컴파일 타임 상수 조건을 유지한다. 키를 출력하거나 로그에 남기지 않는다.
+- app의 기존 `YOUTUBE_API_KEY` 생성 설정은 현재 참조가 없어도 이 단계에서 유지한다.
 
 ## 공개 경계와 의존성
 
-- datasource contract와 DTO는 data가 remote source를 사용하기 위해 공개할 수 있지만, domain과 feature에 노출하지 않는다.
-- Retrofit API와 datasource 구현, NetworkModule은 network 내부 구현으로 `internal`을 유지한다.
-- DTO에서 공유 순수 모델로의 변환은 `:core:data` mapper가 담당한다.
-- Gson을 유지하며 Moshi codegen과 새 JSON 변환 정책을 도입하지 않는다.
-- 기존 YouTube·네이버 API의 base URL·endpoint·오류 정책을 이동 중 바꾸지 않는다. Firestore와 Jsoup 접근은 `:core:data`가 담당한다.
-- network는 domain, model, data, feature, app에 의존하지 않는다.
+- 공개 API는 RemoteDataSource contract와 DTO다. Retrofit API·datasource 구현체·DI 모듈·qualifier는 `internal`이다.
+- network는 다른 프로젝트 모듈에 의존하지 않는다. Retrofit·OkHttp·Gson converter는 구현 의존성이다.
+- Step 7 전까지 app의 repository·PagingSource가 datasource에 의존하고 DTO → model 변환도 기존 app 위치에 유지한다. 이후 `:core:data`가 이 경계를 소비한다. domain과 feature에 DTO를 노출하지 않는다.
+- domain model, mapper, repository 정책, Room, Firestore, Jsoup, UI state는 포함하지 않는다. Firestore provider와 Jsoup 접근은 Step 7 전까지 app에 유지한다.
 
-## 현재 구현 참고
+## 참고 구현과 검증
 
-- [app의 기존 구현](../../../app/src/main/java/com/sghore/chimtubeworld/data/retrofit). 목표 모듈로 이동하기 전의 위치이며 새 모듈 규칙을 모두 만족한다는 뜻은 아니다.
+- [현재 구현](../../../core/network/src/main/java/com/sghore/chimtubeworld/core/network).
+- 참고 템플릿: `.ai-work/reference/AndroidComposeTemplate/core/network`의 `datasource`, `di/NetworkModule`, `dto`, `retrofit`. 경계 구조만 참고하며 Moshi·로깅 설정은 도입하지 않는다.
+- 컴파일·조립 검증: `./gradlew :core:network:compileDebugKotlin :app:assembleDebug`.
+- 기존 동작 보존 기준은 [마이그레이션 기준선](../../migration/baseline.md)을 따른다.

@@ -3,6 +3,7 @@ package com.sghore.chimtubeworld.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sghore.chimtubeworld.core.network.datasource.YoutubeRemoteDataSource
 import com.sghore.chimtubeworld.core.database.dao.Dao
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.model.LinkInfo
@@ -11,12 +12,9 @@ import com.sghore.chimtubeworld.data.repository.dataSource.MainPlaylistPagingSou
 import com.sghore.chimtubeworld.data.repository.dataSource.SubPlaylistPagingSource
 import com.sghore.chimtubeworld.data.repository.dataSource.YoutubePagingSource
 import com.sghore.chimtubeworld.core.common.Constants
-import com.sghore.chimtubeworld.data.retrofit.RetrofitService
-import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.PlaylistsDTO
+import com.sghore.chimtubeworld.core.network.dto.youtubeAPI.PlaylistsDTO
 import com.sghore.chimtubeworld.core.common.getVideoId
 import kotlinx.coroutines.tasks.await
-import retrofit2.Retrofit
-import retrofit2.await
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -24,17 +22,16 @@ import kotlin.time.Duration
 
 class YoutubeRepository @Inject constructor(
     private val store: FirebaseFirestore,
-    private val retrofitBuilder: Retrofit.Builder,
+    private val remoteDataSource: YoutubeRemoteDataSource,
     private val dao: Dao,
 ) {
 
     // 유튜브 영상을 페이징하여 가져옴
     fun getVideos(channelId: String) =
         Pager(PagingConfig(10)) {
-            val retrofitService = getRetrofit()
             YoutubePagingSource(
                 channelId = channelId,
-                retrofitService = retrofitService,
+                remoteDataSource = remoteDataSource,
                 dao = dao
             )
         }.flow
@@ -45,9 +42,7 @@ class YoutubeRepository @Inject constructor(
         playlistId: List<String>?,
         pageToken: String? = null,
     ): PlaylistsDTO {
-        val retrofitService = getRetrofit()
-
-        return retrofitService.getYPlaylists(
+        return remoteDataSource.getYPlaylists(
             channelId = channelId,
             playlistId = playlistId,
             pageToken = pageToken
@@ -94,10 +89,8 @@ class YoutubeRepository @Inject constructor(
 
     // 채널의 정보를 가져옴
     suspend fun getChannelInfo(channelLinkList: List<LinkInfo>): List<Channel> {
-        val retrofitService = getRetrofit()
-
         // API를 통해 채널들의 정보를 가져옴             [0] = 채널아이디, [1] = 플레이리스트 아이디
-        val result = retrofitService.getYChannelInfo(
+        val result = remoteDataSource.getYChannelInfo(
             channelId = channelLinkList.map { it.id.split("|")[0] }
                 .toTypedArray()
         )
@@ -132,9 +125,7 @@ class YoutubeRepository @Inject constructor(
         val videoId = getVideoId(url) ?: // 오류 발생 시
         throw NullPointerException()
 
-        val retrofit = getRetrofit()
-        val videoData = retrofit.getYVideos(arrayOf(videoId))
-            .await()
+        val videoData = remoteDataSource.getYVideos(arrayOf(videoId))
 
         return videoData.items[0].let { response ->
             val dateFormat = SimpleDateFormat(
@@ -160,9 +151,4 @@ class YoutubeRepository @Inject constructor(
             )
         }
     }
-
-    private fun getRetrofit() =
-        retrofitBuilder.baseUrl(Constants.YOUTUBE_API_URL)
-            .build()
-            .create(RetrofitService::class.java)
 }

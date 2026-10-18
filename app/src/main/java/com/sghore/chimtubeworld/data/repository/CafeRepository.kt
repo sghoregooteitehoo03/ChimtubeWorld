@@ -2,29 +2,28 @@ package com.sghore.chimtubeworld.data.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import com.sghore.chimtubeworld.core.network.datasource.CafeRemoteDataSource
 import com.sghore.chimtubeworld.data.repository.dataSource.CafePostPagingSource
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.database.entity.ReadHistoryEntity
 import com.sghore.chimtubeworld.core.database.dao.Dao
-import com.sghore.chimtubeworld.data.retrofit.NaverRetrofitService
 import com.sghore.chimtubeworld.core.common.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.jsoup.Jsoup
-import retrofit2.Retrofit
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 class CafeRepository @Inject constructor(
     private val dao: Dao,
-    private val retrofitBuilder: Retrofit.Builder,
+    private val remoteDataSource: CafeRemoteDataSource,
 ) {
     fun getCafePosts(categoryId: Int) =
         Pager(PagingConfig(10)) {
             CafePostPagingSource(
                 categoryId = categoryId,
-                retrofitService = getRetrofit(),
+                remoteDataSource = remoteDataSource,
                 dao = dao
             )
         }.flow
@@ -68,9 +67,4 @@ class CafeRepository @Inject constructor(
             dao.insertReadData(ReadHistoryEntity(articleId = articleId))
         }
     }
-
-    private fun getRetrofit() =
-        retrofitBuilder.baseUrl(Constants.NAVER_CAFE_API_URL)
-            .build()
-            .create(NaverRetrofitService::class.java)
 }

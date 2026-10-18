@@ -2,18 +2,17 @@ package com.sghore.chimtubeworld.data.repository.dataSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.sghore.chimtubeworld.core.network.datasource.YoutubeRemoteDataSource
 import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.database.dao.Dao
 import com.sghore.chimtubeworld.data.mapper.toDomain
-import com.sghore.chimtubeworld.data.retrofit.RetrofitService
-import retrofit2.await
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.Duration
 
 class YoutubePagingSource(
     private val channelId: String,
-    private val retrofitService: RetrofitService,
+    private val remoteDataSource: YoutubeRemoteDataSource,
     private val dao: Dao
 ) : PagingSource<String, Video>() {
     override fun getRefreshKey(state: PagingState<String, Video>): String? {
@@ -24,16 +23,16 @@ class YoutubePagingSource(
         return try {
             val pageKey = params.key // 페이지 키
 
-            val playlistItems = retrofitService.getYPlaylistItems(
+            val playlistItems = remoteDataSource.getYPlaylistItems(
                 channelId,
                 pageKey
-            ).await() // 채널의 최근 동영상 리스트의 아이디를 가져옴
+            ) // 채널의 최근 동영상 리스트의 아이디를 가져옴
             val videoIdArray = playlistItems.items.map { it.contentDetails.videoId }
                 .toTypedArray() // 동영상 아이디 배열
 
             val nextKey = playlistItems.nextPageToken // 다음 페이지
             val videoList = getYoutubeVideos(
-                retrofitService = retrofitService,
+                remoteDataSource = remoteDataSource,
                 videoIdArray = videoIdArray,
                 currentPageKey = pageKey
             ) // 동영상 리스트
@@ -51,12 +50,11 @@ class YoutubePagingSource(
 
     // 유튜브 영상 정보 가져오기
     private suspend fun getYoutubeVideos(
-        retrofitService: RetrofitService,
+        remoteDataSource: YoutubeRemoteDataSource,
         videoIdArray: Array<String>,
         currentPageKey: String?
     ): List<Video> {
-        val videosResponse = retrofitService.getYVideos(videoIdArray)
-            .await()
+        val videosResponse = remoteDataSource.getYVideos(videoIdArray)
 
         return videosResponse.items.map { response ->
             val bookmarks = dao.getBookmarks(response.id).map { it.toDomain() } // 해당 영상 아이디에 해당하는 북마크를 가져옴

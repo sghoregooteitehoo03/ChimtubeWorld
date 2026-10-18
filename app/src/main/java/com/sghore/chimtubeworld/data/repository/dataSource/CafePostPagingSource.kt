@@ -2,9 +2,9 @@ package com.sghore.chimtubeworld.data.repository.dataSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.sghore.chimtubeworld.core.network.datasource.CafeRemoteDataSource
 import com.sghore.chimtubeworld.core.model.Post
 import com.sghore.chimtubeworld.core.database.dao.Dao
-import com.sghore.chimtubeworld.data.retrofit.NaverRetrofitService
 import com.sghore.chimtubeworld.core.common.Constants
 import org.jsoup.Connection
 import org.jsoup.Jsoup
@@ -13,7 +13,7 @@ import java.util.Locale
 
 class CafePostPagingSource(
     private val categoryId: Int,
-    private val retrofitService: NaverRetrofitService,
+    private val remoteDataSource: CafeRemoteDataSource,
     private val dao: Dao
 ) :
     PagingSource<Int, Post>() {
@@ -25,7 +25,7 @@ class CafePostPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {
         return try {
             val pageKey = params.key ?: 1
-            val posts = retrofitService.getCafePosts(categoryId, pageKey)
+            val posts = remoteDataSource.getCafePosts(categoryId, pageKey)
 
             if (posts.result.articleList.isEmpty())
                 throw NullPointerException()

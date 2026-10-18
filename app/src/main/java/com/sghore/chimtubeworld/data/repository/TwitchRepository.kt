@@ -3,16 +3,13 @@ package com.sghore.chimtubeworld.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sghore.chimtubeworld.core.network.datasource.ChzzkRemoteDataSource
 import com.sghore.chimtubeworld.core.database.dao.Dao
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.model.LinkInfo
 import com.sghore.chimtubeworld.core.model.Video
-import com.sghore.chimtubeworld.data.retrofit.NaverRetrofitService
 import com.sghore.chimtubeworld.core.common.Constants
-import com.sghore.chimtubeworld.data.retrofit.RetrofitService
 import kotlinx.coroutines.tasks.await
-import retrofit2.Retrofit
-import retrofit2.await
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -20,7 +17,7 @@ import kotlin.time.Duration
 
 class TwitchRepository @Inject constructor(
     private val store: FirebaseFirestore,
-    private val retrofitBuilder: Retrofit.Builder,
+    private val remoteDataSource: ChzzkRemoteDataSource,
     private val dao: Dao
 ) {
 
@@ -36,10 +33,8 @@ class TwitchRepository @Inject constructor(
     suspend fun getTwitchUserInfo(
         channelLinkList: List<LinkInfo>,
     ): List<Channel> {
-        val retrofitService = getRetrofit()
-
         return channelLinkList.map {
-            val channelInfo = retrofitService.getChannelInfo(it.id)
+            val channelInfo = remoteDataSource.getChannelInfo(it.id)
             val isLive = channelInfo.content.openLive
             Channel(
                 id = it.id,
@@ -51,7 +46,7 @@ class TwitchRepository @Inject constructor(
                 image = channelInfo.content.channelImageUrl,
                 thumbnailImage = if (it.type == 0) {
                     if (isLive) {
-                        val liveImage = retrofitService.getChannelMoreInfo(it.id)
+                        val liveImage = remoteDataSource.getChannelMoreInfo(it.id)
                             .content.topExposedVideos?.openLive?.liveImageUrl ?: ""
                         liveImage.replace("{type}", "1080")
                     } else {
@@ -65,9 +60,4 @@ class TwitchRepository @Inject constructor(
             )
         }
     }
-
-    private fun getRetrofit() =
-        retrofitBuilder.baseUrl(Constants.NAVER_CHZZK_API_URL)
-            .build()
-            .create(NaverRetrofitService::class.java)
 }

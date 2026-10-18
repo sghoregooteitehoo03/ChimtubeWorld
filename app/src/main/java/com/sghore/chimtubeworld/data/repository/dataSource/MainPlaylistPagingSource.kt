@@ -3,7 +3,7 @@ package com.sghore.chimtubeworld.data.repository.dataSource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sghore.chimtubeworld.core.model.Playlist
-import com.sghore.chimtubeworld.data.retrofit.dto.youtubeAPI.PlaylistsDTO
+import com.sghore.chimtubeworld.core.network.dto.youtubeAPI.PlaylistsDTO
 import kotlin.reflect.KSuspendFunction3
 
 class MainPlaylistPagingSource(
