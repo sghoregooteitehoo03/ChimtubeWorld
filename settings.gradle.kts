@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "ChimtubeWorld"
-include ':app'
+include(":app")
