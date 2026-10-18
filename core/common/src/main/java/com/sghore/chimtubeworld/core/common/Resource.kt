@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.data.model
+package com.sghore.chimtubeworld.core.common
 
 sealed class Resource<T>(val data: T? = null, val errorMsg: String? = null) {
     class Success<T>(data: T) : Resource<T>(data)

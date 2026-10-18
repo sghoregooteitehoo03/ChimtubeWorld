@@ -1,28 +1,33 @@
 # :core:common
 
-**마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. 현재 구현은 `:app`에 있다. [마이그레이션 기준선](../../migration/baseline.md)을 확인한다.
-
 ## 역할
 
-여러 계층에서 공유하는 가벼운 Kotlin 공통 기능과 공통 coroutine dispatcher Hilt binding을 제공한다.
+여러 계층에서 공유하는 Android 비의존 Kotlin 공통 기능을 제공한다. namespace와 package는 `com.sghore.chimtubeworld.core.common`이다.
 
-## 포함 대상
+## 현재 포함된 구현
 
-- `suspendRunCatching`처럼 suspend 블록의 예외 처리를 공통화하는 확장 함수.
-- 순수 Kotlin 문자열, 숫자, 날짜 포맷, 안전 변환, collection 확장처럼 Android나 특정 계층에 묶이지 않는 유틸.
-- `DefaultDispatcher`, `IoDispatcher`, `MainDispatcher` qualifier와 Dispatcher Hilt 제공 모듈.
+- `Resource.kt`: 성공·오류·로딩을 표현하는 공통 결과 래퍼. domain 데이터 모델이 아닌 계층 공통 타입으로 둔다.
+- `Util.kt`: YouTube URL의 영상 ID 추출 함수 `getVideoId`.
+- `VideoParse.kt`: 팔로워·조회수·영상 길이·업로드 시점·북마크 위치 문자열 포맷 함수.
+- `Constants.kt`: API URL, 외부 앱 package·scheme, Firestore 컬렉션 이름 등 기존 공유 상수.
 
-## 제외 대상
+Step 4에서는 package와 소비 코드의 import만 바꾸며 함수 동작과 상수 값을 유지한다.
 
-- Android `Context` 의존 유틸, Compose/UI 유틸, Room·Retrofit 전용 유틸, feature 전용 로직.
-- 화면 state, navigation 정책, data 변환 규칙.
+## 포함·제외 기준
+
+- 순수 Kotlin 문자열, 숫자, 날짜 포맷, 안전 변환, collection 확장처럼 Android에 묶이지 않는 가벼운 공통 기능을 포함한다.
+- Android `Context` 의존 유틸, Compose/UI 유틸, Room·Retrofit 전용 유틸, feature 전용 로직은 제외한다.
+- 화면 state, navigation 정책, data 변환 규칙은 제외한다.
+- `OpenOtherApp`은 `Context`와 외부 앱 실행에 의존하므로 현재 `:app`에 유지하고 Step 9에서 위치를 결정한다.
 
 ## 공개 경계와 의존성
 
-- `suspendRunCatching`은 `CancellationException`을 결과로 감싸지 않고 다시 던진다.
-- dispatcher qualifier는 주입받는 모듈이 참조하므로 공개한다. 제공 구현은 `DispatcherModule` 안에 둔다.
-- common은 feature나 app에 의존하지 않는다.
+- 공유 함수, `Resource`, `Constants`는 cross-module 사용을 위해 기본 공개 범위를 유지한다.
+- common은 다른 프로젝트 모듈에 의존하지 않는다.
+- `sg.android.library` convention만 적용한다. 현재 production 코드는 Kotlin/JDK만 사용하므로 Hilt·Compose·Room·네트워크 의존성을 추가하지 않는다.
+- 템플릿의 `suspendRunCatching`과 dispatcher qualifier·Hilt binding은 아직 도입하지 않았다. 향후 도입 시 `suspendRunCatching`은 `CancellationException`을 다시 던지고, dispatcher qualifier는 공개하며 제공 구현은 `DispatcherModule`에 둔다.
 
-## 현재 구현 참고
+## 구현과 템플릿 참고
 
-- [app의 기존 구현](../../../app/src/main/java/com/sghore/chimtubeworld/util). 목표 모듈로 이동하기 전의 위치이며 새 모듈 규칙을 모두 만족한다는 뜻은 아니다.
+- [현재 소스](../../../core/common/src/main/java/com/sghore/chimtubeworld/core/common)
+- 참고 템플릿: `core/common/build.gradle.kts`, `core/common/src/main/AndroidManifest.xml`, `core/common/src/main/java/com/sg/androidcomposetemplate/core/common`.

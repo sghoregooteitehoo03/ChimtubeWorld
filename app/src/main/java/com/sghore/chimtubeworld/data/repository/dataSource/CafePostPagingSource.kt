@@ -2,10 +2,10 @@ package com.sghore.chimtubeworld.data.repository.dataSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.sghore.chimtubeworld.data.model.Post
+import com.sghore.chimtubeworld.core.model.Post
 import com.sghore.chimtubeworld.data.db.Dao
 import com.sghore.chimtubeworld.data.retrofit.NaverRetrofitService
-import com.sghore.chimtubeworld.other.Constants
+import com.sghore.chimtubeworld.core.common.Constants
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat

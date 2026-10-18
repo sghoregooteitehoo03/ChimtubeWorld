@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.presentation.RowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 

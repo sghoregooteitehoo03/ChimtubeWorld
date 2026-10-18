@@ -29,7 +29,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Playlist
+import com.sghore.chimtubeworld.core.model.Playlist
 import com.valentinilk.shimmer.shimmer
 
 @Composable

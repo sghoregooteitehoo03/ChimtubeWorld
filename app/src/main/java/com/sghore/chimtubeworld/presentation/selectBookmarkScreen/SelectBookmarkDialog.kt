@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import com.sghore.chimtubeworld.data.model.Video
-import com.sghore.chimtubeworld.other.Constants
+import com.sghore.chimtubeworld.core.common.Constants
 import com.sghore.chimtubeworld.other.OpenOtherApp
 
 @Composable

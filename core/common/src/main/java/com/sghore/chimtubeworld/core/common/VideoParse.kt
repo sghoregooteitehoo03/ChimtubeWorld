@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.util
+package com.sghore.chimtubeworld.core.common
 
 import java.math.RoundingMode
 import java.text.DecimalFormat

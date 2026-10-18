@@ -1,7 +1,7 @@
 package com.sghore.chimtubeworld.domain
 
-import com.sghore.chimtubeworld.data.model.Channel
-import com.sghore.chimtubeworld.data.model.Resource
+import com.sghore.chimtubeworld.core.model.Channel
+import com.sghore.chimtubeworld.core.common.Resource
 import com.sghore.chimtubeworld.data.repository.TwitchRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

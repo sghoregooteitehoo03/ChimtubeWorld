@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.util
+package com.sghore.chimtubeworld.core.common
 
 fun getVideoId(url: String): String? {
     val regex = Regex(

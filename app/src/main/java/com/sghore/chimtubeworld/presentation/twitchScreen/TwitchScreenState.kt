@@ -1,6 +1,6 @@
 package com.sghore.chimtubeworld.presentation.twitchScreen
 
-import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.core.model.Channel
 
 data class TwitchScreenState(
     val mainChannelInfo: Channel? = null,

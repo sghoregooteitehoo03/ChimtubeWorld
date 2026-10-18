@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.google.gson.Gson
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
-import com.sghore.chimtubeworld.data.model.Resource
+import com.sghore.chimtubeworld.core.common.Resource
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.BookmarkRepository
 import com.sghore.chimtubeworld.domain.GetYoutubeVideoUseCase

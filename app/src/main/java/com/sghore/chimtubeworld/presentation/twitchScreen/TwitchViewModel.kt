@@ -2,7 +2,7 @@ package com.sghore.chimtubeworld.presentation.twitchScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sghore.chimtubeworld.data.model.Resource
+import com.sghore.chimtubeworld.core.common.Resource
 import com.sghore.chimtubeworld.domain.GetTwitchChannelUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -24,9 +24,10 @@ class TwitchViewModel @Inject constructor(
             when (resource) {
                 is Resource.Success -> {
                     _state.update {
+                        val channels = resource.data
                         TwitchScreenState(
-                            mainChannelInfo = resource.data!!.filter { it.type == 0 }[0],
-                            channels = resource.data
+                            mainChannelInfo = channels!!.filter { it.type == 0 }[0],
+                            channels = channels
                         )
                     }
                 }

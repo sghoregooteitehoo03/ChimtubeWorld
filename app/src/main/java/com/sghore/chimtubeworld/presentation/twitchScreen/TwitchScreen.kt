@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Channel
+import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.presentation.RowList
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
-import com.sghore.chimtubeworld.util.parseFollowText
+import com.sghore.chimtubeworld.core.common.parseFollowText
 
 @Composable
 fun TwitchScreen(

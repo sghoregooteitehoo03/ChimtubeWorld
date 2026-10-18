@@ -2,8 +2,8 @@ package com.sghore.chimtubeworld.presentation.cafeScreen
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import com.sghore.chimtubeworld.data.model.Post
-import com.sghore.chimtubeworld.data.model.Resource
+import com.sghore.chimtubeworld.core.model.Post
+import com.sghore.chimtubeworld.core.common.Resource
 import com.sghore.chimtubeworld.domain.GetCafeInfoUseCase
 import com.sghore.chimtubeworld.domain.GetCafePostsUseCase
 import com.sghore.chimtubeworld.domain.InsertCafeHistoryUseCase

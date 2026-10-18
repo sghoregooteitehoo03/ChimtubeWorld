@@ -1,7 +1,7 @@
 package com.sghore.chimtubeworld.presentation.storeScreen
 
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.GoodsChannelInfo
+import com.sghore.chimtubeworld.core.model.GoodsChannelInfo
 
 data class StoreScreenState(
     val storeInfoList: List<GoodsChannelInfo> = listOf(

@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.other
+package com.sghore.chimtubeworld.core.common
 
 object Constants {
     const val YOUTUBE_PACKAGE_NAME = "com.google.android.youtube"

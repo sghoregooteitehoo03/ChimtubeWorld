@@ -1,8 +1,8 @@
 package com.sghore.chimtubeworld.presentation.cafeScreen
 
 import androidx.paging.PagingData
-import com.sghore.chimtubeworld.data.model.Channel
-import com.sghore.chimtubeworld.data.model.Post
+import com.sghore.chimtubeworld.core.model.Channel
+import com.sghore.chimtubeworld.core.model.Post
 import kotlinx.coroutines.flow.Flow
 
 data class CafeScreenState(

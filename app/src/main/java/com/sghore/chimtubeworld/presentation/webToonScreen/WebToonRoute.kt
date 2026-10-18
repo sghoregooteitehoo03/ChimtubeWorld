@@ -3,7 +3,7 @@ package com.sghore.chimtubeworld.presentation.webToonScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sghore.chimtubeworld.other.Constants
+import com.sghore.chimtubeworld.core.common.Constants
 import com.sghore.chimtubeworld.other.OpenOtherApp
 
 @Composable

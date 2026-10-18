@@ -5,7 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sghore.chimtubeworld.data.model.Goods
 import com.sghore.chimtubeworld.other.OpenOtherApp
 
 @Composable

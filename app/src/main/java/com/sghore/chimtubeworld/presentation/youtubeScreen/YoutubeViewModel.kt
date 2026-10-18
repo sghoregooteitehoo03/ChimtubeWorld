@@ -2,7 +2,7 @@ package com.sghore.chimtubeworld.presentation.youtubeScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sghore.chimtubeworld.data.model.Resource
+import com.sghore.chimtubeworld.core.common.Resource
 import com.sghore.chimtubeworld.domain.GetYoutubeChannelUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

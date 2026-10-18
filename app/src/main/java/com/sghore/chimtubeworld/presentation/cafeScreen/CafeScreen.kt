@@ -23,9 +23,9 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.CafeCategory
-import com.sghore.chimtubeworld.data.model.Channel
-import com.sghore.chimtubeworld.data.model.Post
+import com.sghore.chimtubeworld.core.model.CafeCategory
+import com.sghore.chimtubeworld.core.model.Channel
+import com.sghore.chimtubeworld.core.model.Post
 import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy

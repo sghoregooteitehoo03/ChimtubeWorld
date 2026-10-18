@@ -2,8 +2,8 @@ package com.sghore.chimtubeworld.presentation.webToonScreen
 
 import androidx.lifecycle.ViewModel
 import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.data.model.Channel
-import com.sghore.chimtubeworld.other.Constants
+import com.sghore.chimtubeworld.core.model.Channel
+import com.sghore.chimtubeworld.core.common.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

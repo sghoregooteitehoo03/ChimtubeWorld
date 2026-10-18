@@ -1,6 +1,6 @@
 package com.sghore.chimtubeworld.domain
 
-import com.sghore.chimtubeworld.data.model.Resource
+import com.sghore.chimtubeworld.core.common.Resource
 import com.sghore.chimtubeworld.data.model.Video
 import com.sghore.chimtubeworld.data.repository.YoutubeRepository
 import kotlinx.coroutines.flow.Flow

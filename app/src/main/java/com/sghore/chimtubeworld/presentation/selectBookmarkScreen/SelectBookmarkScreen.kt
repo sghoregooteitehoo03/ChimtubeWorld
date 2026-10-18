@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.data.model.Bookmark
-import com.sghore.chimtubeworld.util.parseDateTextFromPosition
+import com.sghore.chimtubeworld.core.common.parseDateTextFromPosition
 
 @Composable
 fun SelectBookmarkScreen(
