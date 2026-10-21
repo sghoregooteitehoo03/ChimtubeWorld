@@ -22,14 +22,14 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
 import com.sghore.chimtubeworld.core.model.CafeCategory
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.model.Post
-import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun CafeScreen(
@@ -48,7 +48,7 @@ fun CafeScreen(
     }
 
     Surface(
-        color = colorResource(id = R.color.default_background_color)
+        color = colorResource(id = DesignSystemR.color.default_background_color)
     ) {
         CollapsingToolbarScaffold(
             modifier = Modifier
@@ -62,9 +62,9 @@ fun CafeScreen(
                 )
                 .background(
                     color = if (isEnabled) {
-                        colorResource(id = R.color.default_background_color)
+                        colorResource(id = DesignSystemR.color.default_background_color)
                     } else {
-                        colorResource(id = R.color.gray_bright_night)
+                        colorResource(id = DesignSystemR.color.gray_bright_night)
                     }
                 ),
             scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
@@ -200,7 +200,7 @@ fun CafeInfoBanner(
             .fillMaxWidth()
             .height(218.dp)
             .background(
-                color = colorResource(id = R.color.cafe_banner),
+                color = colorResource(id = DesignSystemR.color.cafe_banner),
                 shape = RoundedCornerShape(12.dp)
             )
             .clip(
@@ -241,7 +241,7 @@ fun CafeInfoBanner(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = cafeInfo?.explains?.get(0) ?: "",
-                color = colorResource(id = R.color.gray_darker),
+                color = colorResource(id = DesignSystemR.color.gray_darker),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -264,14 +264,14 @@ fun CafeCategoryList(
         }
         items(categoryList) { category ->
             val textColor = if (category.categoryId == selectedCategoryId) {
-                colorResource(id = R.color.item_color)
+                colorResource(id = DesignSystemR.color.item_color)
             } else {
-                colorResource(id = R.color.default_text_color)
+                colorResource(id = DesignSystemR.color.default_text_color)
             }
             val backgroundColor = if (category.categoryId == selectedCategoryId) {
-                colorResource(id = R.color.gray_night)
+                colorResource(id = DesignSystemR.color.gray_night)
             } else {
-                colorResource(id = R.color.item_reverse_color)
+                colorResource(id = DesignSystemR.color.item_reverse_color)
             }
 
             Box(
@@ -282,7 +282,7 @@ fun CafeCategoryList(
                     )
                     .border(
                         width = 1.dp,
-                        color = colorResource(id = R.color.gray_night),
+                        color = colorResource(id = DesignSystemR.color.gray_night),
                         shape = RoundedCornerShape(22.dp)
                     )
                     .clip(RoundedCornerShape(22.dp))
@@ -334,14 +334,14 @@ fun CafePostItem(
             ) {
                 Text(
                     text = post?.title ?: "",
-                    color = colorResource(id = R.color.item_color),
+                    color = colorResource(id = DesignSystemR.color.item_color),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "${post?.userName} | ${post?.postDate}",
-                    color = colorResource(id = R.color.default_text_color),
+                    color = colorResource(id = DesignSystemR.color.default_text_color),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -361,7 +361,7 @@ fun CafePostItem(
         Divider(
             modifier = modifier
                 .align(Alignment.BottomStart),
-            color = colorResource(id = R.color.gray_bright_night)
+            color = colorResource(id = DesignSystemR.color.gray_bright_night)
         )
     }
 }

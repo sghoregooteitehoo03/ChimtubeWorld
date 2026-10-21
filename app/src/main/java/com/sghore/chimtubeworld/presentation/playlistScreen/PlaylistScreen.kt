@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.core.model.Playlist
 import com.valentinilk.shimmer.shimmer
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun PlaylistScreen(
@@ -60,7 +60,7 @@ fun PlaylistScreen(
                         modifier = Modifier
                             .padding(bottom = 12.dp)
                             .background(
-                                color = colorResource(id = R.color.gray_night),
+                                color = colorResource(id = DesignSystemR.color.gray_night),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clip(RoundedCornerShape(8.dp))
@@ -89,7 +89,7 @@ fun PlaylistItem(
             modifier = Modifier
                 .aspectRatio(16 / 9f)
                 .background(
-                    colorResource(id = R.color.gray_night),
+                    colorResource(id = DesignSystemR.color.gray_night),
                     shape = RoundedCornerShape(8.dp)
                 )
                 .clip(RoundedCornerShape(8.dp))

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sghore.chimtubeworld.core.model.GoodsChannelInfo
-import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
+import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
 
 @Composable
 fun StoreScreen(

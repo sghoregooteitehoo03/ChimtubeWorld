@@ -19,9 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.common.parseDateTextFromPosition
+import com.sghore.chimtubeworld.core.model.Bookmark
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun SelectBookmarkScreen(
@@ -32,7 +32,7 @@ fun SelectBookmarkScreen(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .background(color = colorResource(id = R.color.default_background_color)),
+            .background(color = colorResource(id = DesignSystemR.color.default_background_color)),
         contentAlignment = Alignment.TopCenter
     ) {
         Column {
@@ -40,14 +40,14 @@ fun SelectBookmarkScreen(
             Text(
                 text = "시작 위치 선택",
                 fontSize = 16.sp,
-                color = colorResource(id = R.color.item_color),
+                color = colorResource(id = DesignSystemR.color.item_color),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(14.dp))
             Divider(
                 modifier = Modifier.fillMaxWidth(),
-                color = colorResource(id = R.color.gray_bright_night)
+                color = colorResource(id = DesignSystemR.color.gray_bright_night)
             )
 
             LazyColumn(
@@ -63,7 +63,7 @@ fun SelectBookmarkScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
-                            .background(color = colorResource(id = R.color.gray_bright_night))
+                            .background(color = colorResource(id = DesignSystemR.color.gray_bright_night))
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -75,7 +75,7 @@ fun SelectBookmarkScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
-                            .background(color = colorResource(id = R.color.gray_bright_night))
+                            .background(color = colorResource(id = DesignSystemR.color.gray_bright_night))
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -125,7 +125,7 @@ fun BookmarkItem(
         Spacer(modifier = Modifier.width(14.dp))
         Text(
             text = bookmarkText,
-            color = colorResource(id = R.color.item_color),
+            color = colorResource(id = DesignSystemR.color.item_color),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)

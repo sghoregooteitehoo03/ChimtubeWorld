@@ -1,6 +1,6 @@
 package com.sghore.chimtubeworld.presentation.ui
 
-import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 sealed class NavigationScreen(
     val route: String,
@@ -9,32 +9,32 @@ sealed class NavigationScreen(
 ) {
     object Youtube : NavigationScreen(
         route = "Youtube",
-        selectedIcon = R.drawable.youtube,
-        unSelectedIcon = R.drawable.youtube_darker
+        selectedIcon = DesignSystemR.drawable.youtube,
+        unSelectedIcon = DesignSystemR.drawable.youtube_darker
     )
 
     object Twitch : NavigationScreen(
         route = "Twitch",
-        selectedIcon = R.drawable.chzzk,
-        unSelectedIcon = R.drawable.chzzk_darker
+        selectedIcon = DesignSystemR.drawable.chzzk,
+        unSelectedIcon = DesignSystemR.drawable.chzzk_darker
     )
 
     object WebToon : NavigationScreen(
         route = "Webtoon",
-        selectedIcon = R.drawable.webtoon,
-        unSelectedIcon = R.drawable.webtoon_darker
+        selectedIcon = DesignSystemR.drawable.webtoon,
+        unSelectedIcon = DesignSystemR.drawable.webtoon_darker
     )
 
     object Cafe : NavigationScreen(
         route = "Cafe",
-        selectedIcon = R.drawable.cafe,
-        unSelectedIcon = R.drawable.cafe_darker
+        selectedIcon = DesignSystemR.drawable.cafe,
+        unSelectedIcon = DesignSystemR.drawable.cafe_darker
     )
 
     object Store : NavigationScreen(
         route = "Store",
-        selectedIcon = R.drawable.store,
-        unSelectedIcon = R.drawable.store_darker
+        selectedIcon = DesignSystemR.drawable.store,
+        unSelectedIcon = DesignSystemR.drawable.store_darker
     )
 
     object Playlists : NavigationScreen(

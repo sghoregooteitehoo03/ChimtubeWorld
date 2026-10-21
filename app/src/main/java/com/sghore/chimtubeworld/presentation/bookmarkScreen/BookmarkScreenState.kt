@@ -1,11 +1,11 @@
 package com.sghore.chimtubeworld.presentation.bookmarkScreen
 
-import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.core.model.Video
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 data class BookmarkScreenState(
     val videoData: Video? = null,
-    val videoTypeImage: Int = R.drawable.youtube,
+    val videoTypeImage: Int = DesignSystemR.drawable.youtube,
     val bookmarkTitle: String = "",
     val videoPosition: String = "",
     val selectedColor: Int = android.graphics.Color.parseColor("#FF0000"),

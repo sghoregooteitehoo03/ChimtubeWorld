@@ -14,7 +14,7 @@
 - 가능한 가장 작은 변경 모듈의 compile·test부터 수행한다. app 조립, navigation, DI 연결에 영향이 있으면 app까지 검증한다.
 - 코드 작성을 마친 것과 작업을 완료한 것을 동일하게 취급하지 않는다. 가능한 검증을 수행하고, 수행하지 못한 검증은 이유와 함께 보고한다.
 
-현재는 `:app` 명령만 실행한다. **마이그레이션 진행 중 — 대상 모듈 생성 후 적용**: 아래 core·feature 명령은 [기준선](../migration/baseline.md)과 대상 모듈 생성 여부를 확인한 뒤 사용한다. `<module>`, `<name>`, `<module-path>`는 실제 Gradle module path로 바꾼다.
+현재 생성된 core와 `:app`에 해당하는 명령을 실행한다. **마이그레이션 진행 중 — 대상 모듈 생성 후 적용**: 아래 core·feature 명령은 [기준선](../migration/baseline.md)과 대상 모듈 생성 여부를 확인한 뒤 사용한다. `<module>`, `<name>`, `<module-path>`는 실제 Gradle module path로 바꾼다.
 
 ```shell
 ./gradlew :core:<module>:compileDebugKotlin

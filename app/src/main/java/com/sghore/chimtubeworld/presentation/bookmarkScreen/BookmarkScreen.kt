@@ -26,16 +26,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
-import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.common.parseUploadTimeText
 import com.sghore.chimtubeworld.core.common.parseVideoDurationText
 import com.sghore.chimtubeworld.core.common.parseViewCountText
+import com.sghore.chimtubeworld.core.model.Video
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.Duration
-import androidx.core.graphics.toColorInt
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun BookmarkScreen(
@@ -56,7 +56,7 @@ fun BookmarkScreen(
         if (uiState.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
+                color = colorResource(id = DesignSystemR.color.item_color)
             )
         } else {
             Column {
@@ -106,7 +106,7 @@ fun VideoInfo(
                     fontSize = 12.sp,
                     modifier = Modifier
                         .background(
-                            color = colorResource(id = R.color.black_alpha_80),
+                            color = colorResource(id = DesignSystemR.color.black_alpha_80),
                             shape = RoundedCornerShape(4.dp)
                         )
                         .padding(start = 6.dp, end = 6.dp, top = 2.dp, bottom = 2.dp)
@@ -120,31 +120,31 @@ fun VideoInfo(
             Row {
                 Text(
                     text = video?.channelName ?: "",
-                    color = colorResource(id = R.color.item_color),
+                    color = colorResource(id = DesignSystemR.color.item_color),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.youtube),
+                    painter = painterResource(id = DesignSystemR.drawable.youtube),
                     contentDescription = "typeImage"
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = video?.title ?: "",
-                color = colorResource(id = R.color.item_color)
+                color = colorResource(id = DesignSystemR.color.item_color)
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "${parseViewCountText(video?.viewCount ?: 0)} • ${parseUploadTimeText(video?.uploadTime ?: 0)}",
-                color = colorResource(id = R.color.default_text_color)
+                color = colorResource(id = DesignSystemR.color.default_text_color)
             )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
         Divider(
-            color = colorResource(id = R.color.gray_bright_night),
+            color = colorResource(id = DesignSystemR.color.gray_bright_night),
             thickness = 2.dp
         )
     }
@@ -174,15 +174,15 @@ fun InputBookmarkInfo(
             placeholder = {
                 Text(
                     text = "북마크 제목",
-                    color = colorResource(id = R.color.default_text_color)
+                    color = colorResource(id = DesignSystemR.color.default_text_color)
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
-                textColor = colorResource(id = R.color.item_color),
+                textColor = colorResource(id = DesignSystemR.color.item_color),
                 backgroundColor = Color.Transparent,
-                focusedIndicatorColor = colorResource(id = R.color.item_color),
-                unfocusedIndicatorColor = colorResource(id = R.color.gray_night),
-                cursorColor = colorResource(id = R.color.item_color)
+                focusedIndicatorColor = colorResource(id = DesignSystemR.color.item_color),
+                unfocusedIndicatorColor = colorResource(id = DesignSystemR.color.gray_night),
+                cursorColor = colorResource(id = DesignSystemR.color.item_color)
             ),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
@@ -200,15 +200,15 @@ fun InputBookmarkInfo(
             placeholder = {
                 Text(
                     text = "영상 위치 (00:00)",
-                    color = colorResource(id = R.color.default_text_color)
+                    color = colorResource(id = DesignSystemR.color.default_text_color)
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
-                textColor = colorResource(id = R.color.item_color),
+                textColor = colorResource(id = DesignSystemR.color.item_color),
                 backgroundColor = Color.Transparent,
-                focusedIndicatorColor = colorResource(id = R.color.item_color),
-                unfocusedIndicatorColor = colorResource(id = R.color.gray_night),
-                cursorColor = colorResource(id = R.color.item_color)
+                focusedIndicatorColor = colorResource(id = DesignSystemR.color.item_color),
+                unfocusedIndicatorColor = colorResource(id = DesignSystemR.color.gray_night),
+                cursorColor = colorResource(id = DesignSystemR.color.item_color)
             ),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
@@ -234,8 +234,8 @@ fun InputBookmarkInfo(
             .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
     ) {
         val buttonColors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(id = R.color.item_color),
-            disabledBackgroundColor = colorResource(id = R.color.gray_night)
+            backgroundColor = colorResource(id = DesignSystemR.color.item_color),
+            disabledBackgroundColor = colorResource(id = DesignSystemR.color.gray_night)
         )
 
         Button(
@@ -249,7 +249,7 @@ fun InputBookmarkInfo(
         ) {
             Text(
                 text = buttonText,
-                color = colorResource(id = R.color.item_reverse_color)
+                color = colorResource(id = DesignSystemR.color.item_reverse_color)
             )
         }
     }
@@ -300,9 +300,9 @@ fun BookmarkColorItem(
     modifier: Modifier = Modifier,
 ) {
     val backgroundColor = if (isSelected) {
-        colorResource(id = R.color.black_alpha_30)
+        colorResource(id = DesignSystemR.color.black_alpha_30)
     } else {
-        colorResource(id = R.color.gray_bright_night)
+        colorResource(id = DesignSystemR.color.gray_bright_night)
     }
 
     Box(
@@ -357,7 +357,7 @@ fun VideoInfoPreview() {
                 duration = duration,
                 url = ""
             ),
-            typeImage = R.drawable.youtube
+            typeImage = DesignSystemR.drawable.youtube
         )
     }
 }

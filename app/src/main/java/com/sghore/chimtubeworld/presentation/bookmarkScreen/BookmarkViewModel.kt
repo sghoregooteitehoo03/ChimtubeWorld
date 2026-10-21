@@ -2,19 +2,19 @@ package com.sghore.chimtubeworld.presentation.bookmarkScreen
 
 import androidx.lifecycle.*
 import com.google.gson.Gson
-import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.common.Resource
 import com.sghore.chimtubeworld.core.common.suspendRunCatching
-import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.domain.repository.BookmarkRepository
 import com.sghore.chimtubeworld.core.domain.repository.YoutubeRepository
+import com.sghore.chimtubeworld.core.model.Bookmark
+import com.sghore.chimtubeworld.core.model.Video
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @HiltViewModel
 class BookmarkViewModel @Inject constructor(
@@ -210,9 +210,9 @@ class BookmarkViewModel @Inject constructor(
         val time = getSecondsFromPosition(videoPosition)
         val latestState = _state.value
 
-        return if (latestState.videoTypeImage == R.drawable.youtube) {
+        return if (latestState.videoTypeImage == DesignSystemR.drawable.youtube) {
             "${latestState.videoData!!.url}&t=$time"
-        } else if (latestState.videoTypeImage == R.drawable.twitch) {
+        } else if (latestState.videoTypeImage == DesignSystemR.drawable.twitch) {
             "$${latestState.videoData!!.url}?t=$time"
         } else {
             ""

@@ -1,4 +1,4 @@
-package com.plcoding.cryptocurrencyappyt.presentation.ui.theme
+package com.sghore.chimtubeworld.core.designsystem.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

@@ -22,11 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.core.model.Channel
-import com.sghore.chimtubeworld.presentation.RowList
-import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
 import com.sghore.chimtubeworld.core.common.parseFollowText
+import com.sghore.chimtubeworld.core.designsystem.component.RowList
+import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
+import com.sghore.chimtubeworld.core.model.Channel
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun TwitchScreen(
@@ -38,7 +38,7 @@ fun TwitchScreen(
         if (uiState.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
+                color = colorResource(id = DesignSystemR.color.item_color)
             )
         } else {
             RowList(
@@ -86,7 +86,7 @@ fun MainChannelInfo(
         null
     } else {
         ColorFilter.tint(
-            colorResource(id = R.color.black_alpha_50),
+            colorResource(id = DesignSystemR.color.black_alpha_50),
             blendMode = BlendMode.SrcOver
         )
     }
@@ -119,7 +119,7 @@ fun MainChannelInfo(
                         .border(
                             width = 2.dp,
                             color = if (mainChannel?.isOnline == true)
-                                colorResource(id = R.color.green_online_color)
+                                colorResource(id = DesignSystemR.color.green_online_color)
                             else
                                 colorResource(id = android.R.color.darker_gray),
                             shape = CircleShape
@@ -142,11 +142,11 @@ fun MainChannelInfo(
                             modifier = Modifier
                                 .border(
                                     width = 2.dp,
-                                    color = colorResource(id = R.color.item_reverse_color),
+                                    color = colorResource(id = DesignSystemR.color.item_reverse_color),
                                     shape = RoundedCornerShape(4.dp)
                                 )
                                 .background(
-                                    color = colorResource(id = R.color.red_online_color),
+                                    color = colorResource(id = DesignSystemR.color.red_online_color),
                                     shape = RoundedCornerShape(4.dp)
                                 )
                                 .padding(start = 4.dp, end = 4.dp, top = 2.dp, bottom = 2.dp)
@@ -161,7 +161,7 @@ fun MainChannelInfo(
             ) {
                 Text(
                     text = mainChannel?.name ?: "",
-                    color = colorResource(id = R.color.item_color),
+                    color = colorResource(id = DesignSystemR.color.item_color),
                     fontSize = 18.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -169,7 +169,7 @@ fun MainChannelInfo(
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = parseFollowText(mainChannel?.explains?.get(1)),
-                    color = colorResource(id = R.color.default_text_color),
+                    color = colorResource(id = DesignSystemR.color.default_text_color),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -217,14 +217,14 @@ fun TwitchCrewChannelItem(
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = channel?.name ?: "",
-            color = colorResource(id = R.color.item_color),
+            color = colorResource(id = DesignSystemR.color.item_color),
             fontSize = 18.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
         Text(
             text = channel?.explains?.get(0) ?: "",
-            color = colorResource(id = R.color.default_text_color),
+            color = colorResource(id = DesignSystemR.color.default_text_color),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

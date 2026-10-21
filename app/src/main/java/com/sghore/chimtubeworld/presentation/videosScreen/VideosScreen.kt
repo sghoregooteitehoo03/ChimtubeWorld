@@ -21,13 +21,13 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.core.model.Bookmark
-import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.common.parseUploadTimeText
 import com.sghore.chimtubeworld.core.common.parseVideoDurationText
 import com.sghore.chimtubeworld.core.common.parseViewCountText
+import com.sghore.chimtubeworld.core.model.Bookmark
+import com.sghore.chimtubeworld.core.model.Video
 import com.valentinilk.shimmer.*
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun VideosScreen(
@@ -93,7 +93,7 @@ fun VideoItem(
                     fontSize = 12.sp,
                     modifier = Modifier
                         .background(
-                            color = colorResource(id = R.color.black_alpha_80),
+                            color = colorResource(id = DesignSystemR.color.black_alpha_80),
                             shape = RoundedCornerShape(4.dp)
                         )
                         .padding(start = 6.dp, end = 6.dp, top = 2.dp, bottom = 2.dp)
@@ -104,7 +104,7 @@ fun VideoItem(
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = video?.title ?: "",
-            color = colorResource(id = R.color.item_color),
+            color = colorResource(id = DesignSystemR.color.item_color),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 12.dp, end = 12.dp),
@@ -114,7 +114,7 @@ fun VideoItem(
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = "${parseViewCountText(video?.viewCount ?: 0)} • ${parseUploadTimeText(video?.uploadTime ?: 0)}",
-            color = colorResource(id = R.color.default_text_color),
+            color = colorResource(id = DesignSystemR.color.default_text_color),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 12.dp, end = 12.dp),
@@ -154,7 +154,7 @@ fun VideoShimmerItem() {
         Box(
             modifier = Modifier
                 .aspectRatio(16 / 9f)
-                .background(color = colorResource(id = R.color.gray_night))
+                .background(color = colorResource(id = DesignSystemR.color.gray_night))
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -162,7 +162,7 @@ fun VideoShimmerItem() {
             modifier = Modifier
                 .padding(start = 12.dp, end = 12.dp)
                 .clip(RoundedCornerShape(4.dp))
-                .background(color = colorResource(id = R.color.gray_night))
+                .background(color = colorResource(id = DesignSystemR.color.gray_night))
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(6.dp))
@@ -171,7 +171,7 @@ fun VideoShimmerItem() {
             modifier = Modifier
                 .padding(start = 12.dp, end = 12.dp)
                 .clip(RoundedCornerShape(4.dp))
-                .background(color = colorResource(id = R.color.gray_night))
+                .background(color = colorResource(id = DesignSystemR.color.gray_night))
                 .fillMaxWidth(0.4f)
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -187,7 +187,7 @@ fun BookmarkItem(
         modifier = Modifier
             .clip(RoundedCornerShape(4.dp))
             .background(
-                color = colorResource(id = R.color.gray_bright_night)
+                color = colorResource(id = DesignSystemR.color.gray_bright_night)
             )
             .clickable {
                 onClick()
@@ -204,7 +204,7 @@ fun BookmarkItem(
         Spacer(modifier = Modifier.width(6.dp))
         Text(
             text = bookmark.title,
-            color = colorResource(id = R.color.item_color),
+            color = colorResource(id = DesignSystemR.color.item_color),
             fontSize = 12.sp
         )
     }

@@ -7,14 +7,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
-import com.sghore.chimtubeworld.R
-import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.common.Constants
+import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.presentation.selectBookmarkScreen.SelectBookmarkDialog
 import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
 import kotlinx.coroutines.flow.collectLatest
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun VideosRoute(
@@ -91,7 +91,7 @@ private fun playVideo(
     video: Video,
     typeImageRes: Int
 ) {
-    val packageName = if (typeImageRes == R.drawable.youtube) {
+    val packageName = if (typeImageRes == DesignSystemR.drawable.youtube) {
         // Youtube 패키지
         val youtubePackage = Constants.YOUTUBE_PACKAGE_NAME
         if (video.bookmarks.isEmpty()) {

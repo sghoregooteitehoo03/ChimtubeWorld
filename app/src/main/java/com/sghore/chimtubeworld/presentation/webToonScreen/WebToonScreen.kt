@@ -16,10 +16,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.core.designsystem.component.RowList
+import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
 import com.sghore.chimtubeworld.core.model.Channel
-import com.sghore.chimtubeworld.presentation.RowList
-import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun WebToonScreen(
@@ -77,13 +77,13 @@ fun WebToonItem(
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = webtoon.name,
-            color = colorResource(id = R.color.item_color),
+            color = colorResource(id = DesignSystemR.color.item_color),
             fontSize = 18.sp
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = webtoon.explains[0],
-            color = colorResource(id = R.color.default_text_color),
+            color = colorResource(id = DesignSystemR.color.default_text_color),
         )
     }
 }

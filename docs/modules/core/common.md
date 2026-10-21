@@ -21,7 +21,7 @@ Step 7에서 템플릿의 `ResultExt`, dispatcher DI와 Util 지침 주석을 �
 - 순수 Kotlin 문자열, 숫자, 날짜 포맷, 안전 변환, collection 확장처럼 Android에 묶이지 않는 가벼운 공통 기능을 포함한다.
 - Android `Context` 의존 유틸, Compose/UI 유틸, Room·Retrofit 전용 유틸, feature 전용 로직은 제외한다.
 - 화면 state, navigation 정책, data 변환 규칙은 제외한다.
-- `OpenOtherApp`은 `Context`와 외부 앱 실행에 의존하므로 현재 `:app`에 유지하고 Step 9에서 위치를 결정한다.
+- `OpenOtherApp`은 `Context`와 외부 앱 실행에 의존하므로 Step 9에서도 `:app`에 유지한다. 순수 Kotlin common의 경계와 ui의 View·MVI 기반 타입 경계를 넓히지 않으며 feature 분리 시 외부 실행 콜백 경계와 함께 재검토한다.
 
 ## 공개 경계와 의존성
 

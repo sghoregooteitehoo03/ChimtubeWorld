@@ -5,8 +5,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun PlaylistRoute(
@@ -19,7 +19,7 @@ fun PlaylistRoute(
         uiState = uiState,
         onPlaylistClick = { playlist ->
             val route = NavigationScreen.Videos.route +
-                    "?typeImageRes=${R.drawable.youtube}" +
+                    "?typeImageRes=${DesignSystemR.drawable.youtube}" +
                     "&playlistId=${playlist.id}" +
                     "&playlistName=${playlist.title}"
 

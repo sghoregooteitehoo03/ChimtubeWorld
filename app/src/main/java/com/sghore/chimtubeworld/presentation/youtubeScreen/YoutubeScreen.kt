@@ -18,10 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.core.designsystem.component.RowItemCollocate
+import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
 import com.sghore.chimtubeworld.core.model.Channel
-import com.sghore.chimtubeworld.presentation.RowItemCollocate
-import com.sghore.chimtubeworld.presentation.TitleTextWithExplain
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun YoutubeScreen(
@@ -36,7 +36,7 @@ fun YoutubeScreen(
         if (uiState.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
-                color = colorResource(id = R.color.item_color)
+                color = colorResource(id = DesignSystemR.color.item_color)
             )
         } else {
             Column(modifier = Modifier.padding(12.dp)) {
@@ -93,7 +93,7 @@ fun MainYoutubeChannelItem(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(colorResource(id = R.color.gray_bright_night))
+            .background(colorResource(id = DesignSystemR.color.gray_bright_night))
             .clickable { onClick(channel!!) }
             .padding(16.dp)
     ) {
@@ -111,7 +111,7 @@ fun MainYoutubeChannelItem(
         ) {
             Text(
                 text = channel?.name ?: "",
-                color = colorResource(id = R.color.item_color),
+                color = colorResource(id = DesignSystemR.color.item_color),
                 fontSize = 18.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -119,7 +119,7 @@ fun MainYoutubeChannelItem(
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = channel?.explains?.get(0) ?: "",
-                color = colorResource(id = R.color.default_text_color),
+                color = colorResource(id = DesignSystemR.color.default_text_color),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -180,14 +180,14 @@ fun SubYoutubeChannelItem(
         Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = channel?.explains?.get(0) ?: "",
-            color = colorResource(id = R.color.item_color),
+            color = colorResource(id = DesignSystemR.color.item_color),
             fontSize = 18.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
         Text(
             text = channel?.name ?: "",
-            color = colorResource(id = R.color.default_text_color),
+            color = colorResource(id = DesignSystemR.color.default_text_color),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

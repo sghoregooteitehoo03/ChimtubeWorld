@@ -37,8 +37,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.plcoding.cryptocurrencyappyt.presentation.ui.theme.ChimtubeWorldTheme
-import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.presentation.BottomNavigationBar
 import com.sghore.chimtubeworld.presentation.TopAppBarNavigationItem
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkRoute
@@ -51,6 +50,7 @@ import com.sghore.chimtubeworld.presentation.videosScreen.VideosRoute
 import com.sghore.chimtubeworld.presentation.webToonScreen.WebToonRoute
 import com.sghore.chimtubeworld.presentation.youtubeScreen.YoutubeRoute
 import dagger.hilt.android.AndroidEntryPoint
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -62,8 +62,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setSystemBarsColor(
             window = window,
-            statusBarColor = getColor(R.color.white),
-            navigationBarColor = getColor(R.color.white)
+            statusBarColor = getColor(DesignSystemR.color.white),
+            navigationBarColor = getColor(DesignSystemR.color.white)
         )
 
         setContent {
@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
                             ?.substringBefore("?")
 
                         com.google.accompanist.insets.ui.TopAppBar(
-                            backgroundColor = colorResource(id = R.color.default_background_color),
+                            backgroundColor = colorResource(id = DesignSystemR.color.default_background_color),
                             elevation = 0.dp,
                             modifier = Modifier.fillMaxWidth(),
                             title = {
@@ -209,7 +209,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
                         Divider(
-                            color = colorResource(id = R.color.gray_bright_night)
+                            color = colorResource(id = DesignSystemR.color.gray_bright_night)
                         )
                         NavHost(
                             navController = navController,
@@ -280,7 +280,7 @@ class MainActivity : ComponentActivity() {
                                     gViewModel = gViewModel,
                                     navController = navController,
                                     typeImageRes = entry.arguments?.getInt("typeImageRes")
-                                        ?: R.drawable.youtube
+                                        ?: DesignSystemR.drawable.youtube
                                 )
                             }
                             composable(

@@ -2,7 +2,7 @@
 
 이 문서는 작업 종류에 따라 읽어야 할 규칙을 안내한다. 상세 규칙은 링크된 문서에만 두고, 같은 내용을 여러 문서에 중복하지 않는다.
 
-현재는 단일 `:app`이다. **마이그레이션 진행 중 — 대상 모듈 생성 후 적용** 표시는 후속 구조의 규칙을 뜻한다. 현재 구현·불변 항목은 [기준선](migration/baseline.md), 수동 검증은 [스모크 체크리스트](migration/smoke-checklist.md)를 확인한다.
+현재는 `:app`과 추출된 common·model·database·network·domain·data·testing·designsystem·ui core 모듈로 구성된다. feature 분리와 MVI·Material 3·Navigation 3 전환은 후속 단계다. **마이그레이션 진행 중 — 대상 모듈 생성 후 적용** 표시는 후속 구조의 규칙을 뜻한다. 현재 구현·불변 항목은 [기준선](migration/baseline.md), 수동 검증은 [스모크 체크리스트](migration/smoke-checklist.md)를 확인한다.
 
 ## 문서 디렉터리
 

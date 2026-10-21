@@ -1,151 +1,16 @@
 package com.sghore.chimtubeworld.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.paging.compose.LazyPagingItems
-import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
-
-@Composable
-fun TitleTextWithExplain(
-    title: String,
-    explain: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Text(
-            text = title,
-            color = colorResource(id = R.color.item_color),
-            fontSize = 22.sp
-        )
-        Spacer(Modifier.width(6.dp))
-        Text(
-            text = explain,
-            color = colorResource(id = R.color.default_text_color),
-            fontSize = 16.sp
-        )
-    }
-}
-
-@Composable
-fun <T> RowList(
-    list: List<T>,
-    spanCount: Int,
-    contentPaddingValue: Dp,
-    itemPaddingValue: Dp,
-    headerItem: @Composable () -> Unit,
-    listItem: @Composable (Int, Modifier) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        contentPadding = PaddingValues(contentPaddingValue)
-    ) {
-        val itemCount = if (list.size % spanCount == 0) {
-            list.size / spanCount
-        } else {
-            list.size / spanCount + 1
-        }
-
-        item {
-            headerItem()
-        }
-
-        items(itemCount) { index ->
-            RowItemCollocate(
-                rowIndex = index,
-                list = list,
-                spanCount = spanCount,
-                paddingValue = itemPaddingValue,
-                content = listItem,
-                modifier = modifier
-            )
-        }
-    }
-}
-
-@Composable
-fun <T : Any> PagingRowList(
-    list: LazyPagingItems<T>,
-    spanCount: Int,
-    contentPaddingValue: Dp,
-    itemPaddingValue: Dp,
-    headerItem: @Composable () -> Unit,
-    listItem: @Composable (Int, Modifier) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        contentPadding = PaddingValues(contentPaddingValue)
-    ) {
-        val itemCount = if (list.itemCount % spanCount == 0) {
-            list.itemCount / spanCount
-        } else {
-            list.itemCount / spanCount + 1
-        }
-
-        item {
-            headerItem()
-        }
-
-        items(itemCount) { index ->
-            RowItemCollocate(
-                rowIndex = index,
-                list = list.itemSnapshotList.items,
-                spanCount = spanCount,
-                paddingValue = itemPaddingValue,
-                content = listItem,
-                modifier = modifier
-            )
-        }
-    }
-}
-
-@Composable
-fun <T> RowItemCollocate(
-    rowIndex: Int,
-    list: List<T>,
-    spanCount: Int,
-    paddingValue: Dp,
-    content: @Composable (Int, Modifier) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier) {
-        Row {
-            for (index in 0 until spanCount) {
-                if (list.size >= rowIndex * spanCount + (index + 1)) {
-                    content(
-                        rowIndex * spanCount + index,
-                        Modifier.weight(1f)
-                    )
-
-                    if (index != spanCount - 1) {
-                        Spacer(modifier = Modifier.width(paddingValue))
-                    }
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(paddingValue))
-    }
-}
-
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 fun TopAppBarNavigationItem(
     currentRoute: String?,
@@ -173,7 +38,7 @@ fun BottomNavigationBar(
 
     if (!isHide) {
         BottomNavigation(
-            backgroundColor = colorResource(id = R.color.default_background_color),
+            backgroundColor = colorResource(id = DesignSystemR.color.default_background_color),
         ) {
             bottomMenu.forEach { menu ->
                 // 아이콘 선택 여부

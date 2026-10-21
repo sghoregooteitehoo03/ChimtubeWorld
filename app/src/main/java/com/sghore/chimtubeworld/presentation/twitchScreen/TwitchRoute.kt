@@ -19,9 +19,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sghore.chimtubeworld.R
 import com.sghore.chimtubeworld.core.common.Constants
 import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
@@ -43,15 +43,15 @@ fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
-                    .background(color = colorResource(id = R.color.default_background_color))
+                    .background(color = colorResource(id = DesignSystemR.color.default_background_color))
                     .padding(16.dp)
             ) {
                 SelectionItem(
                     modifier = Modifier
                         .size(120.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(color = colorResource(id = R.color.gray_bright_night)),
-                    image = painterResource(id = R.drawable.youtube),
+                        .background(color = colorResource(id = DesignSystemR.color.gray_bright_night)),
+                    image = painterResource(id = DesignSystemR.drawable.youtube),
                     explain = "유튜브에서 보기",
                     onClick = {
                         OpenOtherApp(context).openYoutube(
@@ -66,8 +66,8 @@ fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
                     modifier = Modifier
                         .size(120.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(color = colorResource(id = R.color.gray_bright_night)),
-                    image = painterResource(id = R.drawable.chzzk),
+                        .background(color = colorResource(id = DesignSystemR.color.gray_bright_night)),
+                    image = painterResource(id = DesignSystemR.drawable.chzzk),
                     explain = "치지직에서 보기",
                     onClick = {
                         OpenOtherApp(context).openCustomTabs(
@@ -103,7 +103,7 @@ fun SelectionItem(
         Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = explain,
-            color = colorResource(id = R.color.item_color)
+            color = colorResource(id = DesignSystemR.color.item_color)
         )
     }
 }
