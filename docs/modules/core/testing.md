@@ -1,6 +1,6 @@
 # :core:testing
 
-Step 8에서 공통 테스트 도구를 구현했다. namespace와 package는 `com.sghore.chimtubeworld.core.testing`이다. production 소비자는 없으며 현재 `:core:data`의 로컬 테스트에서 fixture를 사용한다.
+Step 8에서 공통 테스트 도구를 구현했다. namespace와 package는 `com.sghore.chimtubeworld.core.testing`이다. production 소비자는 없으며 `:core:data`의 로컬 테스트에서 fixture를, Step 13의 webtoon·store ViewModel 테스트에서 MainDispatcherRule을 사용한다.
 
 ## 역할
 

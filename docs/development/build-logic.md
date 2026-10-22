@@ -8,6 +8,7 @@
 
 ## 현재 적용 범위
 
+- 이 프로젝트의 Gradle daemon 최대 heap은 `gradle.properties`의 `-Xmx4096m`(4 GB)으로 설정한다. 템플릿은 2 GB를 사용하지만, 여러 feature의 androidTest APK를 한 빌드에서 패키징할 때 2 GB에서 `OutOfMemoryError: Java heap space`가 발생해 늘렸다.
 - plugin id는 참조 구현과 같은 `sg.*`를 유지한다. 등록·내부 적용·catalog alias·문서의 이름을 일치시켜 불필요한 이름 변경을 줄인다. build-logic group은 `com.sghore.chimtubeworld.buildlogic`이다.
 - app에는 application, application.compose, hilt, serialization을 적용한다. 기존 SDK 설정은 catalog에서, Java 17 호환성은 Android extension에서 제공한다. 앱 식별자·버전·BuildConfig·릴리스 설정·google-services는 app에 남긴다.
 - Compose convention은 Material 3와 공통 UI·Lifecycle·테스트 의존성을 추가한다. 기존 Material 2는 app과 designsystem이 선언하며 icons-extended는 app이 계속 선언한다.

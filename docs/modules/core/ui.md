@@ -36,10 +36,10 @@ feature가 공통으로 사용하는 MVI 기반 `BaseViewModel`과 `:core:model`
 
 ## 현재 포함된 구현과 이동 경계
 
-- `base/BaseContract.kt`, `base/BaseViewModel.kt`: 템플릿에서 package만 조정해 복사했다. 아직 production 사용처는 없으며 후속 feature MVI 단계에서 적용한다. 기존 화면의 상태 관리·이벤트 처리는 바꾸지 않는다.
+- `base/BaseContract.kt`, `base/BaseViewModel.kt`: 템플릿에서 package만 조정해 복사했다. Step 13에서 webtoon·store의 Contract·ViewModel이 사용한다. 나머지 화면은 후속 feature MVI 단계에서 적용하며 base stream 동작은 유지한다.
 - `PagingRowList.kt`: `LazyPagingItems`를 받는 기존 목록을 그대로 이동했다. designsystem의 `RowItemCollocate`를 조합하며 모델 표시용 신규 View는 아직 없다.
 - `BottomNavigationBar`는 app의 `presentation/ReUseableView.kt`에 유지한다. 앱 탭 정의를 사용하는 navigation chrome이다. 모델·navigation에 의존하지 않는 `ScreenScaffold`는 designsystem이 제공한다.
-- `OpenOtherApp.kt`: Step 12에서 app으로의 feature 의존성을 없애기 위해 이동한 공유 Android UI helper다. 공개 클래스·메서드를 app과 webtoon·store가 사용하며 순수 Kotlin common에는 두지 않는다. 호출부의 상태·이벤트 처리는 유지한다.
+- `OpenOtherApp.kt`: Step 12에서 app으로의 feature 의존성을 없애기 위해 이동한 공유 Android UI helper다. 공개 클래스·메서드를 app과 webtoon·store가 사용하며 순수 Kotlin common에는 두지 않는다. Step 13에서 webtoon·store는 Route가 전달한 side effect를 각 EntryProvider에서 이 helper로 실행한다. 기존 패키지·스킴·웹 fallback·실패 토스트는 유지한다.
 
 ## 현재 구현 참고
 

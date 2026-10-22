@@ -1,9 +1,8 @@
 # Feature 작업 규칙
 
-**마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. 현재 화면은 `app`의 [presentation](../../app/src/main/java/com/sghore/chimtubeworld/presentation)에 있다. 아래는 목표 구조이며 기존 상태와 이동 제약은 [기준선](../migration/baseline.md)을 따른다. 이동 단계에서는 로직을 유지하고, MVI·문자열 리소스·테스트는 이후 전환 단계에서 적용한다.
+**마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. Step 12에서 webtoon·store를 api/impl로 분리했고, Step 13에서 두 feature에 아래 MVI·문자열 리소스·Preview·테스트 패턴을 적용했다. 나머지 화면은 `app`의 [presentation](../../app/src/main/java/com/sghore/chimtubeworld/presentation)에 있다. 기존 상태와 이동 제약은 [기준선](../migration/baseline.md)을 따른다. 이동 단계에서는 로직을 유지하고, MVI·문자열 리소스·테스트는 이후 전환 단계에서 적용한다.
 
-
-Step 11에서 NavKey·이동 확장 함수·EntryProvider 및 assisted ViewModel 생성은 단일 app 안에서 먼저 적용했다. 현재 위치는 [app/navigation](../../app/src/main/java/com/sghore/chimtubeworld/navigation)이며, feature 분리 시 아래 API·impl 경계로 옮긴다. MVI 전환은 이번 단계에 포함하지 않는다.
+Step 11에서 NavKey·이동 확장 함수·EntryProvider 및 assisted ViewModel 생성은 단일 app 안에서 먼저 적용했다. webtoon·store의 navigation은 각 feature API·impl에 있고, 나머지는 [app/navigation](../../app/src/main/java/com/sghore/chimtubeworld/navigation)에 유지한다.
 
 ## 모듈 경계
 
@@ -73,3 +72,10 @@ feature/<name>/impl/
 5. app에 API·impl 의존성을 추가하고 root composable의 entryProvider에 등록한다. top-level 탭이면 app 탭 정의·문자열·아이콘도 연결한다.
 6. 분기 있는 로직과 상태별 Screen 테스트는 [테스트 가이드](../development/testing.md)를 따른다.
 7. 대상 모듈 compile·test 후 app assembleDebug를 확인한다. 명령과 완료 보고는 [품질 규칙](../development/quality.md)을 따른다.
+
+## 참고 예제
+
+- 인자 없는 top-level 화면의 Contract·Route·Screen·ViewModel: [webtoon_screen](../../feature/webtoon/impl/src/main/java/com/sghore/chimtubeworld/feature/webtoon/impl/webtoon_screen), [store_screen](../../feature/store/impl/src/main/java/com/sghore/chimtubeworld/feature/store/impl/store_screen). 고정 목록은 UiState의 데이터로 유지하며 표시하지 않는 로딩·오류 상태는 추가하지 않는다.
+- 외부 실행 연결: [WebtoonEntryProvider](../../feature/webtoon/impl/src/main/java/com/sghore/chimtubeworld/feature/webtoon/impl/navigation/WebtoonEntryProvider.kt)는 `OpenWebtoon(id, url)`을 기존 패키지·스킴·웹 fallback helper로, [StoreEntryProvider](../../feature/store/impl/src/main/java/com/sghore/chimtubeworld/feature/store/impl/navigation/StoreEntryProvider.kt)는 `OpenUrl(url)`을 Custom Tabs helper로 연결한다. app의 기존 `webtoonEntry()`·`storeEntry()` 등록은 유지한다.
+- 화면 소유 문자열·접근성 형식 인자: [webtoon strings.xml](../../feature/webtoon/impl/src/main/res/values/strings.xml), [store strings.xml](../../feature/store/impl/src/main/res/values/strings.xml). 작품명·연도·상점명·URL은 데이터로 유지한다. Screen과 `component/`의 항목은 샘플 UiState로 라이트·다크 Preview를 제공한다.
+- ViewModel·Screen 테스트는 [테스트 가이드의 실제 예제](../development/testing.md#실제-예제)를 참고한다. 인자 있는 화면의 AssistedInject 예제는 후속 MVI 단계에서 추가한다.

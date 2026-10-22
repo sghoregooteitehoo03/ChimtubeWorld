@@ -1,15 +1,14 @@
 package com.sghore.chimtubeworld.feature.webtoon.impl.webtoon_screen
 
-import androidx.lifecycle.ViewModel
-import com.sghore.chimtubeworld.feature.webtoon.impl.R
-import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.common.Constants
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import com.sghore.chimtubeworld.core.model.Channel
+import com.sghore.chimtubeworld.core.ui.base.UiEvent
+import com.sghore.chimtubeworld.core.ui.base.UiSideEffect
+import com.sghore.chimtubeworld.core.ui.base.UiState
+import com.sghore.chimtubeworld.feature.webtoon.impl.R
 
-@HiltViewModel
-internal class WebToonViewModel @Inject constructor() : ViewModel() {
-    val webToonInfos = listOf(
+internal data class WebtoonUiState(
+    val webtoonInfos: List<Channel> = listOf(
         Channel(
             id = "103759", // 웹툰 앱에서 바로가기에 필요한 웹툰 아이디 정보
             name = "이말년씨리즈",
@@ -51,4 +50,12 @@ internal class WebToonViewModel @Inject constructor() : ViewModel() {
             type = 0
         )
     )
+) : UiState
+
+internal sealed interface WebtoonUiEvent : UiEvent {
+    data class WebtoonClicked(val webtoon: Channel) : WebtoonUiEvent
+}
+
+internal sealed interface WebtoonUiSideEffect : UiSideEffect {
+    data class OpenWebtoon(val id: String, val url: String) : WebtoonUiSideEffect
 }

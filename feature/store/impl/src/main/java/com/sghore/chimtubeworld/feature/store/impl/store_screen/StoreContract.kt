@@ -1,9 +1,12 @@
 package com.sghore.chimtubeworld.feature.store.impl.store_screen
 
-import com.sghore.chimtubeworld.feature.store.impl.R
 import com.sghore.chimtubeworld.core.model.GoodsChannelInfo
+import com.sghore.chimtubeworld.core.ui.base.UiEvent
+import com.sghore.chimtubeworld.core.ui.base.UiSideEffect
+import com.sghore.chimtubeworld.core.ui.base.UiState
+import com.sghore.chimtubeworld.feature.store.impl.R
 
-internal data class StoreScreenState(
+internal data class StoreUiState(
     val storeInfoList: List<GoodsChannelInfo> = listOf(
         GoodsChannelInfo(
             channelImage = R.drawable.marple,
@@ -15,7 +18,13 @@ internal data class StoreScreenState(
             channelName = "얼렁뚱땅 상점",
             url = "https://uldd.net/collabochim"
         )
-    ),
-    val isLoading: Boolean = false,
-    val errorMsg: String = ""
-)
+    )
+) : UiState
+
+internal sealed interface StoreUiEvent : UiEvent {
+    data class StoreClicked(val storeInfo: GoodsChannelInfo) : StoreUiEvent
+}
+
+internal sealed interface StoreUiSideEffect : UiSideEffect {
+    data class OpenUrl(val url: String) : StoreUiSideEffect
+}
