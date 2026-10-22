@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.presentation.webToonScreen
+package com.sghore.chimtubeworld.feature.webtoon.impl.webtoon_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -20,11 +20,11 @@ import com.sghore.chimtubeworld.core.designsystem.component.RowList
 import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Channel
-import com.sghore.chimtubeworld.presentation.ScreenScaffold
+import com.sghore.chimtubeworld.core.designsystem.component.ScreenScaffold
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
-fun WebToonScreen(
+internal fun WebToonScreen(
     webToonInfos: List<Channel>,
     onWebToonClick: (Channel) -> Unit
 ) {
@@ -56,7 +56,7 @@ fun WebToonScreen(
 }
 
 @Composable
-fun WebToonItem(
+internal fun WebToonItem(
     webtoon: Channel,
     onClick: (Channel) -> Unit,
     modifier: Modifier = Modifier
@@ -95,7 +95,7 @@ fun WebToonItem(
 @Preview(name = "Light")
 @Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun WebToonItemPreview() {
+internal fun WebToonItemPreview() {
     ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         WebToonItem(
             webtoon = Channel(

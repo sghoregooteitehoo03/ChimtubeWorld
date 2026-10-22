@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.sghore.chimtubeworld.core.common.Constants
-import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.core.ui.OpenOtherApp
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable

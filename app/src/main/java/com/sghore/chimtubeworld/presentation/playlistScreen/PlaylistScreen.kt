@@ -30,7 +30,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Playlist
-import com.sghore.chimtubeworld.presentation.ScreenScaffold
+import com.sghore.chimtubeworld.core.designsystem.component.ScreenScaffold
 import com.valentinilk.shimmer.shimmer
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 

@@ -33,7 +33,7 @@ import com.sghore.chimtubeworld.core.common.parseViewCountText
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.model.Video
-import com.sghore.chimtubeworld.presentation.ScreenScaffold
+import com.sghore.chimtubeworld.core.designsystem.component.ScreenScaffold
 import com.valentinilk.shimmer.*
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 

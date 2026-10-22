@@ -38,7 +38,7 @@ import com.sghore.chimtubeworld.core.common.parseViewCountText
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.navigation.VideoSource
-import com.sghore.chimtubeworld.presentation.ScreenScaffold
+import com.sghore.chimtubeworld.core.designsystem.component.ScreenScaffold
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.Duration

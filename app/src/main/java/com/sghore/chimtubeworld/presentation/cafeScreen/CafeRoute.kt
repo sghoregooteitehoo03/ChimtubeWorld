@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.sghore.chimtubeworld.core.common.Constants
-import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.core.ui.OpenOtherApp
 
 @Composable
 fun CafeRoute(

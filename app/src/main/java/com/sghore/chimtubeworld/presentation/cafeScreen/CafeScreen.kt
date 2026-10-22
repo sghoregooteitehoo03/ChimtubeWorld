@@ -27,7 +27,7 @@ import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.CafeCategory
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.model.Post
-import com.sghore.chimtubeworld.presentation.ScreenScaffold
+import com.sghore.chimtubeworld.core.designsystem.component.ScreenScaffold
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState

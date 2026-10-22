@@ -27,7 +27,7 @@ import com.sghore.chimtubeworld.core.designsystem.component.RowList
 import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Channel
-import com.sghore.chimtubeworld.presentation.ScreenScaffold
+import com.sghore.chimtubeworld.core.designsystem.component.ScreenScaffold
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable

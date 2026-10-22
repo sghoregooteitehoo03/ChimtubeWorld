@@ -11,14 +11,12 @@ import com.sghore.chimtubeworld.presentation.bookmarkScreen.EditBookmarkRoute
 import com.sghore.chimtubeworld.presentation.cafeScreen.CafeRoute
 import com.sghore.chimtubeworld.presentation.playlistScreen.PlaylistRoute
 import com.sghore.chimtubeworld.presentation.playlistScreen.PlaylistViewModel
-import com.sghore.chimtubeworld.presentation.storeScreen.StoreRoute
 import com.sghore.chimtubeworld.presentation.twitchScreen.TwitchRoute
 import com.sghore.chimtubeworld.presentation.videosScreen.VideosRoute
 import com.sghore.chimtubeworld.presentation.videosScreen.VideosViewModel
-import com.sghore.chimtubeworld.presentation.webToonScreen.WebToonRoute
 import com.sghore.chimtubeworld.presentation.youtubeScreen.YoutubeRoute
 
-// Until the feature split, keys and entry wiring live together in app/navigation.
+// Entries for screens that have not yet moved into feature modules.
 internal fun EntryProviderScope<NavKey>.appEntries(navigator: Navigator) {
     entry<YoutubeKey> {
         YoutubeRoute(onChannelClick = { channel ->
@@ -31,9 +29,7 @@ internal fun EntryProviderScope<NavKey>.appEntries(navigator: Navigator) {
         })
     }
     entry<ChzzkKey> { TwitchRoute() }
-    entry<WebtoonKey> { WebToonRoute() }
     entry<CafeKey> { CafeRoute() }
-    entry<StoreKey> { StoreRoute() }
     entry<PlaylistsKey> { key ->
         val viewModel = hiltViewModel<PlaylistViewModel, PlaylistViewModel.Factory>(
             creationCallback = { it.create(key.channelId, key.playlistId, key.type) }

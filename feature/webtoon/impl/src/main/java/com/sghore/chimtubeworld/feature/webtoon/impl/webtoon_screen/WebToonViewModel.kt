@@ -1,14 +1,14 @@
-package com.sghore.chimtubeworld.presentation.webToonScreen
+package com.sghore.chimtubeworld.feature.webtoon.impl.webtoon_screen
 
 import androidx.lifecycle.ViewModel
-import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.feature.webtoon.impl.R
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.common.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class WebToonViewModel @Inject constructor() : ViewModel() {
+internal class WebToonViewModel @Inject constructor() : ViewModel() {
     val webToonInfos = listOf(
         Channel(
             id = "103759", // 웹툰 앱에서 바로가기에 필요한 웹툰 아이디 정보

@@ -34,6 +34,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:webtoon:api"))
+    implementation(project(":feature:webtoon:impl"))
+    implementation(project(":feature:store:api"))
+    implementation(project(":feature:store:impl"))
+
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
@@ -76,6 +81,4 @@ dependencies {
     implementation(libs.google.material)
     implementation(libs.toolbar.compose)
 
-    // Web/Parsing
-    implementation(libs.androidx.browser)
 }

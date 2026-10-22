@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.sghore.chimtubeworld.core.common.Constants
 import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.navigation.VideoSource
-import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.core.ui.OpenOtherApp
 import com.sghore.chimtubeworld.presentation.selectBookmarkScreen.SelectBookmarkDialog
 
 @Composable

@@ -8,6 +8,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.browser)
+
     implementation(project(":core:designsystem"))
     implementation(project(":core:model"))
 

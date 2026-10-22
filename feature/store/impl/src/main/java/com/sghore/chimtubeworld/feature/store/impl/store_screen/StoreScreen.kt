@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.presentation.storeScreen
+package com.sghore.chimtubeworld.feature.store.impl.store_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.sp
 import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.GoodsChannelInfo
-import com.sghore.chimtubeworld.presentation.ScreenScaffold
+import com.sghore.chimtubeworld.core.designsystem.component.ScreenScaffold
 
 @Composable
-fun StoreScreen(
+internal fun StoreScreen(
     uiState: StoreScreenState,
     onClickGoods: (GoodsChannelInfo) -> Unit,
 ) {

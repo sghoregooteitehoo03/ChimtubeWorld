@@ -1,5 +1,7 @@
 package com.sghore.chimtubeworld.navigation
 
+import com.sghore.chimtubeworld.feature.webtoon.api.navigation.WebtoonKey
+import com.sghore.chimtubeworld.feature.store.api.navigation.StoreKey
 import androidx.annotation.DrawableRes
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
@@ -9,13 +11,7 @@ import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 data object ChzzkKey : NavKey
 
 @Serializable
-data object WebtoonKey : NavKey
-
-@Serializable
 data object CafeKey : NavKey
-
-@Serializable
-data object StoreKey : NavKey
 
 data class TopLevelDestination(
     val key: NavKey,

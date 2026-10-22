@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.other
+package com.sghore.chimtubeworld.core.ui
 
 import android.content.Context
 import android.content.Intent

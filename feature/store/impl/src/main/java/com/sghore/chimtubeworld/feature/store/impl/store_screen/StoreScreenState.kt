@@ -1,9 +1,9 @@
-package com.sghore.chimtubeworld.presentation.storeScreen
+package com.sghore.chimtubeworld.feature.store.impl.store_screen
 
-import com.sghore.chimtubeworld.R
+import com.sghore.chimtubeworld.feature.store.impl.R
 import com.sghore.chimtubeworld.core.model.GoodsChannelInfo
 
-data class StoreScreenState(
+internal data class StoreScreenState(
     val storeInfoList: List<GoodsChannelInfo> = listOf(
         GoodsChannelInfo(
             channelImage = R.drawable.marple,

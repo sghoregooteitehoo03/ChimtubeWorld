@@ -6,7 +6,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.common.Constants
-import com.sghore.chimtubeworld.other.OpenOtherApp
+import com.sghore.chimtubeworld.core.ui.OpenOtherApp
 
 @Composable
 fun SelectBookmarkDialog(

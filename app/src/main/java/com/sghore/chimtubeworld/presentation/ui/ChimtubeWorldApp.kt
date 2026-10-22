@@ -17,6 +17,8 @@ import com.sghore.chimtubeworld.navigation.AddBookmarkKey
 import com.sghore.chimtubeworld.navigation.EditBookmarkKey
 import com.sghore.chimtubeworld.navigation.appEntries
 import com.sghore.chimtubeworld.navigation.navigateToAddBookmark
+import com.sghore.chimtubeworld.feature.webtoon.impl.navigation.webtoonEntry
+import com.sghore.chimtubeworld.feature.store.impl.navigation.storeEntry
 import com.sghore.chimtubeworld.presentation.BottomNavigationBar
 
 @Composable
@@ -27,7 +29,13 @@ internal fun ChimtubeWorldApp(
 ) {
     val navigationState = appState.navigationState
     val navigator = appState.navigator
-    val entries = remember(navigator) { entryProvider { appEntries(navigator) } }
+    val entries = remember(navigator) {
+        entryProvider {
+            appEntries(navigator)
+            webtoonEntry()
+            storeEntry()
+        }
+    }
     val shareUrl = pendingShareUrls.firstOrNull()
     LaunchedEffect(shareUrl, pendingShareUrls.size, navigator) {
         if (shareUrl != null) {

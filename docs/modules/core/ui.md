@@ -4,13 +4,14 @@ Step 9에서 추출했다. namespace/package는 `com.sghore.chimtubeworld.core.u
 
 ## 역할
 
-feature가 공통으로 사용하는 MVI 기반 `BaseViewModel`과 `:core:model`을 표시하는 공통 Compose View를 제공한다.
+feature가 공통으로 사용하는 MVI 기반 `BaseViewModel`과 `:core:model`을 표시하는 공통 Compose View와 Android UI 실행 helper를 제공한다.
 
 ## 포함 대상
 
 - `UiState`, `UiEvent`, `UiSideEffect` contract.
 - 읽기 전용 state와 side effect stream, `currentState`, `reduce`, `postSideEffect`를 제공하는 `BaseViewModel`.
 - 여러 feature에서 재사용하는 model 기반 Compose View와 Paging Compose 목록.
+- Context·Intent·Custom Tabs 기반 외부 앱 실행 helper `OpenOtherApp`. 기존 앱 실행·웹 fallback·실패 토스트 동작을 유지한다.
 
 ## 제외 대상
 
@@ -22,7 +23,7 @@ feature가 공통으로 사용하는 MVI 기반 `BaseViewModel`과 `:core:model`
 - Contract와 `BaseViewModel`은 feature ViewModel이 구현·상속하므로 공개한다.
 - 내부 mutable flow는 private으로 유지하고 외부에는 읽기 전용 `StateFlow`와 `SharedFlow`만 노출한다.
 - 공통 View는 공유 순수 모델을 직접 받아 표시한다. feature 전용 component와 Screen은 `:core:ui`에 두지 않는다.
-- ui는 `:core:model`, `:core:designsystem`, Compose·Paging Compose·Lifecycle·Coroutine에 의존한다. 공개 시그니처에 나타나는 ViewModel·LazyPagingItems·StateFlow·SharedFlow를 위해 Lifecycle ViewModel KTX·Paging Compose·Coroutines Android는 `api`로 제공한다. domain과 data 계층에는 의존하지 않는다.
+- ui는 `:core:model`, `:core:designsystem`, Compose·Paging Compose·Lifecycle·Coroutine·AndroidX Core KTX·Browser에 의존한다. Core KTX와 Browser는 OpenOtherApp 구현 의존성이다. 공개 시그니처에 나타나는 ViewModel·LazyPagingItems·StateFlow·SharedFlow를 위해 Lifecycle ViewModel KTX·Paging Compose·Coroutines Android는 `api`로 제공한다. domain과 data 계층에는 의존하지 않는다.
 
 ## Side effect와 테스트
 
@@ -37,8 +38,8 @@ feature가 공통으로 사용하는 MVI 기반 `BaseViewModel`과 `:core:model`
 
 - `base/BaseContract.kt`, `base/BaseViewModel.kt`: 템플릿에서 package만 조정해 복사했다. 아직 production 사용처는 없으며 후속 feature MVI 단계에서 적용한다. 기존 화면의 상태 관리·이벤트 처리는 바꾸지 않는다.
 - `PagingRowList.kt`: `LazyPagingItems`를 받는 기존 목록을 그대로 이동했다. designsystem의 `RowItemCollocate`를 조합하며 모델 표시용 신규 View는 아직 없다.
-- `BottomNavigationBar`, `TopAppBarNavigationItem`은 app의 `presentation/ReUseableView.kt`에 유지한다. NavController·NavigationScreen 기반 앱 chrome이므로 Step 11 navigation 전환 전에는 이동하지 않는다.
-- `OpenOtherApp`은 app의 `other/OpenOtherApp.kt`에 유지한다. Context·Intent·Custom Tabs 기반 외부 실행 helper이며 현재 ui의 공통 View·MVI 기반 타입 경계에 포함하지 않는다. 순수 Kotlin common에도 두지 않는다. feature 분리 시 외부 실행 콜백 경계와 함께 재검토하며 이번 단계에서는 의존성 방향과 실행 동작을 보존한다.
+- `BottomNavigationBar`는 app의 `presentation/ReUseableView.kt`에 유지한다. 앱 탭 정의를 사용하는 navigation chrome이다. 모델·navigation에 의존하지 않는 `ScreenScaffold`는 designsystem이 제공한다.
+- `OpenOtherApp.kt`: Step 12에서 app으로의 feature 의존성을 없애기 위해 이동한 공유 Android UI helper다. 공개 클래스·메서드를 app과 webtoon·store가 사용하며 순수 Kotlin common에는 두지 않는다. 호출부의 상태·이벤트 처리는 유지한다.
 
 ## 현재 구현 참고
 
