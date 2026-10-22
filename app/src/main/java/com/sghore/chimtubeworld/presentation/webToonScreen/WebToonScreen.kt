@@ -20,6 +20,7 @@ import com.sghore.chimtubeworld.core.designsystem.component.RowList
 import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Channel
+import com.sghore.chimtubeworld.presentation.ScreenScaffold
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
@@ -27,28 +28,30 @@ fun WebToonScreen(
     webToonInfos: List<Channel>,
     onWebToonClick: (Channel) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        RowList(
-            list = webToonInfos,
-            spanCount = 2,
-            contentPaddingValue = 12.dp,
-            itemPaddingValue = 12.dp,
-            headerItem = {
-                TitleTextWithExplain(
-                    title = "WebToon",
-                    explain = "이말년 시절 작품활동"
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            },
-            listItem = { index, modifier ->
-                WebToonItem(
-                    webtoon = webToonInfos[index],
-                    modifier = modifier,
-                    onClick = onWebToonClick
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
+    ScreenScaffold {
+        Box(modifier = Modifier.fillMaxSize()) {
+            RowList(
+                list = webToonInfos,
+                spanCount = 2,
+                contentPaddingValue = 12.dp,
+                itemPaddingValue = 12.dp,
+                headerItem = {
+                    TitleTextWithExplain(
+                        title = "WebToon",
+                        explain = "이말년 시절 작품활동"
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                },
+                listItem = { index, modifier ->
+                    WebToonItem(
+                        webtoon = webToonInfos[index],
+                        modifier = modifier,
+                        onClick = onWebToonClick
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 
@@ -106,5 +109,14 @@ fun WebToonItemPreview() {
             onClick = {},
             modifier = Modifier.fillMaxWidth()
         )
+    }
+}
+
+@Preview(name = "Screen Light", showBackground = true)
+@Preview(name = "Screen Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun WebToonScreenPreview() {
+    ChimtubeWorldTheme(darkTheme = androidx.compose.foundation.isSystemInDarkTheme()) {
+        WebToonScreen(webToonInfos = emptyList(), onWebToonClick = {})
     }
 }

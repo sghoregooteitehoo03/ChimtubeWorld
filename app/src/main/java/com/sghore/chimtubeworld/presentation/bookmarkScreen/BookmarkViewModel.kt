@@ -1,26 +1,30 @@
 package com.sghore.chimtubeworld.presentation.bookmarkScreen
 
 import androidx.lifecycle.*
-import com.google.gson.Gson
 import com.sghore.chimtubeworld.core.common.Resource
 import com.sghore.chimtubeworld.core.common.suspendRunCatching
 import com.sghore.chimtubeworld.core.domain.repository.BookmarkRepository
 import com.sghore.chimtubeworld.core.domain.repository.YoutubeRepository
 import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.model.Video
+import com.sghore.chimtubeworld.navigation.VideoSource
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
-@HiltViewModel
-class BookmarkViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = BookmarkViewModel.Factory::class)
+class BookmarkViewModel @AssistedInject constructor(
     private val youtubeRepository: YoutubeRepository,
     private val repository: BookmarkRepository,
-    savedStateHandle: SavedStateHandle
+    @Assisted private val videoData: Video?,
+    @Assisted private val pos: Int,
+    @Assisted private val source: VideoSource?,
+    @Assisted private val videoUrl: String?
 ) : ViewModel() {
 
     sealed class BookmarkEvent {
@@ -38,19 +42,10 @@ class BookmarkViewModel @Inject constructor(
         private set
 
     init {
-        // 영상 데이터
-        val videoData = Gson().fromJson(
-            savedStateHandle.get<String>("video"),
-            Video::class.java
-        )
-        val pos = savedStateHandle.get<Int>("pos") ?: -1 // 북마크 위치
-        val typeImageRes = savedStateHandle.get<Int>("typeImageRes") ?: -1 // 유튜브 or 트위치 이미지
-        val videoUrl = savedStateHandle.get<String>("url") // 영상 url
-
-        if (videoData != null && pos != -1 && typeImageRes != -1) {
+        if (videoData != null && pos != -1 && source != null) {
             // 북마크 수정
             selectedBookmark = videoData.bookmarks[pos]
-            initValue(videoData, selectedBookmark!!, typeImageRes)
+            initValue(videoData, selectedBookmark!!, source)
         } else if (videoUrl != null) {
             // 북마크 생성
             getVideoData(videoUrl)
@@ -70,8 +65,6 @@ class BookmarkViewModel @Inject constructor(
 
     // 넘겨온 영상 url을 통해 영상 정보를 가져옴
     fun getVideoData(videoUrl: String) {
-        var videoTypeImage = -1
-
         val videoFlow = loadVideo(videoUrl)
 
         videoFlow.onEach { resource ->
@@ -80,7 +73,7 @@ class BookmarkViewModel @Inject constructor(
                     _state.update {
                         BookmarkScreenState(
                             videoData = resource.data,
-                            videoTypeImage = videoTypeImage
+                            videoSource = null
                         )
                     }
                 }
@@ -174,11 +167,11 @@ class BookmarkViewModel @Inject constructor(
     }
 
     // 값 세팅
-    fun initValue(videoData: Video, bookmark: Bookmark, typeImageRes: Int) {
+    fun initValue(videoData: Video, bookmark: Bookmark, source: VideoSource) {
         _state.update {
             BookmarkScreenState(
                 videoData = videoData,
-                videoTypeImage = typeImageRes,
+                videoSource = source,
                 bookmarkTitle = bookmark.title,
                 videoPosition = getDateStrFromPosition(bookmark.videoPosition),
                 selectedColor = bookmark.color,
@@ -210,12 +203,16 @@ class BookmarkViewModel @Inject constructor(
         val time = getSecondsFromPosition(videoPosition)
         val latestState = _state.value
 
-        return if (latestState.videoTypeImage == DesignSystemR.drawable.youtube) {
-            "${latestState.videoData!!.url}&t=$time"
-        } else if (latestState.videoTypeImage == DesignSystemR.drawable.twitch) {
-            "$${latestState.videoData!!.url}?t=$time"
-        } else {
-            ""
+        return when (latestState.videoSource) {
+            VideoSource.YOUTUBE -> {
+                "${latestState.videoData!!.url}&t=$time"
+            }
+            VideoSource.TWITCH -> {
+                "$${latestState.videoData!!.url}?t=$time"
+            }
+            else -> {
+                ""
+            }
         }
     }
 
@@ -288,5 +285,10 @@ class BookmarkViewModel @Inject constructor(
         } else { // 1시간 이하일 경우
             SimpleDateFormat("mm:ss", Locale.KOREA)
         }.format(time - 32400000)
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(videoData: Video?, pos: Int, source: VideoSource?, videoUrl: String?): BookmarkViewModel
     }
 }

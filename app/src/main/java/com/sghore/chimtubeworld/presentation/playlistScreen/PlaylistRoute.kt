@@ -3,27 +3,20 @@ package com.sghore.chimtubeworld.presentation.playlistScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
-import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
+import com.sghore.chimtubeworld.core.model.Playlist
 
 @Composable
 fun PlaylistRoute(
-    navController: NavController,
-    viewModel: PlaylistViewModel = hiltViewModel()
+    viewModel: PlaylistViewModel,
+    title: String,
+    onBack: () -> Unit,
+    onPlaylistClick: (Playlist) -> Unit
 ) {
     val uiState by viewModel.state.collectAsState()
-
     PlaylistScreen(
         uiState = uiState,
-        onPlaylistClick = { playlist ->
-            val route = NavigationScreen.Videos.route +
-                    "?typeImageRes=${DesignSystemR.drawable.youtube}" +
-                    "&playlistId=${playlist.id}" +
-                    "&playlistName=${playlist.title}"
-
-            navController.navigate(route = route)
-        }
+        title = title,
+        onBack = onBack,
+        onPlaylistClick = onPlaylistClick
     )
 }

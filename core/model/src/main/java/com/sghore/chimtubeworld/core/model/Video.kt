@@ -1,5 +1,8 @@
 package com.sghore.chimtubeworld.core.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Video(
     val id: String,
     val channelName: String,

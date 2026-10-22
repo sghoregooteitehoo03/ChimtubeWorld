@@ -1,36 +1,34 @@
 package com.sghore.chimtubeworld.presentation.playlistScreen
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.sghore.chimtubeworld.core.domain.repository.YoutubeRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class PlaylistViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = PlaylistViewModel.Factory::class)
+class PlaylistViewModel @AssistedInject constructor(
     private val repository: YoutubeRepository,
-    savedStateHandle: SavedStateHandle
+    @Assisted("channelId") private val channelId: String?,
+    @Assisted("playlistId") private val playlistId: String,
+    @Assisted private val type: Int
 ) : ViewModel() {
     private val _state = MutableStateFlow(PlaylistScreenState())
     val state = _state.asStateFlow()
 
     init {
-        val channelId = savedStateHandle.get<String>("channelId")
-        val playlistId = savedStateHandle.get<String>("playlistId")
-            ?.split("|")
-            ?: emptyList()
-        val type = savedStateHandle.get<Int>("type")
+        val playlistIds = playlistId.split("|")
 
         if (type == 0) {
-            getPagingMainPlaylist(channelId, playlistId)
+            getPagingMainPlaylist(channelId, playlistIds)
         } else {
-            getPagingSubPlaylist(playlistId)
+            getPagingSubPlaylist(playlistIds)
         }
     }
 
@@ -53,5 +51,14 @@ class PlaylistViewModel @Inject constructor(
                 ).cachedIn(viewModelScope)
             )
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("channelId") channelId: String?,
+            @Assisted("playlistId") playlistId: String,
+            type: Int
+        ): PlaylistViewModel
     }
 }

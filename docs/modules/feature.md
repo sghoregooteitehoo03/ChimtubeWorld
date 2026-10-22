@@ -2,6 +2,9 @@
 
 **마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. 현재 화면은 `app`의 [presentation](../../app/src/main/java/com/sghore/chimtubeworld/presentation)에 있다. 아래는 목표 구조이며 기존 상태와 이동 제약은 [기준선](../migration/baseline.md)을 따른다. 이동 단계에서는 로직을 유지하고, MVI·문자열 리소스·테스트는 이후 전환 단계에서 적용한다.
 
+
+Step 11에서 NavKey·이동 확장 함수·EntryProvider 및 assisted ViewModel 생성은 단일 app 안에서 먼저 적용했다. 현재 위치는 [app/navigation](../../app/src/main/java/com/sghore/chimtubeworld/navigation)이며, feature 분리 시 아래 API·impl 경계로 옮긴다. MVI 전환은 이번 단계에 포함하지 않는다.
+
 ## 모듈 경계
 
 - 대상 feature는 `youtube`(playlist·videos 포함), `chzzk`, `webtoon`, `cafe`, `store`, `bookmark`다.

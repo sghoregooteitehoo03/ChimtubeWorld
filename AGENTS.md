@@ -8,7 +8,7 @@
 
 ## 현재 상태와 구현 규칙
 
-- 현재는 `:app`에서 common·model·database·network·domain·data·testing·designsystem·ui core 모듈을 추출한 상태이며, Material 3 전환까지 완료했다. feature 분리와 MVI·Navigation 3 전환은 후속 단계다. 미생성 모듈의 규칙은 목표 구조다. 적용 시점과 불변 항목은 [프로젝트 명세](docs/architecture/spec.md)와 [마이그레이션 기준선](docs/migration/baseline.md)을 확인한다. 이동 단계에서 MVI·Navigation 3 전환을 앞당기지 않는다.
+- 현재는 `:app`에서 common·model·database·network·domain·data·testing·designsystem·ui core 모듈을 추출했으며, Material 3와 단일 app 내 Navigation 3 전환 및 core:navigation 도입까지 완료했다. feature 분리와 MVI 전환은 후속 단계다. 미생성 모듈의 규칙은 목표 구조다. 적용 시점과 불변 항목은 [프로젝트 명세](docs/architecture/spec.md)와 [마이그레이션 기준선](docs/migration/baseline.md)을 확인한다. 이동 단계에서 MVI 전환을 앞당기지 않는다.
 
 - 현재 프로젝트의 상태를 확인할 때는 Gradle 설정과 Kotlin 타입 선언, 실제 구현, 코드 주석, `docs` 순서로 확인한다.
 - 문서와 구현이 다르면 현재 상태는 구현을 기준으로 판단하고, 작업 범위에 포함되면 문서도 실제 구조에 맞게 갱신한다.

@@ -7,6 +7,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -34,6 +37,8 @@ import com.sghore.chimtubeworld.core.common.parseVideoDurationText
 import com.sghore.chimtubeworld.core.common.parseViewCountText
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Video
+import com.sghore.chimtubeworld.navigation.VideoSource
+import com.sghore.chimtubeworld.presentation.ScreenScaffold
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.Duration
@@ -41,6 +46,9 @@ import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun BookmarkScreen(
+    onBack: () -> Unit = {},
+    onCopyUrl: (() -> Unit)? = null,
+    onDelete: (() -> Unit)? = null,
     uiState: BookmarkScreenState,
     buttonText: String,
     onTitleChange: (String) -> Unit,
@@ -48,37 +56,54 @@ fun BookmarkScreen(
     onChangeBookmarkColor: (Int) -> Unit,
     onButtonClick: () -> Unit = {},
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(
-                state = rememberScrollState()
-            )
-    ) {
-        if (uiState.isLoading) {
-            CircularProgressIndicator(
-                trackColor = Color.Transparent,
-                strokeCap = StrokeCap.Square,
-                gapSize = 0.dp,
-                modifier = Modifier.align(Alignment.Center),
-                color = colorResource(id = DesignSystemR.color.item_color)
-            )
-        } else {
-            Column {
-                VideoInfo(
-                    video = uiState.videoData,
-                    typeImage = uiState.videoTypeImage
+    ScreenScaffold(title = "북마크", onBack = onBack, actions = {
+        if (onCopyUrl != null) {
+            IconButton(onClick = onCopyUrl) {
+                Icon(Icons.Default.Assignment, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
+            }
+        }
+        if (onDelete != null) {
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
+            }
+        }
+    }) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(
+                    state = rememberScrollState()
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                InputBookmarkInfo(
-                    uiState = uiState,
-                    buttonText = buttonText,
-                    onTitleChange = onTitleChange,
-                    onVideoPositionChange = onVideoPositionChange,
-                    onChangeBookmarkColor = onChangeBookmarkColor,
-                    onButtonClick = onButtonClick,
-                    modifier = Modifier.padding(start = 12.dp, end = 12.dp)
+        ) {
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    trackColor = Color.Transparent,
+                    strokeCap = StrokeCap.Square,
+                    gapSize = 0.dp,
+                    modifier = Modifier.align(Alignment.Center),
+                    color = colorResource(id = DesignSystemR.color.item_color)
                 )
+            } else {
+                Column {
+                    VideoInfo(
+                        video = uiState.videoData,
+                        typeImage = if (uiState.videoSource == VideoSource.TWITCH) {
+                            DesignSystemR.drawable.twitch
+                        } else {
+                            DesignSystemR.drawable.youtube
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    InputBookmarkInfo(
+                        uiState = uiState,
+                        buttonText = buttonText,
+                        onTitleChange = onTitleChange,
+                        onVideoPositionChange = onVideoPositionChange,
+                        onChangeBookmarkColor = onChangeBookmarkColor,
+                        onButtonClick = onButtonClick,
+                        modifier = Modifier.padding(start = 12.dp, end = 12.dp)
+                    )
+                }
             }
         }
     }
@@ -131,7 +156,7 @@ fun VideoInfo(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Image(
-                    painter = painterResource(id = DesignSystemR.drawable.youtube),
+                    painter = painterResource(id = typeImage),
                     contentDescription = "typeImage"
                 )
             }
@@ -419,5 +444,14 @@ private fun InputBookmarkInfoPreview() {
                 )
             }
         }
+    }
+}
+
+@Preview(name = "Screen Light", showBackground = true)
+@Preview(name = "Screen Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun BookmarkScreenPreview() {
+    ChimtubeWorldTheme(darkTheme = androidx.compose.foundation.isSystemInDarkTheme()) {
+        BookmarkScreen(uiState = BookmarkScreenState(isLoading = true), buttonText = "수정하기", onTitleChange = {}, onVideoPositionChange = {}, onChangeBookmarkColor = {}, onCopyUrl = {}, onDelete = {})
     }
 }

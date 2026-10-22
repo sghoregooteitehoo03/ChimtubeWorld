@@ -6,6 +6,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Help
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
@@ -24,38 +30,49 @@ import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.core.common.parseUploadTimeText
 import com.sghore.chimtubeworld.core.common.parseVideoDurationText
 import com.sghore.chimtubeworld.core.common.parseViewCountText
+import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.model.Video
+import com.sghore.chimtubeworld.presentation.ScreenScaffold
 import com.valentinilk.shimmer.*
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun VideosScreen(
+    title: String = "",
+    onBack: () -> Unit = {},
+    onHelp: () -> Unit = {},
     uiState: VideosScreenState,
     onVideoClick: (Video) -> Unit,
     onBookmarkClick: (Video, Int) -> Unit,
 ) {
-    val videoList: LazyPagingItems<Video>? = uiState.videos?.collectAsLazyPagingItems()
-    videoList?.retry()
-    val isLoading by remember {
-        derivedStateOf {
-            videoList?.loadState?.refresh is LoadState.Loading
+    ScreenScaffold(title = title, onBack = onBack, actions = {
+        IconButton(onClick = onHelp) {
+            Icon(Icons.Default.Help, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
         }
-    }
+    }) {
+        val videoList: LazyPagingItems<Video>? = uiState.videos?.collectAsLazyPagingItems()
+        videoList?.retry()
+        val isLoading by remember {
+            derivedStateOf {
+                videoList?.loadState?.refresh is LoadState.Loading
+            }
+        }
 
-    LazyColumn {
-        videoList?.let {
-            if (!isLoading) {
-                items(count = it.itemCount) { index ->
-                    VideoItem(
-                        video = it[index],
-                        onVideoClick = onVideoClick,
-                        onBookmarkClick = onBookmarkClick
-                    )
-                }
-            } else {
-                items(3) {
-                    VideoShimmerItem()
+        LazyColumn {
+            videoList?.let {
+                if (!isLoading) {
+                    items(count = it.itemCount) { index ->
+                        VideoItem(
+                            video = it[index],
+                            onVideoClick = onVideoClick,
+                            onBookmarkClick = onBookmarkClick
+                        )
+                    }
+                } else {
+                    items(3) {
+                        VideoShimmerItem()
+                    }
                 }
             }
         }
@@ -207,5 +224,14 @@ fun BookmarkItem(
             color = colorResource(id = DesignSystemR.color.item_color),
             fontSize = 12.sp
         )
+    }
+}
+
+@Preview(name = "Screen Light", showBackground = true)
+@Preview(name = "Screen Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun VideosScreenPreview() {
+    ChimtubeWorldTheme(darkTheme = androidx.compose.foundation.isSystemInDarkTheme()) {
+        VideosScreen(title = "재생목록", uiState = VideosScreenState(), onVideoClick = {}, onBookmarkClick = { _, _ -> })
     }
 }

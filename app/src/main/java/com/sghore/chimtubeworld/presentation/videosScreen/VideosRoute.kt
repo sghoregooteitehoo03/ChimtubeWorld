@@ -4,68 +4,43 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.google.gson.Gson
 import com.sghore.chimtubeworld.core.common.Constants
 import com.sghore.chimtubeworld.core.model.Video
+import com.sghore.chimtubeworld.navigation.VideoSource
 import com.sghore.chimtubeworld.other.OpenOtherApp
 import com.sghore.chimtubeworld.presentation.selectBookmarkScreen.SelectBookmarkDialog
-import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
-import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
-import kotlinx.coroutines.flow.collectLatest
-import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun VideosRoute(
-    viewModel: VideosViewModel = hiltViewModel(),
-    gViewModel: GlobalViewModel,
-    navController: NavController,
-    typeImageRes: Int
+    viewModel: VideosViewModel,
+    title: String,
+    source: VideoSource,
+    onBack: () -> Unit,
+    onBookmarkClick: (Video, Int) -> Unit
 ) {
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
 
-    gViewModel.bookmarkData?.let {
-        viewModel.changeVideoBookmarks(it)
-        gViewModel.bookmarkData = null
-    }
-
-    LaunchedEffect(true) {
-        gViewModel.eventFlow.collectLatest { event ->
-            when (event) {
-                is GlobalViewModel.ActionEvent.ShowHelp -> {
-                    Toast.makeText(
-                        context,
-                        "유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                is GlobalViewModel.ActionEvent.CopyVideoUrl -> {}
-                is GlobalViewModel.ActionEvent.DeleteBookmark -> {}
-            }
-        }
-    }
-
     VideosScreen(
         uiState = uiState,
+        title = title,
+        onBack = onBack,
+        onHelp = {
+            Toast.makeText(
+                context,
+                "유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.",
+                Toast.LENGTH_SHORT
+            ).show()
+        },
         onVideoClick = { video ->
             playVideo(
                 viewModel = viewModel,
                 context = context,
                 video = video,
-                typeImageRes = typeImageRes
+                source = source
             )
         },
-        onBookmarkClick = { video, pos ->
-            val route =
-                NavigationScreen.EditBookmark.route +
-                        "?typeImageRes=${typeImageRes}" +
-                        "&pos=${pos}" +
-                        "&video=${Gson().toJson(video)}"
-            navController.navigate(route = route)
-        }
+        onBookmarkClick = onBookmarkClick
     )
 
     if (uiState.isDialogOpen) {
@@ -89,9 +64,9 @@ private fun playVideo(
     viewModel: VideosViewModel,
     context: Context,
     video: Video,
-    typeImageRes: Int
+    source: VideoSource
 ) {
-    val packageName = if (typeImageRes == DesignSystemR.drawable.youtube) {
+    val packageName = if (source == VideoSource.YOUTUBE) {
         // Youtube 패키지
         val youtubePackage = Constants.YOUTUBE_PACKAGE_NAME
         if (video.bookmarks.isEmpty()) {

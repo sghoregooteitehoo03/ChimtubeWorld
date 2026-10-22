@@ -40,3 +40,7 @@ Step 4에서 옮긴 모델의 필드명·타입·기본값·생성자를 유지�
 - [북마크 mapper](../../../app/src/main/java/com/sghore/chimtubeworld/data/mapper/BookmarkMapper.kt)
 - [Room Entity](../../../core/database/src/main/java/com/sghore/chimtubeworld/core/database/entity)
 - 참고 템플릿: `core/model/build.gradle.kts`, `core/model/src/main/AndroidManifest.xml`, `core/model/src/main/java/com/sg/androidcomposetemplate/core/model/TemplateModel.kt`.
+
+## Navigation 직렬화
+
+Step 11에서 serialization convention을 적용하고 `Video`·`Bookmark`만 `@Serializable`로 표시했다. EditBookmark의 typed key가 공유 순수 모델을 보관하며 JSON 문자열 route는 사용하지 않는다. 필드·equals·repository 계약·Room Entity와 스키마는 변경하지 않는다.

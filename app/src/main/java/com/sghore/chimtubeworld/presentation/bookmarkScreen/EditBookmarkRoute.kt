@@ -16,55 +16,40 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
-import kotlinx.coroutines.FlowPreview
+import com.sghore.chimtubeworld.core.model.Bookmark
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flattenMerge
-import kotlinx.coroutines.flow.flowOf
 
-@OptIn(FlowPreview::class)
 @Composable
 fun EditBookmarkRoute(
-    viewModel: BookmarkViewModel = hiltViewModel(),
-    gViewModel: GlobalViewModel,
-    navController: NavController
+    viewModel: BookmarkViewModel,
+    onBack: () -> Unit,
+    onBookmarkChanged: (Bookmark) -> Unit
 ) {
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = true) {
-        flowOf(viewModel.event, gViewModel.eventFlow).flattenMerge()
-            .collectLatest { event ->
-                when (event) {
-                    is BookmarkViewModel.BookmarkEvent.ShowToastMessage -> {
-                        Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                    is BookmarkViewModel.BookmarkEvent.ChangeBookmark -> {
-                        Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
-                            .show()
-                        gViewModel.bookmarkData = event.bookmark
-
-                        navController.navigateUp()
-                    }
-                    is GlobalViewModel.ActionEvent.CopyVideoUrl -> {
-                        clipData(
-                            viewModel = viewModel,
-                            context = context
-                        )
-                    }
-                    is GlobalViewModel.ActionEvent.DeleteBookmark -> {
-                        viewModel.setDialogState(true)
-                    }
+    LaunchedEffect(viewModel) {
+        viewModel.event.collectLatest { event ->
+            when (event) {
+                is BookmarkViewModel.BookmarkEvent.ShowToastMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                        .show()
+                }
+                is BookmarkViewModel.BookmarkEvent.ChangeBookmark -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                        .show()
+                    onBookmarkChanged(event.bookmark)
                 }
             }
+        }
     }
 
     BookmarkScreen(
         uiState = uiState,
         buttonText = "수정하기",
+        onBack = onBack,
+        onCopyUrl = { clipData(viewModel, context) },
+        onDelete = { viewModel.setDialogState(true) },
         onTitleChange = viewModel::setTitle,
         onVideoPositionChange = viewModel::setVideoPosition,
         onChangeBookmarkColor = viewModel::changeBookmarkColor,

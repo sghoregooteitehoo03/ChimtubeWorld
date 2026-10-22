@@ -1,10 +1,9 @@
 package com.sghore.chimtubeworld.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,99 +11,107 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import com.sghore.chimtubeworld.presentation.ui.NavigationScreen
+import androidx.compose.ui.unit.sp
+import androidx.navigation3.runtime.NavKey
+import com.sghore.chimtubeworld.navigation.TOP_LEVEL_DESTINATIONS
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
-fun TopAppBarNavigationItem(
-    currentRoute: String?,
-    content: @Composable () -> Unit,
-): (@Composable (() -> Unit))? {
-    return when (currentRoute) {
-        NavigationScreen.Playlists.route, NavigationScreen.Videos.route,
-        NavigationScreen.AddBookmark.route, NavigationScreen.EditBookmark.route -> {
-            content
+// Each screen owns its title and callbacks; this only preserves the existing chrome appearance.
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ScreenScaffold(
+    title: String = "CHIMHA",
+    onBack: (() -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {},
+    content: @Composable () -> Unit
+) {
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.87f),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(DesignSystemR.color.default_background_color),
+                    scrolledContainerColor = colorResource(DesignSystemR.color.default_background_color),
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.87f),
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.87f),
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                expandedHeight = 56.dp,
+                windowInsets = WindowInsets(0, 0, 0, 0),
+                modifier = Modifier.fillMaxWidth(),
+                title = {
+                    if (onBack == null) {
+                        Text(
+                            text = title,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    } else {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.headlineSmall,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                },
+                navigationIcon = {
+                    if (onBack != null) {
+                        // Retain the old 72dp title start with a back icon.
+                        Box(Modifier.width(64.dp)) {
+                            IconButton(onClick = onBack) {
+                                Icon(Icons.Default.ArrowBack, contentDescription = null)
+                            }
+                        }
+                    }
+                },
+                actions = actions
+            )
         }
-
-        else -> null
+    ) { innerPadding ->
+        Column(Modifier.fillMaxSize().padding(innerPadding)) {
+            HorizontalDivider(color = colorResource(DesignSystemR.color.gray_bright_night))
+            Box(Modifier.weight(1f).fillMaxWidth()) { content() }
+        }
     }
 }
 
 @Composable
-fun BottomNavigationBar(
-    isHide: Boolean,
-    navController: NavHostController,
-    bottomMenu: List<NavigationScreen>,
-    currentDestination: NavDestination?,
-    currentRoute: String?,
-    previousRoute: String?
-) {
-
-    if (!isHide) {
-        NavigationBar(
-            modifier = Modifier.height(56.dp).shadow(8.dp),
-            containerColor = colorResource(id = DesignSystemR.color.default_background_color),
-            contentColor = MaterialTheme.colorScheme.onBackground,
-            tonalElevation = 0.dp,
-            windowInsets = WindowInsets(0, 0, 0, 0),
-        ) {
-            // M3 spaces items by 8dp; the old bar divided its full width equally.
-            Row(Modifier.fillMaxSize()) {
-                bottomMenu.forEach { menu ->
-                    // 아이콘 선택 여부
-                    val isSelected = when (currentRoute) {
-                        NavigationScreen.Playlists.route -> {
-                            menu.route == NavigationScreen.Youtube.route
-                                    && previousRoute == NavigationScreen.Youtube.route
-                        }
-
-                        NavigationScreen.Videos.route -> {
-                            (menu.route == NavigationScreen.Youtube.route
-                                    && previousRoute == NavigationScreen.Playlists.route) ||
-                                    (menu.route == NavigationScreen.Twitch.route
-                                            && previousRoute == NavigationScreen.Twitch.route)
-                        }
-
-                        else -> {
-                            currentDestination?.hierarchy?.any { it.route == menu.route } == true
-                        }
-                    }
-
-                    NavigationBarItem(
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.onBackground,
-                            unselectedIconColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                            indicatorColor = Color.Transparent
-                        ),
-                        icon = {
-                            Image(
-                                painter = painterResource(
-                                    id = if (isSelected) {
-                                        menu.selectedIcon
-                                    } else {
-                                        menu.unSelectedIcon
-                                    }
-                                ),
-                                contentDescription = null
-                            )
-                        },
-                        selected = isSelected,
-                        onClick = {
-                            navController.navigate(menu.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    )
-                }
+fun BottomNavigationBar(currentTopLevelKey: NavKey, onDestinationClick: (NavKey) -> Unit) {
+    NavigationBar(
+        modifier = Modifier.height(56.dp).shadow(8.dp),
+        containerColor = colorResource(DesignSystemR.color.default_background_color),
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        tonalElevation = 0.dp,
+        windowInsets = WindowInsets(0, 0, 0, 0)
+    ) {
+        Row(Modifier.fillMaxSize()) {
+            TOP_LEVEL_DESTINATIONS.forEach { destination ->
+                val selected = destination.key == currentTopLevelKey
+                NavigationBarItem(
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.onBackground,
+                        unselectedIconColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        indicatorColor = Color.Transparent
+                    ),
+                    icon = {
+                        Image(
+                            painterResource(if (selected) destination.selectedIconRes else destination.unselectedIconRes),
+                            contentDescription = null
+                        )
+                    },
+                    selected = selected,
+                    onClick = { onDestinationClick(destination.key) }
+                )
             }
         }
     }

@@ -6,21 +6,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.sghore.chimtubeworld.presentation.ui.GlobalViewModel
+import com.sghore.chimtubeworld.core.model.Bookmark
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddBookmarkRoute(
-    viewModel: BookmarkViewModel = hiltViewModel(),
-    gViewModel: GlobalViewModel,
-    navController: NavController
+    viewModel: BookmarkViewModel,
+    onBack: () -> Unit,
+    onBookmarkChanged: (Bookmark) -> Unit
 ) {
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(viewModel) {
         viewModel.event.collectLatest { event ->
             when (event) {
                 is BookmarkViewModel.BookmarkEvent.ShowToastMessage -> {
@@ -30,9 +28,7 @@ fun AddBookmarkRoute(
                 is BookmarkViewModel.BookmarkEvent.ChangeBookmark -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
                         .show()
-                    gViewModel.bookmarkData = event.bookmark
-
-                    navController.navigateUp()
+                    onBookmarkChanged(event.bookmark)
                 }
             }
         }
@@ -41,6 +37,7 @@ fun AddBookmarkRoute(
     BookmarkScreen(
         uiState = uiState,
         buttonText = "만들기",
+        onBack = onBack,
         onTitleChange = viewModel::setTitle,
         onVideoPositionChange = viewModel::setVideoPosition,
         onChangeBookmarkColor = viewModel::changeBookmarkColor,

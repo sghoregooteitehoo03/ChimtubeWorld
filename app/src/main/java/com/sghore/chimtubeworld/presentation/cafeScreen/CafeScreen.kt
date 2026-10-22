@@ -27,6 +27,7 @@ import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.CafeCategory
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.model.Post
+import com.sghore.chimtubeworld.presentation.ScreenScaffold
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -40,72 +41,74 @@ fun CafeScreen(
     onCafeCategoryClick: (Int) -> Unit,
     onCafePostClick: (Post?) -> Unit
 ) {
-    val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
-    val scrollState = rememberScrollState()
-    val isEnabled by remember {
-        derivedStateOf {
-            collapsingState.toolbarState.progress != 0f
-        }
-    }
-
-    Surface(
-        color = colorResource(id = DesignSystemR.color.default_background_color),
-        tonalElevation = 0.dp
-    ) {
-        CollapsingToolbarScaffold(
-            modifier = Modifier
-                .fillMaxSize(),
-            state = collapsingState,
-            toolbarModifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(
-                    state = scrollState,
-                    enabled = isEnabled
-                )
-                .background(
-                    color = if (isEnabled) {
-                        colorResource(id = DesignSystemR.color.default_background_color)
-                    } else {
-                        colorResource(id = DesignSystemR.color.gray_bright_night)
-                    }
-                ),
-            scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
-            toolbar = {
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                )
-                CafeTopItem(
-                    cafeInfo = uiState.cafeInfo,
-                    selectedCategoryId = uiState.cafeCategoryId,
-                    modifier = Modifier
-                        .parallax(1f)
-                        .fillMaxWidth(),
-                    onCafeBannerClick = onCafeBannerClick,
-                    onChimhahaButtonClick = onChimhahaButtonClick,
-                    onCafeCategoryClick = onCafeCategoryClick
-                )
+    ScreenScaffold {
+        val collapsingState = rememberCollapsingToolbarScaffoldState() // collapsing 상태
+        val scrollState = rememberScrollState()
+        val isEnabled by remember {
+            derivedStateOf {
+                collapsingState.toolbarState.progress != 0f
             }
+        }
+
+        Surface(
+            color = colorResource(id = DesignSystemR.color.default_background_color),
+            tonalElevation = 0.dp
         ) {
-            val postList: LazyPagingItems<Post>? = uiState.cafePosts
-                ?.collectAsLazyPagingItems() // 게시글 리스트
+            CollapsingToolbarScaffold(
+                modifier = Modifier
+                    .fillMaxSize(),
+                state = collapsingState,
+                toolbarModifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(
+                        state = scrollState,
+                        enabled = isEnabled
+                    )
+                    .background(
+                        color = if (isEnabled) {
+                            colorResource(id = DesignSystemR.color.default_background_color)
+                        } else {
+                            colorResource(id = DesignSystemR.color.gray_bright_night)
+                        }
+                    ),
+                scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+                toolbar = {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                    )
+                    CafeTopItem(
+                        cafeInfo = uiState.cafeInfo,
+                        selectedCategoryId = uiState.cafeCategoryId,
+                        modifier = Modifier
+                            .parallax(1f)
+                            .fillMaxWidth(),
+                        onCafeBannerClick = onCafeBannerClick,
+                        onChimhahaButtonClick = onChimhahaButtonClick,
+                        onCafeCategoryClick = onCafeCategoryClick
+                    )
+                }
+            ) {
+                val postList: LazyPagingItems<Post>? = uiState.cafePosts
+                    ?.collectAsLazyPagingItems() // 게시글 리스트
 
-            LazyColumn {
-                postList?.let {
-                    items(count = it.itemCount) { index ->
-                        val post = it[index]
-                        val isRead =
-                            (post?.isRead == true) || (uiState.readHistory[post?.id] == true)
+                LazyColumn {
+                    postList?.let {
+                        items(count = it.itemCount) { index ->
+                            val post = it[index]
+                            val isRead =
+                                (post?.isRead == true) || (uiState.readHistory[post?.id] == true)
 
-                        CafePostItem(
-                            post = post,
-                            isRead = isRead,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 12.dp, end = 12.dp),
-                            onClick = onCafePostClick
-                        )
+                            CafePostItem(
+                                post = post,
+                                isRead = isRead,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 12.dp, end = 12.dp),
+                                onClick = onCafePostClick
+                            )
+                        }
                     }
                 }
             }
@@ -434,3 +437,12 @@ fun CafePostItemPreview() {
     }
 }
 
+
+@Preview(name = "Screen Light", showBackground = true)
+@Preview(name = "Screen Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CafeScreenPreview() {
+    ChimtubeWorldTheme(darkTheme = androidx.compose.foundation.isSystemInDarkTheme()) {
+        CafeScreen(uiState = CafeScreenState(), onCafeBannerClick = {}, onChimhahaButtonClick = {}, onCafeCategoryClick = {}, onCafePostClick = {})
+    }
+}

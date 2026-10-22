@@ -3,18 +3,20 @@ package com.sghore.chimtubeworld.presentation.videosScreen
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.sghore.chimtubeworld.core.domain.repository.YoutubeRepository
 import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.model.Video
-import com.sghore.chimtubeworld.core.domain.repository.YoutubeRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class VideosViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = VideosViewModel.Factory::class)
+class VideosViewModel @AssistedInject constructor(
     private val repository: YoutubeRepository,
-    savedStateHandle: SavedStateHandle
+    @Assisted private val playlistId: String
 ) : ViewModel() {
     private val _state = MutableStateFlow(VideosScreenState())
     val state = _state.asStateFlow()
@@ -26,18 +28,12 @@ class VideosViewModel @Inject constructor(
         private set
 
     init {
-        val typeImageRes = savedStateHandle.get<Int>("typeImageRes")
-        val playlistId = savedStateHandle.get<String>("playlistId")
-
-        if (typeImageRes != null && playlistId != null) {
-
-            _state.update {
-                VideosScreenState(
-                    repository.getVideos(
-                        channelId = playlistId.split("|")[0] // 플레이리스트의 아이디 리스트
-                    ).cachedIn(viewModelScope)
-                )
-            }
+        _state.update {
+            VideosScreenState(
+                repository.getVideos(
+                    channelId = playlistId.split("|")[0] // 플레이리스트의 아이디 리스트
+                ).cachedIn(viewModelScope)
+            )
         }
     }
 
@@ -97,5 +93,10 @@ class VideosViewModel @Inject constructor(
                 }?.cachedIn(viewModelScope)
             )
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(playlistId: String): VideosViewModel
     }
 }

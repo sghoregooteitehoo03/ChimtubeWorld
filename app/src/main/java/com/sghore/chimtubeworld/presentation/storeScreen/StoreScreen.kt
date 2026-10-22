@@ -13,43 +13,48 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
+import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.GoodsChannelInfo
+import com.sghore.chimtubeworld.presentation.ScreenScaffold
 
 @Composable
 fun StoreScreen(
     uiState: StoreScreenState,
     onClickGoods: (GoodsChannelInfo) -> Unit,
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        TitleTextWithExplain(
-            title = "Goods",
-            explain = "",
-            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
+    ScreenScaffold {
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            StoreInfoCategoryItem(
-                modifier = Modifier
-                    .weight(0.5f),
-                storeInfo = uiState.storeInfoList[0],
-                onClick = onClickGoods
+            TitleTextWithExplain(
+                title = "Goods",
+                explain = "",
+                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
             )
-            Spacer(modifier = Modifier.width(12.dp))
-            StoreInfoCategoryItem(
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
                 modifier = Modifier
-                    .weight(0.5f),
-                storeInfo = uiState.storeInfoList[1],
-                onClick = onClickGoods
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+            ) {
+                StoreInfoCategoryItem(
+                    modifier = Modifier
+                        .weight(0.5f),
+                    storeInfo = uiState.storeInfoList[0],
+                    onClick = onClickGoods
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                StoreInfoCategoryItem(
+                    modifier = Modifier
+                        .weight(0.5f),
+                    storeInfo = uiState.storeInfoList[1],
+                    onClick = onClickGoods
+                )
+            }
         }
     }
 }
@@ -87,5 +92,13 @@ private fun StoreInfoCategoryItem(
             textAlign = TextAlign.Center,
             fontSize = 20.sp
         )
+    }
+}
+@Preview(name = "Screen Light", showBackground = true)
+@Preview(name = "Screen Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun StoreScreenPreview() {
+    ChimtubeWorldTheme(darkTheme = androidx.compose.foundation.isSystemInDarkTheme()) {
+        StoreScreen(uiState = StoreScreenState(), onClickGoods = {})
     }
 }

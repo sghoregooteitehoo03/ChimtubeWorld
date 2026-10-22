@@ -1,5 +1,8 @@
 package com.sghore.chimtubeworld.core.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Bookmark(
     val id: Int? = null,
     val videoId: String,

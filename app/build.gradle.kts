@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application.convention)
     alias(libs.plugins.android.application.compose)
     alias(libs.plugins.android.hilt)
+    alias(libs.plugins.kotlin.serialization.convention)
     alias(libs.plugins.google.services)
 }
 
@@ -35,6 +36,7 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
+    implementation(project(":core:navigation"))
     implementation(project(":core:common"))
     implementation(project(":core:model"))
     implementation(project(":core:domain"))
@@ -47,7 +49,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
 
     // Hilt
-    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
     // Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -56,14 +58,10 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     // Navigation
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation3.ui)
 
     // Paging
     implementation(libs.androidx.paging.compose)
-
-    // JSON navigation arguments
-    implementation(libs.gson)
 
     // Image
     implementation(libs.coil.compose)

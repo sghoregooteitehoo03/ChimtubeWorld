@@ -9,10 +9,12 @@
 ## 현재 적용 범위
 
 - plugin id는 참조 구현과 같은 `sg.*`를 유지한다. 등록·내부 적용·catalog alias·문서의 이름을 일치시켜 불필요한 이름 변경을 줄인다. build-logic group은 `com.sghore.chimtubeworld.buildlogic`이다.
-- app에는 application, application.compose, hilt만 적용한다. 기존 SDK 설정은 catalog에서, Java 17 호환성은 Android extension에서 제공한다. 앱 식별자·버전·BuildConfig·릴리스 설정·google-services는 app에 남긴다.
+- app에는 application, application.compose, hilt, serialization을 적용한다. 기존 SDK 설정은 catalog에서, Java 17 호환성은 Android extension에서 제공한다. 앱 식별자·버전·BuildConfig·릴리스 설정·google-services는 app에 남긴다.
 - Compose convention은 Material 3와 공통 UI·Lifecycle·테스트 의존성을 추가한다. 기존 Material 2는 app과 designsystem이 선언하며 icons-extended는 app이 계속 선언한다.
 - Room convention은 `room.incremental=true`, `room.schemaLocation=$projectDir/schemas`를 추가하므로 현재 app에는 적용하지 않는다. 기존 Room 의존성과 KSP 설정을 유지한다.
-- library는 추출된 core에, library.compose는 designsystem·ui에 적용한다. feature.api·feature.impl·room·serialization은 아직 적용하지 않았다. **마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. [기준선](../migration/baseline.md)을 확인한다. feature의 `:core:*` 참조는 plugin을 적용할 때만 평가한다.
+- library는 추출된 core에, library.compose는 designsystem·ui·navigation에 적용한다. serialization은 app·model에 적용한다. feature.api·feature.impl·room은 아직 적용하지 않았다. **마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. [기준선](../migration/baseline.md)을 확인한다. feature의 `:core:*` 참조는 plugin을 적용할 때만 평가한다.
+
+Step 11의 app은 navigation3-ui와 Hilt lifecycle-viewmodel-compose를 직접 사용한다. navigation은 navigation3-runtime을 공개하고 lifecycle-viewmodel-navigation3로 entry ViewModelStore를 유지한다. 미적용 feature.impl convention의 Hilt Navigation Compose 선언은 feature 분리 단계에서 검토한다.
 
 ## 공통 테스트 구성
 

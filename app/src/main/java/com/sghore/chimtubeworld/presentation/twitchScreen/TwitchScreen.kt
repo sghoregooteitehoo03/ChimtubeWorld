@@ -27,6 +27,7 @@ import com.sghore.chimtubeworld.core.designsystem.component.RowList
 import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Channel
+import com.sghore.chimtubeworld.presentation.ScreenScaffold
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
@@ -35,47 +36,49 @@ fun TwitchScreen(
     onMainChannelClick: () -> Unit,
     onTwitchCrewChannelClick: (Channel) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (uiState.isLoading) {
-            CircularProgressIndicator(
-                trackColor = Color.Transparent,
-                strokeCap = StrokeCap.Square,
-                gapSize = 0.dp,
-                modifier = Modifier.align(Alignment.Center),
-                color = colorResource(id = DesignSystemR.color.item_color)
-            )
-        } else {
-            RowList(
-                list = uiState.channels,
-                spanCount = 4,
-                contentPaddingValue = 12.dp,
-                itemPaddingValue = 12.dp,
-                headerItem = {
-                    TitleTextWithExplain(
-                        title = "CHZZK Live",
-                        explain = "침착맨 생방송 채널"
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    MainChannelInfo(
-                        mainChannel = uiState.mainChannelInfo,
-                        onClick = onMainChannelClick
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    TitleTextWithExplain(
-                        title = "BEDORAGE",
-                        explain = "스트리머 크루 배도라지"
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                },
-                listItem = { index, modifier ->
-                    TwitchCrewChannelItem(
-                        channel = uiState.channels[index],
-                        onClick = onTwitchCrewChannelClick,
-                        modifier = modifier
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+    ScreenScaffold {
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    trackColor = Color.Transparent,
+                    strokeCap = StrokeCap.Square,
+                    gapSize = 0.dp,
+                    modifier = Modifier.align(Alignment.Center),
+                    color = colorResource(id = DesignSystemR.color.item_color)
+                )
+            } else {
+                RowList(
+                    list = uiState.channels,
+                    spanCount = 4,
+                    contentPaddingValue = 12.dp,
+                    itemPaddingValue = 12.dp,
+                    headerItem = {
+                        TitleTextWithExplain(
+                            title = "CHZZK Live",
+                            explain = "침착맨 생방송 채널"
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        MainChannelInfo(
+                            mainChannel = uiState.mainChannelInfo,
+                            onClick = onMainChannelClick
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                        TitleTextWithExplain(
+                            title = "BEDORAGE",
+                            explain = "스트리머 크루 배도라지"
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    },
+                    listItem = { index, modifier ->
+                        TwitchCrewChannelItem(
+                            channel = uiState.channels[index],
+                            onClick = onTwitchCrewChannelClick,
+                            modifier = modifier
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -271,5 +274,14 @@ fun TwitchCrewChannelItemPreview() {
             ),
             onClick = {}
         )
+    }
+}
+
+@Preview(name = "Screen Light", showBackground = true)
+@Preview(name = "Screen Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun TwitchScreenPreview() {
+    ChimtubeWorldTheme(darkTheme = androidx.compose.foundation.isSystemInDarkTheme()) {
+        TwitchScreen(uiState = TwitchScreenState(isLoading = true), onMainChannelClick = {}, onTwitchCrewChannelClick = {})
     }
 }

@@ -30,42 +30,47 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Playlist
+import com.sghore.chimtubeworld.presentation.ScreenScaffold
 import com.valentinilk.shimmer.shimmer
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun PlaylistScreen(
+    title: String = "",
+    onBack: () -> Unit = {},
     uiState: PlaylistScreenState,
     onPlaylistClick: (Playlist) -> Unit
 ) {
-    val playlists = uiState.playlists?.collectAsLazyPagingItems()
-    val isLoading by remember {
-        derivedStateOf {
-            playlists?.loadState?.refresh is LoadState.Loading
+    ScreenScaffold(title = title, onBack = onBack) {
+        val playlists = uiState.playlists?.collectAsLazyPagingItems()
+        val isLoading by remember {
+            derivedStateOf {
+                playlists?.loadState?.refresh is LoadState.Loading
+            }
         }
-    }
 
-    LazyColumn(contentPadding = PaddingValues(top = 12.dp, start = 12.dp, end = 12.dp)) {
-        playlists?.let {
-            if (!isLoading) {
-                items(count = it.itemCount) { index ->
-                    PlaylistItem(
-                        playlist = it[index],
-                        onClick = onPlaylistClick,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
-                }
-            } else {
-                items(3) {
-                    PlaylistItemShimmer(
-                        modifier = Modifier
-                            .padding(bottom = 12.dp)
-                            .background(
-                                color = colorResource(id = DesignSystemR.color.gray_night),
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .clip(RoundedCornerShape(8.dp))
-                    )
+        LazyColumn(contentPadding = PaddingValues(top = 12.dp, start = 12.dp, end = 12.dp)) {
+            playlists?.let {
+                if (!isLoading) {
+                    items(count = it.itemCount) { index ->
+                        PlaylistItem(
+                            playlist = it[index],
+                            onClick = onPlaylistClick,
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                    }
+                } else {
+                    items(3) {
+                        PlaylistItemShimmer(
+                            modifier = Modifier
+                                .padding(bottom = 12.dp)
+                                .background(
+                                    color = colorResource(id = DesignSystemR.color.gray_night),
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .clip(RoundedCornerShape(8.dp))
+                        )
+                    }
                 }
             }
         }
@@ -155,5 +160,14 @@ fun PlaylistItemPreview() {
             playlist = playlist,
             onClick = {}
         )
+    }
+}
+
+@Preview(name = "Screen Light", showBackground = true)
+@Preview(name = "Screen Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PlaylistScreenPreview() {
+    ChimtubeWorldTheme(darkTheme = androidx.compose.foundation.isSystemInDarkTheme()) {
+        PlaylistScreen(title = "침착맨", uiState = PlaylistScreenState(), onPlaylistClick = {})
     }
 }
