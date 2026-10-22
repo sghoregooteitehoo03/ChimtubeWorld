@@ -44,7 +44,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     // Compose
-    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.icons.extended)
 
     // Hilt
@@ -70,7 +69,6 @@ dependencies {
     implementation(libs.coil.compose)
 
     // UI Utilities
-    implementation(libs.accompanist.insets.ui)
     implementation(libs.androidx.appcompat)
     debugImplementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)

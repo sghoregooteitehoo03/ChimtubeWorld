@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -31,6 +32,7 @@ import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.core.common.parseUploadTimeText
 import com.sghore.chimtubeworld.core.common.parseVideoDurationText
 import com.sghore.chimtubeworld.core.common.parseViewCountText
+import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Video
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,6 +57,9 @@ fun BookmarkScreen(
     ) {
         if (uiState.isLoading) {
             CircularProgressIndicator(
+                trackColor = Color.Transparent,
+                strokeCap = StrokeCap.Square,
+                gapSize = 0.dp,
                 modifier = Modifier.align(Alignment.Center),
                 color = colorResource(id = DesignSystemR.color.item_color)
             )
@@ -143,7 +148,7 @@ fun VideoInfo(
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-        Divider(
+        HorizontalDivider(
             color = colorResource(id = DesignSystemR.color.gray_bright_night),
             thickness = 2.dp
         )
@@ -169,6 +174,7 @@ fun InputBookmarkInfo(
     ) {
         TextField(
             value = uiState.bookmarkTitle,
+            textStyle = MaterialTheme.typography.bodyLarge,
             onValueChange = onTitleChange,
             maxLines = 1,
             placeholder = {
@@ -177,9 +183,13 @@ fun InputBookmarkInfo(
                     color = colorResource(id = DesignSystemR.color.default_text_color)
                 )
             },
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = colorResource(id = DesignSystemR.color.item_color),
-                backgroundColor = Color.Transparent,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = colorResource(id = DesignSystemR.color.item_color),
+                unfocusedTextColor = colorResource(id = DesignSystemR.color.item_color),
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
                 focusedIndicatorColor = colorResource(id = DesignSystemR.color.item_color),
                 unfocusedIndicatorColor = colorResource(id = DesignSystemR.color.gray_night),
                 cursorColor = colorResource(id = DesignSystemR.color.item_color)
@@ -195,6 +205,7 @@ fun InputBookmarkInfo(
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = uiState.videoPosition,
+            textStyle = MaterialTheme.typography.bodyLarge,
             onValueChange = onVideoPositionChange,
             maxLines = 1,
             placeholder = {
@@ -203,9 +214,13 @@ fun InputBookmarkInfo(
                     color = colorResource(id = DesignSystemR.color.default_text_color)
                 )
             },
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = colorResource(id = DesignSystemR.color.item_color),
-                backgroundColor = Color.Transparent,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = colorResource(id = DesignSystemR.color.item_color),
+                unfocusedTextColor = colorResource(id = DesignSystemR.color.item_color),
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
                 focusedIndicatorColor = colorResource(id = DesignSystemR.color.item_color),
                 unfocusedIndicatorColor = colorResource(id = DesignSystemR.color.gray_night),
                 cursorColor = colorResource(id = DesignSystemR.color.item_color)
@@ -234,8 +249,8 @@ fun InputBookmarkInfo(
             .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
     ) {
         val buttonColors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(id = DesignSystemR.color.item_color),
-            disabledBackgroundColor = colorResource(id = DesignSystemR.color.gray_night)
+            containerColor = colorResource(id = DesignSystemR.color.item_color),
+            disabledContainerColor = colorResource(id = DesignSystemR.color.gray_night)
         )
 
         Button(
@@ -243,6 +258,14 @@ fun InputBookmarkInfo(
                 .fillMaxWidth()
                 .height(48.dp),
             colors = buttonColors,
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 2.dp,
+                pressedElevation = 8.dp,
+                focusedElevation = 4.dp,
+                hoveredElevation = 4.dp,
+                disabledElevation = 0.dp
+            ),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             shape = RoundedCornerShape(8.dp),
             enabled = uiState.isEnable,
             onClick = { onButtonClick() }
@@ -331,10 +354,11 @@ fun BookmarkColorItem(
     }
 }
 
-@Preview
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun VideoInfoPreview() {
-    MaterialTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         val dateFormat = SimpleDateFormat(
             "yyyy-MM-dd'T'HH:mm:ss'Z'",
             Locale.KOREA
@@ -362,13 +386,38 @@ fun VideoInfoPreview() {
     }
 }
 
-@Preview
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun BookmarkColorListPreview() {
-    MaterialTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         BookmarkColorList(
             selectedColor = "#FF0000".toColorInt(),
             {}
         )
+    }
+}
+
+@Preview(name = "Input Light", showBackground = true)
+@Preview(name = "Input Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun InputBookmarkInfoPreview() {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
+        Surface(color = MaterialTheme.colorScheme.background, tonalElevation = 0.dp) {
+            Column {
+                InputBookmarkInfo(
+                    uiState = BookmarkScreenState(
+                        bookmarkTitle = "북마크",
+                        videoPosition = "00:00",
+                        isEnable = true
+                    ),
+                    buttonText = "만들기",
+                    onTitleChange = {},
+                    onVideoPositionChange = {},
+                    onChangeBookmarkColor = {},
+                    onButtonClick = {}
+                )
+            }
+        }
     }
 }

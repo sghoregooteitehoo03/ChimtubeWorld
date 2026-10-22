@@ -2,14 +2,14 @@ package com.sghore.chimtubeworld.presentation.playlistScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.PlaylistPlay
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
+import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Playlist
 import com.valentinilk.shimmer.shimmer
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
@@ -140,10 +141,11 @@ fun PlaylistItemShimmer(
     )
 }
 
-@Preview
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PlaylistItemPreview() {
-    MaterialTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         val playlist = Playlist(
             id = "",
             title = "\uD83D\uDCAA\uD83C\uDFFB말년을 건강하게\uD83D\uDCAA\uD83C\uDFFB│침착맨의 노후대비 운동입문기",

@@ -4,13 +4,14 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.core.designsystem.component.RowItemCollocate
 import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
+import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
@@ -35,6 +37,9 @@ fun YoutubeScreen(
     ) {
         if (uiState.isLoading) {
             CircularProgressIndicator(
+                trackColor = Color.Transparent,
+                strokeCap = StrokeCap.Square,
+                gapSize = 0.dp,
                 modifier = Modifier.align(Alignment.Center),
                 color = colorResource(id = DesignSystemR.color.item_color)
             )
@@ -194,10 +199,11 @@ fun SubYoutubeChannelItem(
     }
 }
 
-@Preview
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun TitleTextWihtExplainPreview() {
-    MaterialTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         TitleTextWithExplain(
             "Youtube",
             "침튜브 채널"
@@ -205,10 +211,11 @@ fun TitleTextWihtExplainPreview() {
     }
 }
 
-@Preview
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MainYoutubeChannelItemPreview() {
-    MaterialTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         MainYoutubeChannelItem(
             channel = Channel(
                 id = "",
@@ -228,10 +235,11 @@ fun MainYoutubeChannelItemPreview() {
     }
 }
 
-@Preview
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SubyoutubeChannelItemPreview() {
-    MaterialTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         SubYoutubeChannelItem(
             channel = Channel(
                 id = "",

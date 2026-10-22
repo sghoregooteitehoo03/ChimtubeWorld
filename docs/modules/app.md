@@ -4,6 +4,8 @@
 
 현재 `:app`은 화면·ViewModel·앱 조립·navigation chrome을 포함한다. 데이터 구현과 theme·공유 component·리소스는 core로 추출했다. `BottomNavigationBar`·`TopAppBarNavigationItem`과 Context 기반 외부 실행 helper `OpenOtherApp`은 app에 유지한다. [기존 MainActivity](../../app/src/main/java/com/sghore/chimtubeworld/presentation/ui/MainActivity.kt)와 [NavigationScreen](../../app/src/main/java/com/sghore/chimtubeworld/presentation/ui/NavigationScreen.kt)을 참고한다.
 
+Step 10에서 Scaffold·TopAppBar·NavigationBar와 화면 component를 Material 3로 전환했다. `enableEdgeToEdge`·`setSystemBarsColor`는 유지하고 Scaffold·상/하단바의 자동 window inset은 0으로 지정해 기존 decor의 시스템 바 처리를 보존한다. 상/하단바 높이 56dp, 하단바 그림자 8dp·tonalElevation 0dp·투명 선택 indicator를 사용한다. 색상·타이포그래피 보존 기준과 전이 Material 2 의존성은 [designsystem 문서](core/designsystem.md)를 따른다. navigation 정책과 GlobalViewModel 이벤트는 그대로다.
+
 **마이그레이션 진행 중 — 대상 모듈 생성 후 적용**: 아래 책임은 목표 구조다. [기준선](../migration/baseline.md)의 기존 동작을 유지하며 단계별로 옮긴다. 현재 GlobalViewModel·공통 TopAppBar·문자열 route를 이 문서만을 근거로 바꾸지 않는다.
 
 ## 목표 책임

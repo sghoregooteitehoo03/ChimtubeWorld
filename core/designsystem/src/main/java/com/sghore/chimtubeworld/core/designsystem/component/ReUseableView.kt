@@ -1,8 +1,9 @@
 package com.sghore.chimtubeworld.core.designsystem.component
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -105,18 +106,20 @@ fun <T> RowItemCollocate(
 }
 
 
-@Preview(showBackground = true)
+@Preview(name = "Light", showBackground = true)
+@Preview(name = "Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun TitleTextWithExplainPreview() {
-    ChimtubeWorldTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         TitleTextWithExplain(title = "제목", explain = "설명")
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Light", showBackground = true)
+@Preview(name = "Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun RowListPreview() {
-    ChimtubeWorldTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         RowList(
             list = listOf("항목 1", "항목 2", "항목 3"),
             spanCount = 2,
@@ -128,10 +131,11 @@ private fun RowListPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Light", showBackground = true)
+@Preview(name = "Dark", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun RowItemCollocatePreview() {
-    ChimtubeWorldTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         RowItemCollocate(
             rowIndex = 0,
             list = listOf("항목 1", "항목 2"),

@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +23,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.sghore.chimtubeworld.core.designsystem.component.TitleTextWithExplain
+import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
 import com.sghore.chimtubeworld.core.model.CafeCategory
 import com.sghore.chimtubeworld.core.model.Channel
 import com.sghore.chimtubeworld.core.model.Post
@@ -48,7 +49,8 @@ fun CafeScreen(
     }
 
     Surface(
-        color = colorResource(id = DesignSystemR.color.default_background_color)
+        color = colorResource(id = DesignSystemR.color.default_background_color),
+        tonalElevation = 0.dp
     ) {
         CollapsingToolbarScaffold(
             modifier = Modifier
@@ -358,7 +360,7 @@ fun CafePostItem(
                 )
             }
         }
-        Divider(
+        HorizontalDivider(
             modifier = modifier
                 .align(Alignment.BottomStart),
             color = colorResource(id = DesignSystemR.color.gray_bright_night)
@@ -366,10 +368,11 @@ fun CafePostItem(
     }
 }
 
-@Preview
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CafeInfoBannerPreview() {
-    MaterialTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         CafeInfoBanner(
             cafeInfo = Channel(
                 id = "",
@@ -383,10 +386,11 @@ fun CafeInfoBannerPreview() {
     }
 }
 
-@Preview
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CafeCategoryListPreview() {
-    MaterialTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         val list = listOf(
             CafeCategory("전체", 0),
             CafeCategory("방송일정 및 공지", 5),
@@ -408,10 +412,11 @@ fun CafeCategoryListPreview() {
     }
 }
 
-@Preview
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CafePostItemPreview() {
-    MaterialTheme {
+    ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         CafePostItem(
             post = Post(
                 id = 0,

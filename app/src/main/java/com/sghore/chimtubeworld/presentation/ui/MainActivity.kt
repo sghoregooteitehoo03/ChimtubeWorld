@@ -15,12 +15,12 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Help
+import androidx.compose.material3.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +53,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @AndroidEntryPoint
+@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     private val gViewModel by viewModels<GlobalViewModel>()
     private lateinit var navController: NavHostController
@@ -82,6 +83,10 @@ class MainActivity : ComponentActivity() {
                 )
 
                 Scaffold(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.87f),
+                    // The decor already handles system bars; the old Scaffold added no insets.
+                    contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
                     topBar = {
                         val navBackStackEntry by navController.currentBackStackEntryAsState()
                         // 현재 루트
@@ -90,15 +95,23 @@ class MainActivity : ComponentActivity() {
                             ?.substringBefore("/")
                             ?.substringBefore("?")
 
-                        com.google.accompanist.insets.ui.TopAppBar(
-                            backgroundColor = colorResource(id = DesignSystemR.color.default_background_color),
-                            elevation = 0.dp,
+                        TopAppBar(
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = colorResource(id = DesignSystemR.color.default_background_color),
+                                scrolledContainerColor = colorResource(id = DesignSystemR.color.default_background_color),
+                                navigationIconContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.87f),
+                                titleContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.87f),
+                                actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                            ),
+                            expandedHeight = 56.dp,
+                            windowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
                             modifier = Modifier.fillMaxWidth(),
                             title = {
                                 when (currentRoute) {
                                     NavigationScreen.AddBookmark.route, NavigationScreen.EditBookmark.route -> {
                                         Text(
                                             text = "북마크",
+                                            style = MaterialTheme.typography.headlineSmall,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis
                                         )
@@ -107,6 +120,7 @@ class MainActivity : ComponentActivity() {
                                     NavigationScreen.Playlists.route, NavigationScreen.Videos.route -> {
                                         Text(
                                             text = videoNameForToolbar,
+                                            style = MaterialTheme.typography.headlineSmall,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis
                                         )
@@ -117,7 +131,7 @@ class MainActivity : ComponentActivity() {
 
                                         Text(
                                             text = "CHIMHA",
-                                            color = MaterialTheme.colors.onPrimary,
+                                            color = MaterialTheme.colorScheme.onPrimary,
                                             fontSize = 24.sp,
                                             fontWeight = FontWeight.Bold,
                                             textAlign = TextAlign.Center,
@@ -130,14 +144,19 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
                             },
-                            navigationIcon = TopAppBarNavigationItem(currentRoute = currentRoute) {
-                                IconButton(onClick = {
-                                    navController.navigateUp()
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.ArrowBack,
-                                        contentDescription = null
-                                    )
+                            navigationIcon = {
+                                TopAppBarNavigationItem(currentRoute = currentRoute) {
+                                    IconButton(onClick = {
+                                        navController.navigateUp()
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowBack,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }?.let { navigationItem ->
+                                    // Retain the M2 title start position (72dp with a back icon).
+                                    Box(Modifier.width(64.dp)) { navigationItem() }
                                 }
                             },
                             actions = {
@@ -151,7 +170,7 @@ class MainActivity : ComponentActivity() {
                                             Icon(
                                                 imageVector = Icons.Default.Assignment,
                                                 contentDescription = null,
-                                                tint = MaterialTheme.colors.onPrimary
+                                                tint = MaterialTheme.colorScheme.onPrimary
                                             )
                                         }
                                         IconButton(onClick = {
@@ -162,7 +181,7 @@ class MainActivity : ComponentActivity() {
                                             Icon(
                                                 imageVector = Icons.Default.Delete,
                                                 contentDescription = null,
-                                                tint = MaterialTheme.colors.onPrimary
+                                                tint = MaterialTheme.colorScheme.onPrimary
                                             )
                                         }
                                     }
@@ -176,7 +195,7 @@ class MainActivity : ComponentActivity() {
                                             Icon(
                                                 imageVector = Icons.Default.Help,
                                                 contentDescription = null,
-                                                tint = MaterialTheme.colors.onPrimary
+                                                tint = MaterialTheme.colorScheme.onPrimary
                                             )
                                         }
                                     }
@@ -208,7 +227,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
-                        Divider(
+                        HorizontalDivider(
                             color = colorResource(id = DesignSystemR.color.gray_bright_night)
                         )
                         NavHost(

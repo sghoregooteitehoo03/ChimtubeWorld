@@ -6,8 +6,9 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -74,13 +75,23 @@ fun EditBookmarkRoute(
 
     if (uiState.isOpenDialog) {
         AlertDialog(
+            containerColor = MaterialTheme.colorScheme.surface,
+            tonalElevation = 0.dp,
+            shape = MaterialTheme.shapes.medium,
+            textContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             onDismissRequest = { viewModel.setDialogState(false) },
-            text = { Text(text = "북마크를 삭제하시겠습니까?") },
+            text = {
+                Text(
+                    text = "북마크를 삭제하시겠습니까?",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
             confirmButton = {
                 Text(
                     text = "확인",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.87f),
                     modifier = Modifier
-                        .padding(end = 16.dp, bottom = 16.dp)
                         .clickable {
                             viewModel.deleteBookmark(viewModel.selectedBookmark!!)
                             viewModel.setDialogState(false)
@@ -90,8 +101,11 @@ fun EditBookmarkRoute(
             dismissButton = {
                 Text(
                     text = "취소",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.87f),
                     modifier = Modifier
-                        .padding(end = 16.dp, bottom = 16.dp)
+                        // M3 already supplies the dialog's outer 24dp padding.
+                        .padding(end = 8.dp)
                         .clickable {
                             viewModel.setDialogState(false)
                         }
