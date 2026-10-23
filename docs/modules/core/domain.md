@@ -38,7 +38,7 @@ domain이 필요로 하는 repository contract를 둔다. usecase는 여러 repo
 
 ViewModel이 사용하는 메서드만 계약으로 노출한다. 채널 조회의 Firestore 링크 조회 → API 호출은 data 구현의 private helper로 감춘다. DTO를 반환하는 `getPlaylist`도 data 구현의 private PagingSource callback으로 유지한다. YouTube 채널 목록의 기존 원소 nullable 계약을 유지한다.
 
-ViewModel은 repository를 직접 주입받는다. 현재 카페 정보·Twitch 채널·YouTube 채널·단일 영상 조회의 private Flow helper에서 기존처럼 성공 시 `Resource.Success`를, 예외 시 `printStackTrace()` 후 `Resource.Error("데이터를 불러오는데 오류가 발생하였습니다.")`를 방출한다. `Loading`은 추가하지 않는다. 카페 읽음 기록 저장 예외도 CafeViewModel에서 출력 후 삼키는 기존 동작을 유지한다. 이 임시 래핑은 후속 MVI 단계에서 템플릿의 오류 상태 처리 방식으로 전환한다.
+ViewModel은 repository를 직접 주입받는다. 아직 MVI 전환 전인 YouTube 채널·단일 영상 조회의 private Flow helper에서 기존처럼 성공 시 `Resource.Success`를, 예외 시 `printStackTrace()` 후 `Resource.Error("데이터를 불러오는데 오류가 발생하였습니다.")`를 방출한다. `Loading`은 추가하지 않는다. 이 임시 래핑은 후속 MVI 단계에서 템플릿의 오류 상태 처리 방식으로 전환한다. Step 15의 CafeViewModel·ChzzkViewModel은 repository를 `suspendRunCatching`으로 호출하고 `isLoading`·`hasLoadError`로 결과를 전달한다. 카페 읽음 기록 저장 예외는 CafeViewModel에서 출력 후 삼키는 기존 동작을 유지한다.
 
 ## 구현과 검증 참고
 

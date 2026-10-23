@@ -1,93 +1,78 @@
 package com.sghore.chimtubeworld.feature.cafe.impl.cafe_screen
 
-import androidx.lifecycle.*
+import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.sghore.chimtubeworld.core.model.Post
-import com.sghore.chimtubeworld.core.model.Channel
-import com.sghore.chimtubeworld.core.common.Resource
+import com.sghore.chimtubeworld.core.common.Constants
 import com.sghore.chimtubeworld.core.common.suspendRunCatching
 import com.sghore.chimtubeworld.core.domain.repository.CafeRepository
+import com.sghore.chimtubeworld.core.model.Post
+import com.sghore.chimtubeworld.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class CafeViewModel @Inject constructor(
     private val repository: CafeRepository
-) : ViewModel() {
-    private val _state = MutableStateFlow(CafeScreenState())
-    val state: StateFlow<CafeScreenState> = _state.asStateFlow()
+) : BaseViewModel<CafeUiState, CafeUiEvent, CafeUiSideEffect>(CafeUiState()) {
 
     init {
-        getCafeInfo()
+        loadCafeInfo()
     }
 
-    private fun loadCafeInfo(): Flow<Resource<Channel>> = flow {
-        suspendRunCatching {
-            val cafeInfo = repository.getCafeInfo()
-            emit(Resource.Success<Channel>(cafeInfo))
-        }.onFailure { e ->
-            if (e !is Exception) throw e
-            e.printStackTrace()
-            emit(Resource.Error<Channel>("데이터를 불러오는데 오류가 발생하였습니다."))
+    override fun onEvent(event: CafeUiEvent) {
+        when (event) {
+            is CafeUiEvent.CategoryClicked -> changeCategory(event.categoryId)
+            is CafeUiEvent.PostClicked -> openPost(event.post)
+            is CafeUiEvent.BannerClicked -> postSideEffect(CafeUiSideEffect.OpenUrl(event.url))
+            CafeUiEvent.ChimhahaClicked -> {
+                postSideEffect(CafeUiSideEffect.OpenUrl(Constants.CHIMHAHA_URL))
+            }
         }
     }
 
-    // 카페의 정보를 가져옴
-    fun getCafeInfo() {
-        loadCafeInfo().onEach { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    _state.update {
-                        CafeScreenState(
-                            cafeInfo = resource.data,
-                            cafePosts = repository.getCafePosts(categoryId = 0)
-                                .cachedIn(viewModelScope)
-                        )
-                    }
-                }
-
-                is Resource.Loading -> {}
-                is Resource.Error -> {
-                    _state.update {
-                        CafeScreenState(
-                            errorMsg = resource.errorMsg ?: "오류"
-                        )
-                    }
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    // 카테고리 변경
-    fun changeCategory(categoryId: Int) {
-        _state.update {
-            it.copy(
-                cafeCategoryId = categoryId,
-                cafePosts = repository.getCafePosts(categoryId = categoryId)
-                    .cachedIn(viewModelScope)
-            )
-        }
-    }
-
-    // 히스토리 저장
-    fun readPost(post: Post) = viewModelScope.launch {
-        if (!post.isRead) { // 읽지 않은 게시글일 경우
-            _state.update {
-                it.copy(
-                    readHistory = it.readHistory.toMutableMap().apply {
-                        this[post.id] = true
-                    }
-                )
-            }
+    private fun loadCafeInfo() {
+        viewModelScope.launch {
+            reduce { copy(isLoading = true, hasLoadError = false) }
 
             suspendRunCatching {
-                repository.readPost(post.id)
-            }.onFailure { e ->
-                if (e !is Exception) throw e
-                e.printStackTrace()
+                repository.getCafeInfo()
+            }.onSuccess { cafeInfo ->
+                val posts = repository.getCafePosts(categoryId = 0).cachedIn(viewModelScope)
+
+                reduce {
+                    CafeUiState(cafeInfo = cafeInfo, cafePosts = posts)
+                }
+            }.onFailure { error ->
+                if (error !is Exception) throw error
+                error.printStackTrace()
+
+                reduce { copy(isLoading = false, hasLoadError = true) }
             }
         }
+    }
+
+    private fun changeCategory(categoryId: Int) {
+        val posts = repository.getCafePosts(categoryId).cachedIn(viewModelScope)
+
+        reduce { copy(cafeCategoryId = categoryId, cafePosts = posts) }
+    }
+
+    private fun openPost(post: Post) {
+        if (!post.isRead) {
+            reduce { copy(readHistory = readHistory + (post.id to true)) }
+
+            viewModelScope.launch {
+                suspendRunCatching {
+                    repository.readPost(post.id)
+                }.onFailure { error ->
+                    if (error !is Exception) throw error
+                    error.printStackTrace()
+                }
+            }
+        }
+
+        // 읽음 기록 저장 완료를 기다리지 않고 기존처럼 게시글을 연다.
+        postSideEffect(CafeUiSideEffect.OpenUrl(post.url ?: ""))
     }
 }

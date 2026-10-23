@@ -2,7 +2,7 @@
 
 검증 범위와 완료 보고는 [quality.md](quality.md), 공통 도구의 책임은 [core/testing.md](../modules/core/testing.md)를 따른다.
 
-Step 8에서 `:core:testing`의 Fake·fixture·MainDispatcherRule과 `:core:data`의 repository·mapper·PagingSource 로컬 테스트를 추가했다. Step 13에서 webtoon·store의 ViewModel·Compose Screen 테스트를 작성했다. 나머지 feature는 후속 MVI 단계에서 적용한다. 테스트 작성과 실행 통과는 구분하며, 수동 동작 확인은 [마이그레이션 기준선](../migration/baseline.md)과 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다.
+Step 8에서 `:core:testing`의 Fake·fixture·MainDispatcherRule과 `:core:data`의 repository·mapper·PagingSource 로컬 테스트를 추가했다. Step 13에서 webtoon·store, Step 15에서 cafe·chzzk의 ViewModel·Compose Screen 테스트를 작성했다. 나머지 feature는 후속 MVI 단계에서 적용한다. 테스트 작성과 실행 통과는 구분하며, 수동 동작 확인은 [마이그레이션 기준선](../migration/baseline.md)과 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다.
 
 Step 11의 [NavigatorTest](../../core/navigation/src/test/java/com/sghore/chimtubeworld/core/navigation/NavigatorTest.kt)는 템플릿 테스트를 5개 탭에 맞추어 확장했다. 탭 재선택·sub-stack 유지·탭 이력·root 뒤로가기·popUpTo·결과 1회 소비를 검증한다. [NavigationKeysTest](../../app/src/test/java/com/sghore/chimtubeworld/navigation/NavigationKeysTest.kt)는 9개 key와 특수문자 인자·Video/Bookmark 직렬화를 확인한다. 각각 `:core:navigation:testDebugUnitTest`, `:app:testDebugUnitTest`로 실행하며 기기 스모크를 대체하지 않는다.
 
@@ -91,8 +91,14 @@ fun `요청 URL을 기록하고 설정한 영상을 반환한다`() = runTest {
 | [StoreViewModelTest](../../feature/store/impl/src/test/java/com/sghore/chimtubeworld/feature/store/impl/store_screen/StoreViewModelTest.kt) | 두 상점의 순서·이름·이미지·URL, 초기 effect 없음, 각 클릭의 정확한 URL effect만 1회 전달·상태 유지 |
 | [WebtoonScreenTest](../../feature/webtoon/impl/src/androidTest/java/com/sghore/chimtubeworld/feature/webtoon/impl/webtoon_screen/WebtoonScreenTest.kt) | 주입한 다섯 작품의 스크롤 표시·연도·접근성 설명, 각 클릭의 event 값, 빈 목록의 제목·설명 |
 | [StoreScreenTest](../../feature/store/impl/src/androidTest/java/com/sghore/chimtubeworld/feature/store/impl/store_screen/StoreScreenTest.kt) | 주입한 두 상점·제목·접근성 설명, 각 클릭의 event 값 |
+| [CafeViewModelTest](../../feature/cafe/impl/src/test/java/com/sghore/chimtubeworld/feature/cafe/impl/cafe_screen/CafeViewModelTest.kt) | FakeCafeRepository로 초기 로딩·성공·실패, 카테고리 요청 ID·Paging Flow 교체·중복 수집 캐시, 읽음 상태·저장 ID·저장 실패 무시, 이미 읽은 글·null URL, 배너·침하하의 정확한 URL effect |
+| [ChzzkViewModelTest](../../feature/chzzk/impl/src/test/java/com/sghore/chimtubeworld/feature/chzzk/impl/chzzk_screen/ChzzkViewModelTest.kt) | FakeTwitchRepository로 초기 로딩·성공·실패, 첫 type 0 선택·목록 순서·type 0 누락 예외 유지, 다이얼로그 열기·닫기, YouTube·메인·크루 채널의 정확한 URL effect |
+| [CafeScreenTest](../../feature/cafe/impl/src/androidTest/java/com/sghore/chimtubeworld/feature/cafe/impl/cafe_screen/CafeScreenTest.kt) | 헤더·카페 정보·10개 카테고리 표시·선택된 카테고리 중복 입력 방지, 배너·침하하·Paging 게시글의 event, 오류 문자열 표시 |
+| [ChzzkScreenTest](../../feature/chzzk/impl/src/androidTest/java/com/sghore/chimtubeworld/feature/chzzk/impl/chzzk_screen/ChzzkScreenTest.kt) | 로딩·오류 표시, 채널 목록·헤더·생방송 표시와 클릭, 다이얼로그 상태별 표시·두 선택지·뒤로가기 event |
 
-두 feature는 고정 목록만 사용하므로 repository Fake나 로딩·실패·재시도 테스트가 필요하지 않다. ViewModel 테스트는 MainDispatcherRule·runTest·선행 effect 수집·ViewModelStore 정리를 사용하고, Screen 테스트는 `createComposeRule` v2에서 theme·Screen만 구성한다. 외부 앱 설치 여부·실제 Intent·Custom Tabs fallback과 라이트/다크 외형은 기기 스모크로 확인한다. APK 조립은 기기 테스트 실행을 대신하지 않는다.
+webtoon·store는 고정 목록만 사용하므로 repository Fake나 로딩·실패·재시도 테스트가 필요하지 않다. cafe·chzzk는 core:testing의 Fake·fixture로 로딩·실패와 사용자 입력을 검증한다. 재시도 입력은 추가하지 않았으며 관련 테스트도 없다. Cafe의 Paging 단위 테스트는 Flow 교체와 캐시 수집 계약을 확인하고, 게시글 표시·클릭은 `flowOf(PagingData.from(...))`을 주입하는 Screen 테스트에서 확인한다. 실제 Pager 스크롤·원격 페이지 로딩은 기기 스모크 범위다.
+
+ViewModel 테스트는 MainDispatcherRule·runTest·선행 effect 수집·ViewModelStore 정리를 사용하고, Screen 테스트는 `createComposeRule` v2에서 theme·Screen만 구성한다. 외부 앱 설치 여부·실제 Intent·Custom Tabs fallback과 라이트/다크 외형은 기기 스모크로 확인한다. APK 조립은 기기 테스트 실행을 대신하지 않는다.
 
 ## 실행과 결과
 

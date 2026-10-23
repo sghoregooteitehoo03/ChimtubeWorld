@@ -1,47 +1,29 @@
 package com.sghore.chimtubeworld.feature.cafe.impl.cafe_screen
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.sghore.chimtubeworld.core.common.Constants
-import com.sghore.chimtubeworld.core.ui.OpenOtherApp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 internal fun CafeRoute(
-    viewModel: CafeViewModel = hiltViewModel()
+    viewModel: CafeViewModel = hiltViewModel(),
+    onSideEffect: (CafeUiSideEffect) -> Unit
 ) {
-    val uiState by viewModel.state.collectAsState()
-    val context = LocalContext.current
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val currentOnSideEffect by rememberUpdatedState(onSideEffect)
+
+    LaunchedEffect(viewModel.sideEffect) {
+        viewModel.sideEffect.collectLatest { sideEffect ->
+            currentOnSideEffect(sideEffect)
+        }
+    }
 
     CafeScreen(
-        uiState = uiState,
-        onCafeBannerClick = { url ->
-            openCustomTabs(
-                context = context,
-                url = url
-            )
-        },
-        onChimhahaButtonClick = {
-            openCustomTabs(
-                context = context,
-                url = Constants.CHIMHAHA_URL
-            )
-        },
-        onCafeCategoryClick = viewModel::changeCategory,
-        onCafePostClick = { post ->
-            viewModel.readPost(post = post!!)
-            openCustomTabs(
-                context = context,
-                url = post.url ?: ""
-            )
-        }
+        uiState = uiState.value,
+        onEvent = viewModel::onEvent
     )
-}
-
-private fun openCustomTabs(context: Context, url: String) {
-    OpenOtherApp(context = context)
-        .openCustomTabs(url = url)
 }
