@@ -38,6 +38,10 @@ dependencies {
     implementation(project(":feature:webtoon:impl"))
     implementation(project(":feature:store:api"))
     implementation(project(":feature:store:impl"))
+    implementation(project(":feature:cafe:api"))
+    implementation(project(":feature:cafe:impl"))
+    implementation(project(":feature:chzzk:api"))
+    implementation(project(":feature:chzzk:impl"))
 
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
@@ -79,6 +83,5 @@ dependencies {
     debugImplementation(libs.androidx.customview.poolingcontainer)
     implementation(libs.compose.shimmer)
     implementation(libs.google.material)
-    implementation(libs.toolbar.compose)
 
 }

@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.presentation.twitchScreen
+package com.sghore.chimtubeworld.feature.chzzk.impl.chzzk_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
-class TwitchViewModel @Inject constructor(
+internal class TwitchViewModel @Inject constructor(
     private val repository: TwitchRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(TwitchScreenState(isLoading = true))

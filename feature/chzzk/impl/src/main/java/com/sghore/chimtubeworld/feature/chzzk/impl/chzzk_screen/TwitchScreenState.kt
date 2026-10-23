@@ -1,8 +1,8 @@
-package com.sghore.chimtubeworld.presentation.twitchScreen
+package com.sghore.chimtubeworld.feature.chzzk.impl.chzzk_screen
 
 import com.sghore.chimtubeworld.core.model.Channel
 
-data class TwitchScreenState(
+internal data class TwitchScreenState(
     val mainChannelInfo: Channel? = null,
     val channels: List<Channel?> = emptyList(),
     val isLoading: Boolean = false,

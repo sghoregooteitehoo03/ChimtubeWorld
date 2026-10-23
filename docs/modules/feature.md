@@ -1,8 +1,8 @@
 # Feature 작업 규칙
 
-**마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. Step 12에서 webtoon·store를 api/impl로 분리했고, Step 13에서 두 feature에 아래 MVI·문자열 리소스·Preview·테스트 패턴을 적용했다. 나머지 화면은 `app`의 [presentation](../../app/src/main/java/com/sghore/chimtubeworld/presentation)에 있다. 기존 상태와 이동 제약은 [기준선](../migration/baseline.md)을 따른다. 이동 단계에서는 로직을 유지하고, MVI·문자열 리소스·테스트는 이후 전환 단계에서 적용한다.
+**마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. Step 12에서 webtoon·store를 api/impl로 분리했고, Step 13에서 두 feature에 아래 MVI·문자열 리소스·Preview·테스트 패턴을 적용했다. Step 14에서 cafe·chzzk를 api/impl로 이동했으며 기존 State·ViewModel·Twitch* 이름은 유지한다. 두 feature의 MVI·문자열 리소스·테스트 전환은 Step 15에서 진행한다. youtube(playlist·videos 포함)·bookmark 화면은 `app`의 [presentation](../../app/src/main/java/com/sghore/chimtubeworld/presentation)에 있다. 기존 상태와 이동 제약은 [기준선](../migration/baseline.md)을 따른다. 이동 단계에서는 로직을 유지하고, MVI·문자열 리소스·테스트는 이후 전환 단계에서 적용한다.
 
-Step 11에서 NavKey·이동 확장 함수·EntryProvider 및 assisted ViewModel 생성은 단일 app 안에서 먼저 적용했다. webtoon·store의 navigation은 각 feature API·impl에 있고, 나머지는 [app/navigation](../../app/src/main/java/com/sghore/chimtubeworld/navigation)에 유지한다.
+Step 11에서 NavKey·이동 확장 함수·EntryProvider 및 assisted ViewModel 생성은 단일 app 안에서 먼저 적용했다. webtoon·store·cafe·chzzk의 navigation은 각 feature API·impl에 있고, youtube·bookmark는 [app/navigation](../../app/src/main/java/com/sghore/chimtubeworld/navigation)에 유지한다.
 
 ## 모듈 경계
 

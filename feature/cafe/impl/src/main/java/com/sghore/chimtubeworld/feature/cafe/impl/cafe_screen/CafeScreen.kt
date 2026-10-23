@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.presentation.cafeScreen
+package com.sghore.chimtubeworld.feature.cafe.impl.cafe_screen
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -34,7 +34,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
-fun CafeScreen(
+internal fun CafeScreen(
     uiState: CafeScreenState,
     onCafeBannerClick: (String) -> Unit,
     onChimhahaButtonClick: () -> Unit,
@@ -117,7 +117,7 @@ fun CafeScreen(
 }
 
 @Composable
-fun CafeTopItem(
+internal fun CafeTopItem(
     cafeInfo: Channel?,
     selectedCategoryId: Int,
     modifier: Modifier = Modifier,
@@ -195,7 +195,7 @@ fun CafeTopItem(
 }
 
 @Composable
-fun CafeInfoBanner(
+internal fun CafeInfoBanner(
     cafeInfo: Channel?,
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit = {}
@@ -255,7 +255,7 @@ fun CafeInfoBanner(
 }
 
 @Composable
-fun CafeCategoryList(
+internal fun CafeCategoryList(
     categoryList: List<CafeCategory>,
     selectedCategoryId: Int,
     onClick: (Int) -> Unit,
@@ -310,7 +310,7 @@ fun CafeCategoryList(
 }
 
 @Composable
-fun CafePostItem(
+internal fun CafePostItem(
     post: Post?,
     isRead: Boolean,
     modifier: Modifier = Modifier,
@@ -374,7 +374,7 @@ fun CafePostItem(
 @Preview(name = "Light")
 @Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun CafeInfoBannerPreview() {
+internal fun CafeInfoBannerPreview() {
     ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         CafeInfoBanner(
             cafeInfo = Channel(
@@ -392,7 +392,7 @@ fun CafeInfoBannerPreview() {
 @Preview(name = "Light")
 @Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun CafeCategoryListPreview() {
+internal fun CafeCategoryListPreview() {
     ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         val list = listOf(
             CafeCategory("전체", 0),
@@ -418,7 +418,7 @@ fun CafeCategoryListPreview() {
 @Preview(name = "Light")
 @Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun CafePostItemPreview() {
+internal fun CafePostItemPreview() {
     ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         CafePostItem(
             post = Post(

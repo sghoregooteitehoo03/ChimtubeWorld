@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.presentation.cafeScreen
+package com.sghore.chimtubeworld.feature.cafe.impl.cafe_screen
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -10,7 +10,7 @@ import com.sghore.chimtubeworld.core.common.Constants
 import com.sghore.chimtubeworld.core.ui.OpenOtherApp
 
 @Composable
-fun CafeRoute(
+internal fun CafeRoute(
     viewModel: CafeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()

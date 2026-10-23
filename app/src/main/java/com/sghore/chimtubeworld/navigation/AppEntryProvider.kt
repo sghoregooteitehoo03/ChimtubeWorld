@@ -8,10 +8,8 @@ import com.sghore.chimtubeworld.core.navigation.Navigator
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.AddBookmarkRoute
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.BookmarkViewModel
 import com.sghore.chimtubeworld.presentation.bookmarkScreen.EditBookmarkRoute
-import com.sghore.chimtubeworld.presentation.cafeScreen.CafeRoute
 import com.sghore.chimtubeworld.presentation.playlistScreen.PlaylistRoute
 import com.sghore.chimtubeworld.presentation.playlistScreen.PlaylistViewModel
-import com.sghore.chimtubeworld.presentation.twitchScreen.TwitchRoute
 import com.sghore.chimtubeworld.presentation.videosScreen.VideosRoute
 import com.sghore.chimtubeworld.presentation.videosScreen.VideosViewModel
 import com.sghore.chimtubeworld.presentation.youtubeScreen.YoutubeRoute
@@ -28,8 +26,6 @@ internal fun EntryProviderScope<NavKey>.appEntries(navigator: Navigator) {
             )
         })
     }
-    entry<ChzzkKey> { TwitchRoute() }
-    entry<CafeKey> { CafeRoute() }
     entry<PlaylistsKey> { key ->
         val viewModel = hiltViewModel<PlaylistViewModel, PlaylistViewModel.Factory>(
             creationCallback = { it.create(key.channelId, key.playlistId, key.type) }

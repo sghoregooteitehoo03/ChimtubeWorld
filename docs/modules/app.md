@@ -2,14 +2,14 @@
 
 ## 현재 상태
 
-현재 `:app`은 화면·ViewModel·앱 조립·navigation chrome을 포함한다. 데이터 구현과 theme·공유 component·리소스는 core로 추출했다. Step 11에서 Navigation 3로 전환했고 Step 12에서 webtoon·store는 api/impl feature 모듈로 이동했다. 나머지 feature 분리와 MVI는 후속 단계다. 화면별 `*ScreenState`·개별 함수 호출을 유지하며 BaseViewModel은 사용하지 않는다.
+현재 `:app`은 화면·ViewModel·앱 조립·navigation chrome을 포함한다. 데이터 구현과 theme·공유 component·리소스는 core로 추출했다. Step 11에서 Navigation 3로 전환했고 Step 12에서 webtoon·store, Step 14에서 cafe·chzzk를 api/impl feature 모듈로 이동했다. webtoon·store는 Step 13에서 MVI로 전환했다. cafe·chzzk는 기존 `*ScreenState`·개별 함수 호출과 Twitch* 이름을 유지하며 MVI 전환은 Step 15에서 진행한다. app에는 youtube(playlist·videos 포함)·bookmark 화면과 상태가 남아 있으며 두 feature의 분리와 MVI는 후속 단계다.
 
-[MainActivity](../../app/src/main/java/com/sghore/chimtubeworld/presentation/ui/MainActivity.kt)는 theme·시스템 바·공유 인텐트를, [ChimtubeWorldApp](../../app/src/main/java/com/sghore/chimtubeworld/presentation/ui/ChimtubeWorldApp.kt)은 NavDisplay와 하단바를 조립한다. [AppState](../../app/src/main/java/com/sghore/chimtubeworld/presentation/ui/AppState.kt)는 NavigationState와 Navigator를 보유한다. webtoon·store의 NavKey·이동 확장 함수는 각 feature API, EntryProvider는 각 impl에 둔다. 나머지 NavKey·이동 확장 함수·EntryProvider와 TopLevelDestination은 [app/navigation](../../app/src/main/java/com/sghore/chimtubeworld/navigation)에 둔다.
+[MainActivity](../../app/src/main/java/com/sghore/chimtubeworld/presentation/ui/MainActivity.kt)는 theme·시스템 바·공유 인텐트를, [ChimtubeWorldApp](../../app/src/main/java/com/sghore/chimtubeworld/presentation/ui/ChimtubeWorldApp.kt)은 NavDisplay와 하단바를 조립한다. [AppState](../../app/src/main/java/com/sghore/chimtubeworld/presentation/ui/AppState.kt)는 NavigationState와 Navigator를 보유한다. webtoon·store·cafe·chzzk의 NavKey·이동 확장 함수는 각 feature API, EntryProvider는 각 impl에 둔다. 나머지 NavKey·이동 확장 함수·EntryProvider와 TopLevelDestination은 [app/navigation](../../app/src/main/java/com/sghore/chimtubeworld/navigation)에 둔다.
 
 ## Navigation과 화면 책임
 
 - 시작 탭은 YouTube이고, 하단 탭 순서는 YouTube·Chzzk·Webtoon·Cafe·Store다. 선택 아이콘은 현재 sub-stack의 top-level key로 결정한다.
-- ChimtubeWorldApp의 entryProvider는 appEntries(navigator)와 feature impl의 webtoonEntry()·storeEntry()를 등록한다. TopLevelDestination은 feature API의 WebtoonKey·StoreKey를 사용하며 app은 네 feature 모듈에 직접 의존한다.
+- ChimtubeWorldApp의 entryProvider는 appEntries(navigator)와 feature impl의 webtoonEntry()·storeEntry()·cafeEntry()·chzzkEntry()를 등록한다. TopLevelDestination은 feature API의 WebtoonKey·StoreKey·CafeKey·ChzzkKey를 사용하며 app은 네 feature의 API·impl 모듈 8개에 직접 의존한다.
 - app은 entryProvider를 등록하고 `NavigationState.toEntries`를 NavDisplay에 전달한다. entry별 saveable state·ViewModelStore는 core:navigation이 관리한다. [탭·뒤로가기 정책](core/navigation.md)을 적용한다.
 - Playlists는 채널명·선택적 channelId·playlistId·type, Videos는 playlistId·플레이리스트명·VideoSource, AddBookmark는 URL·요청 ID, EditBookmark는 Video·북마크 위치·VideoSource를 key에 보관한다. Gson JSON이나 문자열 route는 사용하지 않는다.
 - PlaylistViewModel·VideosViewModel·BookmarkViewModel은 AssistedInject를 사용한다. entry의 `hiltViewModel(creationCallback)`이 key의 인자를 factory.create에 전달한다. Route는 ViewModel을 필수 인자로 받고 Navigator 대신 이동 콜백을 받는다.

@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.presentation.twitchScreen
+package com.sghore.chimtubeworld.feature.chzzk.impl.chzzk_screen
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -31,7 +31,7 @@ import com.sghore.chimtubeworld.core.designsystem.component.ScreenScaffold
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
-fun TwitchScreen(
+internal fun TwitchScreen(
     uiState: TwitchScreenState,
     onMainChannelClick: () -> Unit,
     onTwitchCrewChannelClick: (Channel) -> Unit
@@ -84,7 +84,7 @@ fun TwitchScreen(
 }
 
 @Composable
-fun MainChannelInfo(
+internal fun MainChannelInfo(
     mainChannel: Channel?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -186,7 +186,7 @@ fun MainChannelInfo(
 }
 
 @Composable
-fun TwitchCrewChannelItem(
+internal fun TwitchCrewChannelItem(
     channel: Channel?,
     onClick: (Channel) -> Unit,
     modifier: Modifier = Modifier
@@ -241,7 +241,7 @@ fun TwitchCrewChannelItem(
 @Preview(name = "Light")
 @Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun MainChannelInfoPreview() {
+internal fun MainChannelInfoPreview() {
     ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         MainChannelInfo(
             mainChannel = Channel(
@@ -261,7 +261,7 @@ fun MainChannelInfoPreview() {
 @Preview(name = "Light")
 @Preview(name = "Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun TwitchCrewChannelItemPreview() {
+internal fun TwitchCrewChannelItemPreview() {
     ChimtubeWorldTheme(darkTheme = isSystemInDarkTheme()) {
         TwitchCrewChannelItem(
             channel = Channel(

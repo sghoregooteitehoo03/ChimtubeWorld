@@ -1,17 +1,12 @@
 package com.sghore.chimtubeworld.navigation
 
+import com.sghore.chimtubeworld.feature.cafe.api.navigation.CafeKey
+import com.sghore.chimtubeworld.feature.chzzk.api.navigation.ChzzkKey
 import com.sghore.chimtubeworld.feature.webtoon.api.navigation.WebtoonKey
 import com.sghore.chimtubeworld.feature.store.api.navigation.StoreKey
 import androidx.annotation.DrawableRes
 import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
-
-@Serializable
-data object ChzzkKey : NavKey
-
-@Serializable
-data object CafeKey : NavKey
 
 data class TopLevelDestination(
     val key: NavKey,

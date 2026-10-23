@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.presentation.twitchScreen
+package com.sghore.chimtubeworld.feature.chzzk.impl.chzzk_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,7 +24,7 @@ import com.sghore.chimtubeworld.core.ui.OpenOtherApp
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
-fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
+internal fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
 
@@ -82,7 +82,7 @@ fun TwitchRoute(viewModel: TwitchViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun SelectionItem(
+internal fun SelectionItem(
     modifier: Modifier = Modifier,
     image: Painter,
     explain: String,

@@ -17,6 +17,8 @@ import com.sghore.chimtubeworld.navigation.AddBookmarkKey
 import com.sghore.chimtubeworld.navigation.EditBookmarkKey
 import com.sghore.chimtubeworld.navigation.appEntries
 import com.sghore.chimtubeworld.navigation.navigateToAddBookmark
+import com.sghore.chimtubeworld.feature.cafe.impl.navigation.cafeEntry
+import com.sghore.chimtubeworld.feature.chzzk.impl.navigation.chzzkEntry
 import com.sghore.chimtubeworld.feature.webtoon.impl.navigation.webtoonEntry
 import com.sghore.chimtubeworld.feature.store.impl.navigation.storeEntry
 import com.sghore.chimtubeworld.presentation.BottomNavigationBar
@@ -34,6 +36,8 @@ internal fun ChimtubeWorldApp(
             appEntries(navigator)
             webtoonEntry()
             storeEntry()
+            cafeEntry()
+            chzzkEntry()
         }
     }
     val shareUrl = pendingShareUrls.firstOrNull()

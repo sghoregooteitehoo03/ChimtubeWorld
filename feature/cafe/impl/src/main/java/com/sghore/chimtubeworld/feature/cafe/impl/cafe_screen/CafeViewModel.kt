@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.presentation.cafeScreen
+package com.sghore.chimtubeworld.feature.cafe.impl.cafe_screen
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CafeViewModel @Inject constructor(
+internal class CafeViewModel @Inject constructor(
     private val repository: CafeRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(CafeScreenState())
