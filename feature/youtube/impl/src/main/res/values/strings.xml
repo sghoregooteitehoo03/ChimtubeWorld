@@ -1,0 +1,15 @@
+<resources>
+    <string name="youtube_title">Youtube</string>
+    <string name="youtube_explanation">침튜브 채널</string>
+    <string name="youtube_sub_title">Sub Contents</string>
+    <string name="youtube_sub_explanation">침착맨 외부 방송</string>
+    <string name="youtube_load_error">데이터를 불러오는데 오류가 발생하였습니다.</string>
+    <string name="playlist_image">playlistImage</string>
+    <string name="playlist_icon">Playlist</string>
+    <string name="videos_help">도움말</string>
+    <string name="videos_help_message">유튜브 및 트위치 영상을 해당 앱으로\n공유하면 북마크를 만드실 수 있습니다.</string>
+    <string name="videos_metadata">%1$s • %2$s</string>
+    <string name="videos_select_position">시작 위치 선택</string>
+    <string name="videos_from_start">처음부터</string>
+    <string name="videos_bookmark_position">%1$s (%2$s)</string>
+</resources>

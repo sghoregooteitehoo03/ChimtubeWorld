@@ -1,223 +1,154 @@
 package com.sghore.chimtubeworld.feature.bookmark.impl.bookmark_screen
 
-import androidx.lifecycle.*
-import com.sghore.chimtubeworld.core.common.Resource
+import androidx.lifecycle.viewModelScope
 import com.sghore.chimtubeworld.core.common.suspendRunCatching
 import com.sghore.chimtubeworld.core.domain.repository.BookmarkRepository
 import com.sghore.chimtubeworld.core.domain.repository.YoutubeRepository
 import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.model.Video
 import com.sghore.chimtubeworld.core.model.VideoSource
+import com.sghore.chimtubeworld.core.ui.base.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.text.SimpleDateFormat
-import java.util.*
-import kotlinx.coroutines.flow.*
+import java.util.Locale
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = BookmarkViewModel.Factory::class)
-class BookmarkViewModel @AssistedInject constructor(
+internal class BookmarkViewModel @AssistedInject constructor(
     private val youtubeRepository: YoutubeRepository,
     private val repository: BookmarkRepository,
     @Assisted private val videoData: Video?,
     @Assisted private val pos: Int,
     @Assisted private val source: VideoSource?,
     @Assisted private val videoUrl: String?
-) : ViewModel() {
+) : BaseViewModel<BookmarkUiState, BookmarkUiEvent, BookmarkUiSideEffect>(BookmarkUiState(isLoading = true)) {
 
-    sealed class BookmarkEvent {
-        data class ShowToastMessage(val message: String) : BookmarkEvent()
-        data class ChangeBookmark(val message: String, val bookmark: Bookmark) : BookmarkEvent()
+    private val selectedBookmark: Bookmark? = if (videoData != null && pos != -1 && source != null) {
+        videoData.bookmarks[pos]
+    } else {
+        null
     }
-
-    private val _state = MutableStateFlow(BookmarkScreenState(isLoading = true))
-    private val _event = MutableSharedFlow<BookmarkEvent>()
-
-    val state = _state.asStateFlow()
-    val event = _event.asSharedFlow()
-
-    var selectedBookmark: Bookmark? = null
-        private set
 
     init {
-        if (videoData != null && pos != -1 && source != null) {
-            // 북마크 수정
-            selectedBookmark = videoData.bookmarks[pos]
-            initValue(videoData, selectedBookmark!!, source)
+        if (selectedBookmark != null) {
+            reduce {
+                BookmarkUiState(
+                    // Use the assisted argument, not the reduce receiver's initially null videoData.
+                    videoData = this@BookmarkViewModel.videoData,
+                    videoSource = source,
+                    bookmarkTitle = selectedBookmark.title,
+                    videoPosition = getDateStrFromPosition(selectedBookmark.videoPosition),
+                    selectedColor = selectedBookmark.color,
+                    isEnable = true,
+                    isEditing = true
+                )
+            }
         } else if (videoUrl != null) {
-            // 북마크 생성
-            getVideoData(videoUrl)
+            loadVideo(videoUrl)
         }
     }
 
-    private fun loadVideo(videoUrl: String): Flow<Resource<Video>> = flow {
-        suspendRunCatching {
-            val videoData = youtubeRepository.getVideo(url = videoUrl)
-            emit(Resource.Success<Video>(videoData))
-        }.onFailure { e ->
-            if (e !is Exception) throw e
-            e.printStackTrace()
-            emit(Resource.Error<Video>("데이터를 불러오는데 오류가 발생하였습니다."))
-        }
-    }
-
-    // 넘겨온 영상 url을 통해 영상 정보를 가져옴
-    fun getVideoData(videoUrl: String) {
-        val videoFlow = loadVideo(videoUrl)
-
-        videoFlow.onEach { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    _state.update {
-                        BookmarkScreenState(
-                            videoData = resource.data,
-                            videoSource = null
-                        )
-                    }
-                }
-
-                is Resource.Loading -> {}
-                is Resource.Error -> {
-                    _state.update {
-                        BookmarkScreenState()
-                    }
-                    _event.emit(
-                        BookmarkEvent.ShowToastMessage(message = resource.errorMsg ?: "오류")
-                    )
+    override fun onEvent(event: BookmarkUiEvent) {
+        when (event) {
+            BookmarkUiEvent.BackClicked -> postSideEffect(BookmarkUiSideEffect.NavigateBack)
+            is BookmarkUiEvent.TitleChanged -> {
+                if (event.title.length <= 10) {
+                    reduce { copy(bookmarkTitle = event.title, isEnable = event.title.isNotEmpty() && videoPosition.isNotEmpty()) }
                 }
             }
-        }.launchIn(viewModelScope)
-
-    }
-
-    fun setTitle(title: String) {
-        if (title.length <= 10) {
-            _state.update {
-                it.copy(
-                    bookmarkTitle = title,
-                    isEnable = title.isNotEmpty() && it.videoPosition.isNotEmpty()
-                )
+            is BookmarkUiEvent.PositionChanged -> {
+                if (event.position.length <= 8) {
+                    reduce { copy(videoPosition = event.position, isEnable = bookmarkTitle.isNotEmpty() && event.position.isNotEmpty()) }
+                }
+            }
+            is BookmarkUiEvent.ColorChanged -> reduce { copy(selectedColor = event.color) }
+            BookmarkUiEvent.SaveClicked -> saveBookmark()
+            BookmarkUiEvent.CopyUrlClicked -> copyUrl()
+            BookmarkUiEvent.DeleteClicked -> if (selectedBookmark != null) reduce { copy(isOpenDialog = true) }
+            BookmarkUiEvent.DialogDismissed -> reduce { copy(isOpenDialog = false) }
+            BookmarkUiEvent.DeleteConfirmed -> {
+                if (currentState.isOpenDialog) {
+                    reduce { copy(isOpenDialog = false) }
+                    deleteBookmark()
+                }
             }
         }
     }
 
-    fun setVideoPosition(videoPosition: String) {
-        if (videoPosition.length <= 8) {
-            _state.update {
-                it.copy(
-                    videoPosition = videoPosition,
-                    isEnable = it.bookmarkTitle.isNotEmpty() && videoPosition.isNotEmpty()
-                )
+    private fun loadVideo(url: String) {
+        viewModelScope.launch {
+            reduce { copy(isLoading = true, hasLoadError = false) }
+
+            suspendRunCatching {
+                youtubeRepository.getVideo(url)
+            }.onSuccess { video ->
+                reduce { BookmarkUiState(videoData = video, videoSource = null) }
+            }.onFailure { error ->
+                if (error !is Exception) throw error
+                error.printStackTrace()
+
+                reduce { BookmarkUiState(hasLoadError = true) }
+                postSideEffect(BookmarkUiSideEffect.LoadFailed)
             }
         }
     }
 
-    fun changeBookmarkColor(color: Int) {
-        _state.update {
-            it.copy(
-                selectedColor = color
+    private fun saveBookmark() {
+        val state = currentState
+        if (!state.isEnable) return
+        val video = state.videoData ?: return
+        val position = getDateFromPosition(state.videoPosition)
+        if (!checkVideoPosition(position, video.duration)) {
+            postSideEffect(BookmarkUiSideEffect.InvalidPosition)
+            return
+        }
+
+        viewModelScope.launch {
+            val bookmark = Bookmark(
+                id = selectedBookmark?.id,
+                videoId = video.id,
+                title = state.bookmarkTitle,
+                videoPosition = position!!,
+                color = state.selectedColor
             )
-        }
-    }
-
-    // 북마크 추가 및 수정
-    fun addOrEditBookmark(editBookmarkId: Int? = null) = viewModelScope.launch {
-        // 데이터가 다 들어와 있을 때
-        if (_state.value.isEnable) {
-            val positionTime = getDateFromPosition(
-                _state.value.videoPosition
-            )
-
-            // 영상 범위가 정상일 때
-            if (checkVideoPosition(positionTime, _state.value.videoData?.duration!!)) {
-                val bookmark =
-                    Bookmark(
-                        id = editBookmarkId,
-                        videoId = _state.value.videoData!!.id,
-                        title = _state.value.bookmarkTitle,
-                        videoPosition = positionTime!!,
-                        color = _state.value.selectedColor
-                    )
-                repository.addBookmark(bookmark)
-
-                if (editBookmarkId == null) { // 북마크 추가
-                    val id = repository.getItemId(bookmark)
-                    _event.emit(
-                        BookmarkEvent.ChangeBookmark(
-                            message = "북마크가 추가되었습니다.",
-                            bookmark = bookmark.copy(id = id)
-                        )
-                    )
-                } else { // 북마크 수정
-                    _event.emit(
-                        BookmarkEvent.ChangeBookmark(
-                            message = "북마크가 수정되었습니다.",
-                            bookmark = bookmark
-                        )
-                    )
-                }
+            repository.addBookmark(bookmark)
+            val result = if (selectedBookmark == null) {
+                bookmark.copy(id = repository.getItemId(bookmark))
             } else {
-                _event.emit(
-                    BookmarkEvent.ShowToastMessage(message = "영상 위치가 잘 못 되었습니다.")
-                )
+                bookmark
             }
+
+            postSideEffect(BookmarkUiSideEffect.BookmarkChanged(
+                result, if (selectedBookmark == null) BookmarkChange.ADDED else BookmarkChange.EDITED
+            ))
         }
     }
 
-    // 값 세팅
-    fun initValue(videoData: Video, bookmark: Bookmark, source: VideoSource) {
-        _state.update {
-            BookmarkScreenState(
-                videoData = videoData,
-                videoSource = source,
-                bookmarkTitle = bookmark.title,
-                videoPosition = getDateStrFromPosition(bookmark.videoPosition),
-                selectedColor = bookmark.color,
-                isEnable = true
-            )
+    private fun deleteBookmark() {
+        val bookmark = selectedBookmark ?: return
+        viewModelScope.launch {
+            repository.deleteBookmark(bookmark)
+            // Preserve the result sentinel consumed by Videos.
+            postSideEffect(BookmarkUiSideEffect.BookmarkChanged(
+                bookmark.copy(title = "", videoPosition = 0L), BookmarkChange.DELETED
+            ))
         }
     }
 
-    fun deleteBookmark(bookmark: Bookmark) = viewModelScope.launch {
-        repository.deleteBookmark(bookmark)
-
-        _event.emit(
-            BookmarkEvent.ChangeBookmark(
-                message = "북마크가 삭제 되었습니다.",
-                bookmark = bookmark.copy(title = "", videoPosition = 0L)
-            )
-        )
-    }
-
-    fun setDialogState(isOpen: Boolean) {
-        _state.update {
-            it.copy(
-                isOpenDialog = isOpen
-            )
+    private fun copyUrl() {
+        val bookmark = selectedBookmark ?: return
+        val time = getSecondsFromPosition(bookmark.videoPosition)
+        val url = when (currentState.videoSource) {
+            VideoSource.YOUTUBE -> "${currentState.videoData!!.url}&t=$time"
+            VideoSource.TWITCH -> "$${currentState.videoData!!.url}?t=$time"
+            else -> ""
         }
+
+        postSideEffect(BookmarkUiSideEffect.CopyUrl(url))
     }
-
-    fun getVideoUrl(videoPosition: Long): String {
-        val time = getSecondsFromPosition(videoPosition)
-        val latestState = _state.value
-
-        return when (latestState.videoSource) {
-            VideoSource.YOUTUBE -> {
-                "${latestState.videoData!!.url}&t=$time"
-            }
-            VideoSource.TWITCH -> {
-                "$${latestState.videoData!!.url}?t=$time"
-            }
-            else -> {
-                ""
-            }
-        }
-    }
-
-    private fun getBaseUrl(url: String) =
-        url.substringAfter("https://").substringBefore("/")
 
     // 영상 범위 확인
     private fun checkVideoPosition(positionTime: Long?, duration: Long): Boolean {
@@ -273,19 +204,6 @@ class BookmarkViewModel @AssistedInject constructor(
     // 시간 데이터를 초로 변환
     private fun getSecondsFromPosition(videoPosition: Long) =
         "${(videoPosition + 32400000) / 1000}s"
-
-    // url에서 시간을 가져옴
-    private fun getTimeFromUrl(url: String): String {
-        val time = url.substringAfter("t=")
-            .substringBefore("s")
-            .toInt() * 1000 // milliSecons와 단위를 맞춤
-
-        return if (time >= 3600000) { // 1시간 이상 일 경우
-            SimpleDateFormat("hh:mm:ss", Locale.KOREA)
-        } else { // 1시간 이하일 경우
-            SimpleDateFormat("mm:ss", Locale.KOREA)
-        }.format(time - 32400000)
-    }
 
     @AssistedFactory
     interface Factory {

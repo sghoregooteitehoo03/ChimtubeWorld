@@ -1,4 +1,4 @@
-package com.sghore.chimtubeworld.feature.youtube.impl.select_bookmark_screen
+package com.sghore.chimtubeworld.feature.youtube.impl.videos_screen.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,16 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sghore.chimtubeworld.core.common.parseDateTextFromPosition
-import com.sghore.chimtubeworld.core.model.Bookmark
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
+import com.sghore.chimtubeworld.core.designsystem.theme.ChimtubeWorldTheme
+import com.sghore.chimtubeworld.core.model.Bookmark
+import com.sghore.chimtubeworld.feature.youtube.impl.R
 
 @Composable
-fun SelectBookmarkScreen(
+internal fun SelectBookmarkContent(
     bookmarkList: List<Bookmark>,
     onBookmarkClick: (Long) -> Unit
 ) {
@@ -38,7 +42,7 @@ fun SelectBookmarkScreen(
         Column {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "시작 위치 선택",
+                text = stringResource(R.string.videos_select_position),
                 fontSize = 16.sp,
                 color = colorResource(id = DesignSystemR.color.item_color),
                 fontWeight = FontWeight.Bold,
@@ -57,7 +61,7 @@ fun SelectBookmarkScreen(
             ) {
                 item {
                     Spacer(modifier = Modifier.height(12.dp))
-                    BookmarkItem(
+                    SelectionBookmarkItem(
                         bookmark = null,
                         onClick = onBookmarkClick,
                         modifier = Modifier
@@ -69,7 +73,7 @@ fun SelectBookmarkScreen(
                 }
 
                 items(bookmarkList) { bookmark ->
-                    BookmarkItem(
+                    SelectionBookmarkItem(
                         bookmark = bookmark,
                         onClick = onBookmarkClick,
                         modifier = Modifier
@@ -85,7 +89,7 @@ fun SelectBookmarkScreen(
 }
 
 @Composable
-fun BookmarkItem(
+private fun SelectionBookmarkItem(
     bookmark: Bookmark?,
     onClick: (Long) -> Unit,
     modifier: Modifier = Modifier
@@ -108,9 +112,9 @@ fun BookmarkItem(
             Color.Transparent
         }
         val bookmarkText = if (bookmark != null) {
-            "${bookmark.title} (${parseDateTextFromPosition(bookmark.videoPosition)})"
+            stringResource(R.string.videos_bookmark_position, bookmark.title, parseDateTextFromPosition(bookmark.videoPosition))
         } else {
-            "처음부터"
+            stringResource(R.string.videos_from_start)
         }
 
         Box(
@@ -131,4 +135,16 @@ fun BookmarkItem(
             modifier = Modifier.weight(1f)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SelectionContentPreview() {
+    ChimtubeWorldTheme { SelectBookmarkContent(emptyList(), {}) }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SelectionBookmarkPreview() {
+    ChimtubeWorldTheme { SelectionBookmarkItem(null, {}) }
 }

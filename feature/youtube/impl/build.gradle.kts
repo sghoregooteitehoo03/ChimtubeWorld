@@ -7,6 +7,7 @@ android {
 }
 
 dependencies {
+    testImplementation(libs.androidx.paging.testing)
     implementation(project(":feature:youtube:api"))
     implementation(project(":feature:bookmark:api"))
     implementation(libs.androidx.paging.compose)
