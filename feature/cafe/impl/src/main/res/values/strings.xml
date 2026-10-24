@@ -1,0 +1,19 @@
+<resources>
+    <string name="cafe_screen_title">CHIMHA</string>
+    <string name="cafe_title">Community</string>
+    <string name="cafe_explanation">팬카페&amp;침하하</string>
+    <string name="cafe_chimhaha">👍침하하 바로가기</string>
+    <string name="cafe_categories_title">비상대피소</string>
+    <string name="cafe_load_error">데이터를 불러오는데 오류가 발생하였습니다.</string>
+    <string name="cafe_post_metadata">%1$s | %2$s</string>
+    <string name="cafe_category_all">전체</string>
+    <string name="cafe_category_notice">방송일정 및 공지</string>
+    <string name="cafe_category_exclusive">침착맨 전용</string>
+    <string name="cafe_category_gallery">침착맨 갤러리</string>
+    <string name="cafe_category_story">침착맨 이야기</string>
+    <string name="cafe_category_fanart">팬아트</string>
+    <string name="cafe_category_meme">침착맨 짤</string>
+    <string name="cafe_category_video">추천영상</string>
+    <string name="cafe_category_request">해줘요</string>
+    <string name="cafe_category_find">찾아주세요</string>
+</resources>

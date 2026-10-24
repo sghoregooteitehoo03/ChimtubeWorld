@@ -1,0 +1,20 @@
+<resources>
+    <string name="bookmark_title">북마크</string>
+    <string name="bookmark_create">만들기</string>
+    <string name="bookmark_edit">수정하기</string>
+    <string name="bookmark_copy_url">URL 복사</string>
+    <string name="bookmark_delete">삭제</string>
+    <string name="bookmark_title_hint">북마크 제목</string>
+    <string name="bookmark_position_hint">영상 위치 (00:00)</string>
+    <string name="bookmark_video_source">typeImage</string>
+    <string name="bookmark_metadata">%1$s • %2$s</string>
+    <string name="bookmark_delete_confirmation">북마크를 삭제하시겠습니까?</string>
+    <string name="bookmark_confirm">확인</string>
+    <string name="bookmark_cancel">취소</string>
+    <string name="bookmark_load_error">데이터를 불러오는데 오류가 발생하였습니다.</string>
+    <string name="bookmark_invalid_position">영상 위치가 잘 못 되었습니다.</string>
+    <string name="bookmark_added">북마크가 추가되었습니다.</string>
+    <string name="bookmark_edited">북마크가 수정되었습니다.</string>
+    <string name="bookmark_deleted">북마크가 삭제 되었습니다.</string>
+    <string name="bookmark_url_copied">URL이 복사되었습니다.</string>
+</resources>
