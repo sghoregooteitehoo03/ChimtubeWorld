@@ -64,7 +64,7 @@ internal fun ChimtubeWorldApp(
             }
         }
     ) { innerPadding ->
-        Box(Modifier.fillMaxSize().padding(innerPadding)) {
+        Box(Modifier.fillMaxSize().padding(innerPadding).consumeWindowInsets(innerPadding)) {
             NavDisplay(
                 entries = navigationState.toEntries(entries),
                 onBack = { navigator.goBack() },

@@ -64,7 +64,7 @@ internal class YoutubePagingSource(
             )
             // 업로드 시간
             val uploadTime =
-                dateFormat.parse(response.snippet.publishedAt).time + 32400000 // (+9 Hours) UTC -> KOREA
+                dateFormat.parse(response.snippet.publishedAt)!!.time + 32400000 // (+9 Hours) UTC -> KOREA
             // 영상 길이
             val duration = Duration.parse(response.contentDetails.duration)
                 .inWholeMilliseconds - 32400000 // (-9 Hours) KOREA -> UTC

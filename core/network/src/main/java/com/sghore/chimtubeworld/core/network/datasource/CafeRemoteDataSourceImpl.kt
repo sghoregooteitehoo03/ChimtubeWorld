@@ -5,7 +5,7 @@ import com.sghore.chimtubeworld.core.network.retrofit.NaverRetrofitService
 import javax.inject.Inject
 
 internal class CafeRemoteDataSourceImpl @Inject constructor(
-    @NaverCafe private val service: NaverRetrofitService
+    @param:NaverCafe private val service: NaverRetrofitService
 ) : CafeRemoteDataSource {
     override suspend fun getCafePosts(categoryId: Int, page: Int, limit: Int) =
         service.getCafePosts(categoryId, page, limit)

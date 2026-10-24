@@ -4,7 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Help
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +38,7 @@ internal fun VideosScreen(
 
     ScreenScaffold(title = uiState.title, onBack = { onEvent(VideosUiEvent.BackClicked) }, actions = {
         IconButton(onClick = { onEvent(VideosUiEvent.HelpClicked) }) {
-            Icon(Icons.Default.Help, contentDescription = stringResource(R.string.videos_help), tint = MaterialTheme.colorScheme.onPrimary)
+            Icon(Icons.AutoMirrored.Filled.Help, contentDescription = stringResource(R.string.videos_help), tint = MaterialTheme.colorScheme.onPrimary)
         }
     }) {
         val videoList: LazyPagingItems<Video>? = uiState.videos?.collectAsLazyPagingItems()

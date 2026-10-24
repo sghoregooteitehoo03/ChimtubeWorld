@@ -3,7 +3,7 @@ package com.sghore.chimtubeworld.feature.bookmark.impl.bookmark_screen
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -40,7 +40,7 @@ internal fun BookmarkScreen(
     ScreenScaffold(title = stringResource(R.string.bookmark_title), onBack = { onEvent(BookmarkUiEvent.BackClicked) }, actions = {
         if (uiState.isEditing) {
             IconButton(onClick = { onEvent(BookmarkUiEvent.CopyUrlClicked) }) {
-                Icon(Icons.Default.Assignment, contentDescription = stringResource(R.string.bookmark_copy_url), tint = MaterialTheme.colorScheme.onPrimary)
+                Icon(Icons.AutoMirrored.Filled.Assignment, contentDescription = stringResource(R.string.bookmark_copy_url), tint = MaterialTheme.colorScheme.onPrimary)
             }
         }
         if (uiState.isEditing) {
@@ -52,6 +52,8 @@ internal fun BookmarkScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .navigationBarsPadding()
+                .imePadding()
                 .verticalScroll(
                     state = rememberScrollState()
                 )

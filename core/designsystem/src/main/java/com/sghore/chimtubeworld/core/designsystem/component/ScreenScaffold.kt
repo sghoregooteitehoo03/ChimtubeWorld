@@ -2,7 +2,7 @@ package com.sghore.chimtubeworld.core.designsystem.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,7 +37,7 @@ fun ScreenScaffold(
                     actionIconContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 expandedHeight = 56.dp,
-                windowInsets = WindowInsets(0, 0, 0, 0),
+                windowInsets = TopAppBarDefaults.windowInsets,
                 modifier = Modifier.fillMaxWidth(),
                 title = {
                     if (onBack == null) {
@@ -63,7 +63,7 @@ fun ScreenScaffold(
                         // Retain the old 72dp title start with a back icon.
                         Box(Modifier.width(64.dp)) {
                             IconButton(onClick = onBack) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = null)
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                             }
                         }
                     }
@@ -72,7 +72,7 @@ fun ScreenScaffold(
             )
         }
     ) { innerPadding ->
-        Column(Modifier.fillMaxSize().padding(innerPadding)) {
+        Column(Modifier.fillMaxSize().padding(innerPadding).consumeWindowInsets(innerPadding)) {
             HorizontalDivider(color = colorResource(DesignSystemR.color.gray_bright_night))
             Box(Modifier.weight(1f).fillMaxWidth()) { content() }
         }

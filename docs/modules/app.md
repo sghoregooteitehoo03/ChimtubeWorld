@@ -21,8 +21,9 @@ app의 production Kotlin 파일은 `presentation/ui/{MainActivity,MainApplicatio
 
 - 각 Screen이 designsystem의 `ScreenScaffold`를 호출해 자신의 상단바를 그린다. 최상위 5개 화면은 중앙 `CHIMHA` 제목, Playlists·Videos는 key의 채널명·플레이리스트명, Add/EditBookmark는 `북마크` 제목을 사용한다. 하위 4개 화면은 뒤로가기 화살표를 제공한다.
 - Videos 도움말·Bookmark URL 복사는 Screen의 event → ViewModel의 side effect → Route의 전달 → EntryProvider의 Toast·클립보드 처리로 연결한다. 삭제 확인 다이얼로그는 UiState로 관리하고 Screen이 표시한다.
-- 상단바의 기존 색상·56dp 높이·제목 스타일·뒤로가기 위치·아이콘·하단 구분선을 유지한다. 하단바는 AddBookmark/EditBookmark에서만 숨기며, 나머지 화면에서는 표시한다. 하단바는 56dp 높이, 그림자 8dp·tonalElevation 0dp·투명 선택 indicator를 유지한다.
-- `enableEdgeToEdge`·`setSystemBarsColor`와 decor의 시스템 바 처리는 유지한다. root·화면 Scaffold와 상/하단바의 자동 window inset은 0이다. 색상·타이포그래피 기준은 [designsystem 문서](core/designsystem.md)를 따른다.
+- 상단바의 기존 색상·56dp 콘텐츠 높이·제목 스타일·뒤로가기 위치·아이콘·하단 구분선을 유지한다. 하단바는 AddBookmark/EditBookmark에서만 숨기며, 나머지 화면에서는 표시한다. 하단바는 NavigationBarDefaults.windowInsets로 navigation bar inset을 처리하고 전체 높이를 56dp + 하단 inset으로 잡아 container 색상을 시스템 내비게이션바 아래까지 그린다. 그림자 8dp·tonalElevation 0dp·투명 선택 indicator를 유지한다.
+- MainActivity는 enableEdgeToEdge 기본 자동 스타일을 사용해 라이트 테마에서 어두운 시스템 바 아이콘, 다크 테마에서 밝은 아이콘을 표시한다(플랫폼 지원 범위). window 색상 강제와 decorView 패딩은 사용하지 않는다. root·화면 Scaffold의 contentWindowInsets는 0이며 innerPadding을 적용·소비한다. 상태바 inset은 각 ScreenScaffold가 한 번만 처리하고 카페 collapsing toolbar도 그 콘텐츠 안에 배치한다. 색상·타이포그래피 기준은 [designsystem 문서](core/designsystem.md)를 따른다.
+- 하단바가 없는 북마크 추가·수정 화면은 스크롤 영역 바깥에 navigationBarsPadding·imePadding을 적용한다. inset 소비로 두 패딩이 중복되지 않으며 키보드 위에서 입력 필드와 저장 버튼까지 스크롤할 수 있다. MainActivity의 windowSoftInputMode는 adjustResize다.
 - 공통 아이콘은 designsystem drawable을 직접 참조한다. source enum은 북마크 정보 표시 지점에서 YouTube/Twitch drawable로 변환한다. Context 기반 외부 실행 helper `OpenOtherApp`은 core:ui에서 feature들이 공유한다.
 
 ## 공유 인텐트 진입

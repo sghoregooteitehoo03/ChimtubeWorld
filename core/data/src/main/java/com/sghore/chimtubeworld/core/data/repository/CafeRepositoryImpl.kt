@@ -20,7 +20,7 @@ import javax.inject.Inject
 internal class CafeRepositoryImpl @Inject constructor(
     private val dao: Dao,
     private val remoteDataSource: CafeRemoteDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @param:IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : CafeRepository {
     override fun getCafePosts(categoryId: Int) =
         Pager(PagingConfig(10)) {

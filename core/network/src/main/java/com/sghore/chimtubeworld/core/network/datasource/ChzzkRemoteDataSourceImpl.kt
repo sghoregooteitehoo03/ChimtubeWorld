@@ -5,7 +5,7 @@ import com.sghore.chimtubeworld.core.network.retrofit.NaverRetrofitService
 import javax.inject.Inject
 
 internal class ChzzkRemoteDataSourceImpl @Inject constructor(
-    @Chzzk private val service: NaverRetrofitService
+    @param:Chzzk private val service: NaverRetrofitService
 ) : ChzzkRemoteDataSource {
     override suspend fun getChannelInfo(channelId: String) =
         service.getChannelInfo(channelId)

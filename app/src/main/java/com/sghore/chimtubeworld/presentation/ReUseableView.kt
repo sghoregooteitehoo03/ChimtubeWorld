@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -16,12 +17,15 @@ import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
 
 @Composable
 fun BottomNavigationBar(currentTopLevelKey: NavKey, onDestinationClick: (NavKey) -> Unit) {
+    val navigationBarInsets = NavigationBarDefaults.windowInsets
+    val navigationBarPadding = with(LocalDensity.current) { navigationBarInsets.getBottom(this).toDp() }
+
     NavigationBar(
-        modifier = Modifier.height(56.dp).shadow(8.dp),
+        modifier = Modifier.height(56.dp + navigationBarPadding).shadow(8.dp),
         containerColor = colorResource(DesignSystemR.color.default_background_color),
         contentColor = MaterialTheme.colorScheme.onBackground,
         tonalElevation = 0.dp,
-        windowInsets = WindowInsets(0, 0, 0, 0)
+        windowInsets = navigationBarInsets
     ) {
         Row(Modifier.fillMaxSize()) {
             TOP_LEVEL_DESTINATIONS.forEach { destination ->

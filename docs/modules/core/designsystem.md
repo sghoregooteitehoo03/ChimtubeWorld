@@ -76,9 +76,9 @@ Shapes의 small 4dp·medium 12dp·large 22dp는 그대로다. M3 추가 슬롯 e
 ## 컴포넌트와 의존성
 
 - Scaffold, Text, Icon, IconButton, Surface, Button, TextField, AlertDialog, CircularProgressIndicator는 M3를 사용한다. 구분선은 HorizontalDivider, 하단바는 NavigationBar/Item을 사용한다. 현재 Card·OutlinedTextField 사용처는 없다.
-- 상단바는 M3 TopAppBar를 사용한다. 상/하단바 높이는 56dp이고 상단바는 스크롤 동작 없이 elevation 0이다. 뒤로가기 아이콘 슬롯 너비를 지정해 제목 시작 위치 72dp를 유지한다.
+- ScreenScaffold의 M3 TopAppBar는 TopAppBarDefaults.windowInsets로 상태바 inset(상단 cutout 포함)을 처리하며, container 색상이 상태바 아래까지 이어진다. 상/하단바의 콘텐츠 높이는 56dp이고 inset 높이는 별도로 더한다. 상단바는 스크롤 동작 없이 elevation 0이며 뒤로가기 제목 시작 위치 72dp를 유지한다.
 - NavigationBar는 기존 XML background를 명시하고 tint 없이 8dp 그림자를 유지한다. indicator는 Transparent이며 내부 Row로 M3 기본 8dp 항목 간격을 제거해 기존 5개 탭의 균등 폭을 유지한다. 아이콘 drawable·선택 판단·navigation 콜백은 그대로다.
-- MainActivity의 enableEdgeToEdge·setSystemBarsColor는 유지한다. M2의 기존 무인셋 overload와 같은 동작을 위해 Scaffold.contentWindowInsets·TopAppBar.windowInsets·NavigationBar.windowInsets는 모두 0이다. 시스템 바를 중복해서 패딩하지 않는다.
+- MainActivity는 enableEdgeToEdge 기본 자동 스타일로 시스템 바 아이콘을 테마에 맞추며 색상을 강제하지 않는다. root와 ScreenScaffold의 contentWindowInsets는 0으로 두고 각 Scaffold의 innerPadding을 적용·소비한다. 상단 inset은 ScreenScaffold만 처리하므로 내부 카페 CollapsingToolbarScaffold에도 중복 패딩을 추가하지 않는다. 하단 inset은 app 하단바 또는 하단바가 없는 북마크 화면이 처리한다.
 - TextField는 기존 text/cursor/indicator 색상과 투명 container, 14sp 스타일을 명시한다. Button은 48dp 높이·8dp 모서리·16/8dp content padding과 M2 elevation(default 2, pressed 8, focused/hovered 4, disabled 0dp)을 유지한다.
 - 로딩 원은 기존 색상에 투명 track·Square stroke cap·gap 0dp를 명시한다. M3 자체의 회전 애니메이션 타이밍은 M2와 다를 수 있다.
 - app·designsystem은 `androidx.compose.material:material`과 accompanist-insets-ui에 직접 의존하지 않는다. material-icons-extended와 XML theme용 com.google.android.material은 유지한다. Compose convention은 M3를 제공한다.

@@ -322,7 +322,7 @@ private fun VideoInfoPreview() {
         )
         // 업로드 시간
         val uploadTime =
-            dateFormat.parse("2022-01-21T10:00:31Z").time + 32400000 // (+9 Hours) UTC -> KOREA
+            dateFormat.parse("2022-01-21T10:00:31Z")!!.time + 32400000 // (+9 Hours) UTC -> KOREA
         // 영상 길이
         val duration = Duration.parse("PT15M40S")
             .inWholeMilliseconds - 32400000 // (-9 Hours) KOREA -> UTC

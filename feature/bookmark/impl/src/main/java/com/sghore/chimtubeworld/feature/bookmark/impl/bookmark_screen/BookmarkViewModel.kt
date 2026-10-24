@@ -178,7 +178,7 @@ internal class BookmarkViewModel @AssistedInject constructor(
         }
 
         return try {
-            dateFormat.parse(videoPosition).time
+            dateFormat.parse(videoPosition)!!.time
         } catch (e: Exception) {
             return null
         }
