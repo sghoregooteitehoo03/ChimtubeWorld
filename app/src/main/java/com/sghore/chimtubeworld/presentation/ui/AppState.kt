@@ -7,7 +7,7 @@ import com.sghore.chimtubeworld.core.navigation.NavigationState
 import com.sghore.chimtubeworld.core.navigation.Navigator
 import com.sghore.chimtubeworld.core.navigation.rememberNavigationState
 import com.sghore.chimtubeworld.navigation.TOP_LEVEL_DESTINATIONS
-import com.sghore.chimtubeworld.navigation.YoutubeKey
+import com.sghore.chimtubeworld.feature.youtube.api.navigation.YoutubeKey
 
 @Stable
 internal class AppState(val navigationState: NavigationState) {

@@ -1,12 +1,13 @@
 package com.sghore.chimtubeworld.navigation
 
-import com.sghore.chimtubeworld.feature.cafe.api.navigation.CafeKey
-import com.sghore.chimtubeworld.feature.chzzk.api.navigation.ChzzkKey
-import com.sghore.chimtubeworld.feature.webtoon.api.navigation.WebtoonKey
-import com.sghore.chimtubeworld.feature.store.api.navigation.StoreKey
 import androidx.annotation.DrawableRes
 import androidx.navigation3.runtime.NavKey
 import com.sghore.chimtubeworld.core.designsystem.R as DesignSystemR
+import com.sghore.chimtubeworld.feature.cafe.api.navigation.CafeKey
+import com.sghore.chimtubeworld.feature.chzzk.api.navigation.ChzzkKey
+import com.sghore.chimtubeworld.feature.store.api.navigation.StoreKey
+import com.sghore.chimtubeworld.feature.webtoon.api.navigation.WebtoonKey
+import com.sghore.chimtubeworld.feature.youtube.api.navigation.YoutubeKey
 
 data class TopLevelDestination(
     val key: NavKey,

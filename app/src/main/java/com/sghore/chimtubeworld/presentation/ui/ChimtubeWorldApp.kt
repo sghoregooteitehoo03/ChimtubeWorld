@@ -13,14 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.sghore.chimtubeworld.core.navigation.toEntries
-import com.sghore.chimtubeworld.navigation.AddBookmarkKey
-import com.sghore.chimtubeworld.navigation.EditBookmarkKey
-import com.sghore.chimtubeworld.navigation.appEntries
-import com.sghore.chimtubeworld.navigation.navigateToAddBookmark
+import com.sghore.chimtubeworld.feature.bookmark.api.navigation.AddBookmarkKey
+import com.sghore.chimtubeworld.feature.bookmark.api.navigation.EditBookmarkKey
+import com.sghore.chimtubeworld.feature.bookmark.api.navigation.navigateToAddBookmark
+import com.sghore.chimtubeworld.feature.bookmark.impl.navigation.bookmarkEntry
 import com.sghore.chimtubeworld.feature.cafe.impl.navigation.cafeEntry
 import com.sghore.chimtubeworld.feature.chzzk.impl.navigation.chzzkEntry
-import com.sghore.chimtubeworld.feature.webtoon.impl.navigation.webtoonEntry
 import com.sghore.chimtubeworld.feature.store.impl.navigation.storeEntry
+import com.sghore.chimtubeworld.feature.webtoon.impl.navigation.webtoonEntry
+import com.sghore.chimtubeworld.feature.youtube.impl.navigation.youtubeEntry
 import com.sghore.chimtubeworld.presentation.BottomNavigationBar
 
 @Composable
@@ -33,7 +34,8 @@ internal fun ChimtubeWorldApp(
     val navigator = appState.navigator
     val entries = remember(navigator) {
         entryProvider {
-            appEntries(navigator)
+            youtubeEntry(navigator)
+            bookmarkEntry(navigator)
             webtoonEntry()
             storeEntry()
             cafeEntry()

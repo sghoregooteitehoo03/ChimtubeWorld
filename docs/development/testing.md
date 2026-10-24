@@ -4,7 +4,7 @@
 
 Step 8에서 `:core:testing`의 Fake·fixture·MainDispatcherRule과 `:core:data`의 repository·mapper·PagingSource 로컬 테스트를 추가했다. Step 13에서 webtoon·store, Step 15에서 cafe·chzzk의 ViewModel·Compose Screen 테스트를 작성했다. 나머지 feature는 후속 MVI 단계에서 적용한다. 테스트 작성과 실행 통과는 구분하며, 수동 동작 확인은 [마이그레이션 기준선](../migration/baseline.md)과 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다.
 
-Step 11의 [NavigatorTest](../../core/navigation/src/test/java/com/sghore/chimtubeworld/core/navigation/NavigatorTest.kt)는 템플릿 테스트를 5개 탭에 맞추어 확장했다. 탭 재선택·sub-stack 유지·탭 이력·root 뒤로가기·popUpTo·결과 1회 소비를 검증한다. [NavigationKeysTest](../../app/src/test/java/com/sghore/chimtubeworld/navigation/NavigationKeysTest.kt)는 9개 key와 특수문자 인자·Video/Bookmark 직렬화를 확인한다. 각각 `:core:navigation:testDebugUnitTest`, `:app:testDebugUnitTest`로 실행하며 기기 스모크를 대체하지 않는다.
+Step 11의 [NavigatorTest](../../core/navigation/src/test/java/com/sghore/chimtubeworld/core/navigation/NavigatorTest.kt)는 템플릿 테스트를 5개 탭에 맞추어 확장했다. 탭 재선택·sub-stack 유지·탭 이력·root 뒤로가기·popUpTo·결과 1회 소비를 검증한다. [NavigationKeysTest](../../app/src/test/java/com/sghore/chimtubeworld/navigation/NavigationKeysTest.kt)는 각 feature API의 모든 key 9개(YoutubeKey·PlaylistsKey·VideosKey·ChzzkKey·WebtoonKey·CafeKey·StoreKey·AddBookmarkKey·EditBookmarkKey)와 특수문자 인자·Video/Bookmark 직렬화를 확인한다. 각각 `:core:navigation:testDebugUnitTest`, `:app:testDebugUnitTest`로 실행하며 기기 스모크를 대체하지 않는다.
 
 ## 테스트 위치와 대상
 

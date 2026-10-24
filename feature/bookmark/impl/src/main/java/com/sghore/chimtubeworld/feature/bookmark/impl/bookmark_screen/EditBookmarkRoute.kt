@@ -1,0 +1,117 @@
+package com.sghore.chimtubeworld.feature.bookmark.impl.bookmark_screen
+
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import com.sghore.chimtubeworld.core.model.Bookmark
+import kotlinx.coroutines.flow.collectLatest
+
+@Composable
+fun EditBookmarkRoute(
+    viewModel: BookmarkViewModel,
+    onBack: () -> Unit,
+    onBookmarkChanged: (Bookmark) -> Unit
+) {
+    val uiState by viewModel.state.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(viewModel) {
+        viewModel.event.collectLatest { event ->
+            when (event) {
+                is BookmarkViewModel.BookmarkEvent.ShowToastMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                        .show()
+                }
+                is BookmarkViewModel.BookmarkEvent.ChangeBookmark -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                        .show()
+                    onBookmarkChanged(event.bookmark)
+                }
+            }
+        }
+    }
+
+    BookmarkScreen(
+        uiState = uiState,
+        buttonText = "수정하기",
+        onBack = onBack,
+        onCopyUrl = { clipData(viewModel, context) },
+        onDelete = { viewModel.setDialogState(true) },
+        onTitleChange = viewModel::setTitle,
+        onVideoPositionChange = viewModel::setVideoPosition,
+        onChangeBookmarkColor = viewModel::changeBookmarkColor,
+        onButtonClick = {
+            viewModel.addOrEditBookmark(viewModel.selectedBookmark?.id!!)
+        }
+    )
+
+    if (uiState.isOpenDialog) {
+        AlertDialog(
+            containerColor = MaterialTheme.colorScheme.surface,
+            tonalElevation = 0.dp,
+            shape = MaterialTheme.shapes.medium,
+            textContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            onDismissRequest = { viewModel.setDialogState(false) },
+            text = {
+                Text(
+                    text = "북마크를 삭제하시겠습니까?",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                Text(
+                    text = "확인",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.87f),
+                    modifier = Modifier
+                        .clickable {
+                            viewModel.deleteBookmark(viewModel.selectedBookmark!!)
+                            viewModel.setDialogState(false)
+                        }
+                )
+            },
+            dismissButton = {
+                Text(
+                    text = "취소",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.87f),
+                    modifier = Modifier
+                        // M3 already supplies the dialog's outer 24dp padding.
+                        .padding(end = 8.dp)
+                        .clickable {
+                            viewModel.setDialogState(false)
+                        }
+                )
+            }
+        )
+    }
+}
+
+// url 클립보드에 저장
+private fun clipData(
+    viewModel: BookmarkViewModel,
+    context: Context
+) {
+    val bookmark = viewModel.selectedBookmark!!
+    val url = viewModel.getVideoUrl(bookmark.videoPosition)
+    val clipBoard =
+        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("url", url)
+
+    clipBoard.setPrimaryClip(clip)
+    Toast.makeText(context, "URL이 복사되었습니다.", Toast.LENGTH_SHORT)
+        .show()
+}

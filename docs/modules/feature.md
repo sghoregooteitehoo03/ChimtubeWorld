@@ -1,16 +1,18 @@
 # Feature 작업 규칙
 
-**마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. Step 12에서 webtoon·store를 api/impl로 분리했고, Step 13에서 두 feature에 아래 MVI·문자열 리소스·Preview·테스트 패턴을 적용했다. Step 14에서 cafe·chzzk를 api/impl로 이동했고, Step 15에서 아래 MVI·문자열 리소스·Preview·테스트 패턴을 적용했다. chzzk 화면은 Chzzk* 이름을 사용하며 domain의 TwitchRepository 계약은 유지한다. youtube(playlist·videos 포함)·bookmark 화면은 `app`의 [presentation](../../app/src/main/java/com/sghore/chimtubeworld/presentation)에 있다. 기존 상태와 이동 제약은 [기준선](../migration/baseline.md)을 따른다. 이동 단계에서는 로직을 유지하고, MVI·문자열 리소스·테스트는 이후 전환 단계에서 적용한다.
+**마이그레이션 진행 중 — youtube·bookmark의 MVI는 Step 17에서 적용**. Step 12에서 webtoon·store를 api/impl로 분리했고, Step 13에서 두 feature에 아래 MVI·문자열 리소스·Preview·테스트 패턴을 적용했다. Step 14에서 cafe·chzzk를 api/impl로 이동했고, Step 15에서 아래 MVI·문자열 리소스·Preview·테스트 패턴을 적용했다. chzzk 화면은 Chzzk* 이름을 사용하며 domain의 TwitchRepository 계약은 유지한다. Step 16에서 youtube(playlist·videos·북마크 선택 다이얼로그 포함)·bookmark도 api/impl로 이동해 여섯 feature의 분리를 완료했다. 두 feature는 기존 ScreenState·개별 함수 호출·문자열·AssistedInject를 유지한다. 기존 상태와 이동 제약은 [기준선](../migration/baseline.md)을 따른다. 이동 단계에서는 로직을 유지하고, MVI·문자열 리소스·테스트는 이후 전환 단계에서 적용한다.
 
-Step 11에서 NavKey·이동 확장 함수·EntryProvider 및 assisted ViewModel 생성은 단일 app 안에서 먼저 적용했다. webtoon·store·cafe·chzzk의 navigation은 각 feature API·impl에 있고, youtube·bookmark는 [app/navigation](../../app/src/main/java/com/sghore/chimtubeworld/navigation)에 유지한다.
+Step 11에서 NavKey·이동 확장 함수·EntryProvider 및 assisted ViewModel 생성은 단일 app 안에서 먼저 적용했다. 현재 여섯 feature의 navigation은 각 feature API·impl에 있고, app은 entry 등록과 TopLevelDestination만 소유한다.
 
 ## 모듈 경계
 
 - 대상 feature는 `youtube`(playlist·videos 포함), `chzzk`, `webtoon`, `cafe`, `store`, `bookmark`다.
-- feature는 `api`와 `impl`을 분리한다. API는 `@Serializable NavKey`, Navigator 확장 함수, navigation result key만 제공한다.
+- feature는 `api`와 `impl`을 분리한다. 사용 모듈과 관계없이 모든 `@Serializable NavKey`·`Navigator.navigateTo…` 확장 함수·navigation result key는 API에 공개 선언한다. feature 내부에서만 사용하는 navigation 계약도 API에 두며 impl에 `internal`로 선언하지 않는다.
+- youtube API는 YoutubeKey·PlaylistsKey·VideosKey와 navigateToYoutube·navigateToPlaylists·navigateToVideos를 공개한다. bookmark API는 AddBookmarkKey·EditBookmarkKey·navigateToAddBookmark·navigateToEditBookmark·BookmarkResultKey를 공개한다. app의 공유 인텐트 진입은 navigateToAddBookmark를, youtube impl의 편집 이동·결과 소비는 navigateToEditBookmark·BookmarkResultKey를 사용한다.
 - 호출 모듈은 구체 NavKey를 직접 생성하지 않고 API의 `navigateTo...` 확장 함수를 사용한다.
 - impl은 대응 API와 이동 대상 feature API에 직접 의존한다. API에는 Compose UI·ViewModel·data 구현을 두지 않는다.
 - navigation parameter는 최소 식별자 또는 core model의 순수 공유 모델로 제한한다. 결과 key는 feature API가 `NavigationResultKey<T>` object로 선언한다.
+- feature 간 연결 예: youtube impl은 bookmark api의 `navigateToEditBookmark`와 `BookmarkResultKey`에 의존한다. bookmark impl이 `setResult` 후 `goBack`하고, 현재 Videos entry가 `consumeResult`로 한 번 읽어 기존 ViewModel에 전달한다. bookmark impl → youtube 의존이나 impl → impl 의존은 두지 않는다. VideosKey·EditBookmarkKey의 공유 VideoSource는 core:model에 둔다.
 
 ## API·Impl 구조
 
@@ -28,7 +30,8 @@ feature/<name>/impl/
 ```
 
 - 한 화면의 Contract·Route·Screen·ViewModel을 `<name>_screen`에 함께 둔다.
-- navigation에는 app의 NavDisplay 조립에 쓰는 EntryProvider만 둔다.
+- impl은 화면을 소유하고, navigation에는 API의 모든 소유 key를 등록하는 단일 EntryProvider를 둔다.
+- feature 하나는 `EntryProviderScope<NavKey>.<name>Entry(...)` 함수 하나만 공개하고 그 함수가 모든 소유 화면의 entry를 등록한다. 화면별 등록 helper가 필요하면 private으로 둔다. app은 feature별 함수만 호출해 화면을 등록한다. youtubeEntry(navigator)는 YoutubeKey·PlaylistsKey·VideosKey, bookmarkEntry(navigator)는 AddBookmarkKey·EditBookmarkKey를 함께 등록한다.
 - component는 feature 내부 재사용에 한정한다. 여러 feature가 쓰는 component는 designsystem 또는 ui 승격을 검토한다.
 
 ## MVI와 Compose 화면
@@ -44,7 +47,7 @@ feature/<name>/impl/
 ## 화면 진입 인자와 ViewModel 생성
 
 - 인자 없는 Route는 `hiltViewModel()` 기본 파라미터로 ViewModel을 얻는다.
-- 인자 있는 화면은 API의 직렬화 가능한 NavKey에 식별자를 둔다. ViewModel은 `@AssistedInject`, `@Assisted`, `@HiltViewModel(assistedFactory = …)`, `@AssistedFactory`로 생성한다.
+- 인자 있는 화면은 직렬화 가능한 NavKey에 식별자를 둔다. feature 내부 사용 여부와 관계없이 모든 NavKey·Navigator 이동 확장 함수·result key는 API에 공개 선언한다. impl의 단일 `<name>Entry`가 모든 소유 key와 화면을 연결한다. ViewModel은 `@AssistedInject`, `@Assisted`, `@HiltViewModel(assistedFactory = …)`, `@AssistedFactory`로 생성한다.
 - EntryProvider가 entry의 ViewModelStore를 사용하는 `hiltViewModel<VM, Factory>(creationCallback = …)`에서 factory.create를 호출하고 Route의 필수 인자로 전달한다. Factory를 별도 주입해 직접 ViewModel을 만들지 않는다.
 - 최초 조회는 ViewModel 초기화에서 시작한다. 재시도는 생성자의 동일 식별자를 사용한다. 재구성 때 최초 조회 event를 다시 보내지 않는다.
 - 같은 entry의 ViewModel이 유지되면 assisted 인자를 다시 주입하지 않는다. 다른 식별자는 새 NavKey로 진입한다.
@@ -69,7 +72,7 @@ feature/<name>/impl/
 2. api에는 `alias(libs.plugins.android.feature.api)`, impl에는 `alias(libs.plugins.android.feature.impl)`을 적용한다. 전제 core 모듈이 먼저 생성돼 있어야 한다.
 3. 각 모듈에 빈 `<manifest />`를 둔다. impl은 대응 API와 이동 대상 API를 의존하며 convention 의존성을 다시 선언하지 않는다.
 4. API의 navigation contract, impl의 화면·문자열·Preview·EntryProvider를 연결한다.
-5. app에 API·impl 의존성을 추가하고 root composable의 entryProvider에 등록한다. top-level 탭이면 app 탭 정의·문자열·아이콘도 연결한다.
+5. app에 API·impl 의존성을 추가하고 root composable의 entryProvider에서 feature의 `<name>Entry(...)` 하나를 호출해 모든 화면을 등록한다. top-level 탭이면 app 탭 정의·문자열·아이콘도 연결한다.
 6. 분기 있는 로직과 상태별 Screen 테스트는 [테스트 가이드](../development/testing.md)를 따른다.
 7. 대상 모듈 compile·test 후 app assembleDebug를 확인한다. 명령과 완료 보고는 [품질 규칙](../development/quality.md)을 따른다.
 
@@ -80,4 +83,4 @@ feature/<name>/impl/
 - cafe·chzzk 외부 실행: [CafeEntryProvider](../../feature/cafe/impl/src/main/java/com/sghore/chimtubeworld/feature/cafe/impl/navigation/CafeEntryProvider.kt)는 `OpenUrl`을 Custom Tabs로, [ChzzkEntryProvider](../../feature/chzzk/impl/src/main/java/com/sghore/chimtubeworld/feature/chzzk/impl/navigation/ChzzkEntryProvider.kt)는 `OpenYoutube`·`OpenUrl`을 기존 YouTube 패키지·웹 fallback 또는 Custom Tabs helper로 연결한다. Route는 lifecycle state 수집과 effect 전달만 담당하고 dialog는 Screen이 조합한다.
 - 외부 실행 연결: [WebtoonEntryProvider](../../feature/webtoon/impl/src/main/java/com/sghore/chimtubeworld/feature/webtoon/impl/navigation/WebtoonEntryProvider.kt)는 `OpenWebtoon(id, url)`을 기존 패키지·스킴·웹 fallback helper로, [StoreEntryProvider](../../feature/store/impl/src/main/java/com/sghore/chimtubeworld/feature/store/impl/navigation/StoreEntryProvider.kt)는 `OpenUrl(url)`을 Custom Tabs helper로 연결한다. app의 기존 `webtoonEntry()`·`storeEntry()` 등록은 유지한다.
 - 화면 소유 문자열·접근성 형식 인자: [webtoon strings.xml](../../feature/webtoon/impl/src/main/res/values/strings.xml), [store strings.xml](../../feature/store/impl/src/main/res/values/strings.xml). 작품명·연도·상점명·URL은 데이터로 유지한다. Screen과 `component/`의 항목은 샘플 UiState로 라이트·다크 Preview를 제공한다.
-- ViewModel·Screen 테스트는 [테스트 가이드의 실제 예제](../development/testing.md#실제-예제)를 참고한다. 인자 있는 화면의 AssistedInject 예제는 후속 MVI 단계에서 추가한다.
+- ViewModel·Screen 테스트는 [테스트 가이드의 실제 예제](../development/testing.md#실제-예제)를 참고한다. 기존 인자 있는 화면의 AssistedInject·creationCallback 연결은 [YoutubeEntryProvider](../../feature/youtube/impl/src/main/java/com/sghore/chimtubeworld/feature/youtube/impl/navigation/YoutubeEntryProvider.kt)·[BookmarkEntryProvider](../../feature/bookmark/impl/src/main/java/com/sghore/chimtubeworld/feature/bookmark/impl/navigation/BookmarkEntryProvider.kt)에 이동했으며 MVI·테스트 예제는 Step 17에서 추가한다.

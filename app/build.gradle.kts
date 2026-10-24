@@ -34,6 +34,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:youtube:api"))
+    implementation(project(":feature:youtube:impl"))
+    implementation(project(":feature:bookmark:api"))
+    implementation(project(":feature:bookmark:impl"))
+
     implementation(project(":feature:webtoon:api"))
     implementation(project(":feature:webtoon:impl"))
     implementation(project(":feature:store:api"))
@@ -54,26 +59,11 @@ dependencies {
     // AndroidX Core
     implementation(libs.androidx.core.ktx)
 
-    // Compose
-    implementation(libs.androidx.compose.material.icons.extended)
-
-    // Hilt
-    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
-
-    // Lifecycle
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-
     // Kotlin Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
     // Navigation
     implementation(libs.androidx.navigation3.ui)
-
-    // Paging
-    implementation(libs.androidx.paging.compose)
-
-    // Image
-    implementation(libs.coil.compose)
 
     // UI Utilities
     implementation(libs.androidx.appcompat)
@@ -81,7 +71,6 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.constraintlayout.compose)
     debugImplementation(libs.androidx.customview.poolingcontainer)
-    implementation(libs.compose.shimmer)
     implementation(libs.google.material)
 
 }
