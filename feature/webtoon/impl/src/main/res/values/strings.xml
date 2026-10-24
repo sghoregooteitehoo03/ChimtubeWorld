@@ -1,0 +1,7 @@
+<resources>
+    <string name="webtoon_screen_title">CHIMHA</string>
+    <string name="webtoon_title">WebToon</string>
+    <string name="webtoon_explanation">이말년 시절 작품활동</string>
+    <!-- 기존 접근성 설명인 웹툰 ID를 그대로 표시한다. -->
+    <string name="webtoon_cover_content_description">%1$s</string>
+</resources>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="chzzk_screen_title">CHIMHA</string>
+    <string name="chzzk_title">CHZZK Live</string>
+    <string name="chzzk_explanation">침착맨 생방송 채널</string>
+    <string name="chzzk_crew_title">BEDORAGE</string>
+    <string name="chzzk_crew_explanation">스트리머 크루 배도라지</string>
+    <string name="chzzk_main_profile_description">침착맨 프로필</string>
+    <string name="chzzk_live">생방송</string>
+    <string name="chzzk_watch_youtube">유튜브에서 보기</string>
+    <string name="chzzk_watch_chzzk">치지직에서 보기</string>
+    <string name="chzzk_load_error">데이터를 불러오는데 오류가 발생하였습니다.</string>
+</resources>

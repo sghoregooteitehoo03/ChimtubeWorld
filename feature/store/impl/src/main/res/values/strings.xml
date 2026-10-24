@@ -1,0 +1,6 @@
+<resources>
+    <string name="store_screen_title">CHIMHA</string>
+    <string name="store_title">Goods</string>
+    <!-- 기존 접근성 설명인 상점 채널명을 그대로 표시한다. -->
+    <string name="store_image_content_description">%1$s</string>
+</resources>
