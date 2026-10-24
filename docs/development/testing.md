@@ -2,7 +2,7 @@
 
 검증 범위와 완료 보고는 [quality.md](quality.md), 공통 도구의 책임은 [core/testing.md](../modules/core/testing.md)를 따른다.
 
-`:core:testing`은 Fake·fixture·MainDispatcherRule을 제공하고 `:core:data`는 repository·mapper·PagingSource 로컬 테스트를 소유한다. 여섯 feature impl은 ViewModel·Compose Screen 테스트를, bookmark impl은 위치 입력 Parameterized 테스트를 둔다. 테스트 작성과 실행 통과는 구분하며 수동 동작 확인은 [기준선](../migration/baseline.md)과 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다.
+`:core:testing`은 Fake·fixture·MainDispatcherRule을 제공하고 `:core:data`는 repository·mapper·PagingSource 로컬 테스트를 소유한다. 여섯 feature impl은 ViewModel·Compose Screen 테스트를, bookmark impl은 위치 입력 Parameterized 테스트를 둔다. 테스트 작성과 실행 통과는 구분하며 수동 동작 확인 기준은 [기준선](../migration/baseline.md)을 따른다.
 
 [NavigatorTest](../../core/navigation/src/test/java/com/sghore/chimtubeworld/core/navigation/NavigatorTest.kt)는 5개 탭 정책을 검증한다. 탭 재선택·sub-stack 유지·탭 이력·root 뒤로가기·popUpTo·결과 1회 소비를 검증한다. [NavigationKeysTest](../../app/src/test/java/com/sghore/chimtubeworld/navigation/NavigationKeysTest.kt)는 각 feature API의 모든 key 9개(YoutubeKey·PlaylistsKey·VideosKey·ChzzkKey·WebtoonKey·CafeKey·StoreKey·AddBookmarkKey·EditBookmarkKey)와 특수문자 인자·Video/Bookmark 직렬화를 확인한다. 각각 `:core:navigation:testDebugUnitTest`, `:app:testDebugUnitTest`로 실행하며 기기 스모크를 대체하지 않는다.
 

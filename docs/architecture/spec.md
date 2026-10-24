@@ -11,7 +11,7 @@ ChimtubeWorld는 배포 호환성을 유지하며 화면 기능을 `feature`, �
 - repository contract는 domain, internal 구현체·mapper·PagingSource·Firestore·Jsoup은 data가 소유한다. 단순 위임·UI 오류 래핑용 usecase는 만들지 않으며 현재 usecase는 없다. Firestore provider는 data, Room provider는 database, OkHttp·Retrofit·RemoteDataSource binding은 network에 둔다.
 - 공유 Bookmark·Video·VideoSource는 model, 저장 Entity는 database에 둔다. 읽음 기록은 data 내부에서만 사용하며 Post.isRead로 노출한다.
 - 공통 Fake·fixture·MainDispatcherRule은 testing, repository·mapper·PagingSource 단위 테스트는 data에 둔다. Jsoup·Firestore 등 제외 경계는 [테스트 가이드](../development/testing.md#현재-테스트-예제와-경계)를 따른다.
-- Material 3 색상·타이포그래피 매핑은 [designsystem](../modules/core/designsystem.md), 탭·뒤로가기는 [navigation 정책](../modules/core/navigation.md)을 따른다. 데이터·식별자 보존은 [기준선](../migration/baseline.md), 릴리스 동작 확인은 [스모크 체크리스트](../migration/smoke-checklist.md), Room 검증은 [database 문서](../modules/core/database.md#빌드-설정과-스키마-보존)를 따른다.
+- Material 3 색상·타이포그래피 매핑은 [designsystem](../modules/core/designsystem.md), 탭·뒤로가기는 [navigation 정책](../modules/core/navigation.md)을 따른다. 데이터·식별자 보존은 [기준선](../migration/baseline.md), Room 검증은 [database 문서](../modules/core/database.md#빌드-설정과-스키마-보존)를 따른다.
 
 ## 아키텍처
 

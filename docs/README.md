@@ -2,7 +2,7 @@
 
 이 문서는 작업 종류에 따라 읽어야 할 규칙을 안내한다. 상세 규칙은 링크된 문서에만 두고, 같은 내용을 여러 문서에 중복하지 않는다.
 
-프로젝트는 `:app`, 10개 core 모듈, 여섯 feature의 API·impl로 구성된다. 모든 feature는 Material 3·Navigation 3와 MVI 규칙을 따른다. 릴리스 호환성은 [기준선](migration/baseline.md), 수동 검증은 [스모크 체크리스트](migration/smoke-checklist.md)를 확인한다.
+프로젝트는 `:app`, 10개 core 모듈, 여섯 feature의 API·impl로 구성된다. 모든 feature는 Material 3·Navigation 3와 MVI 규칙을 따른다. 릴리스 호환성은 [기준선](migration/baseline.md)을 확인한다.
 
 ## 문서 디렉터리
 
@@ -11,7 +11,7 @@
 | `architecture/` | [프로젝트 명세](architecture/spec.md): 전체 구조, 기술 스택, 모듈 의존성 방향 |
 | `modules/` | [app](modules/app.md), [feature](modules/feature.md), 아래 Core 문서: 모듈별 책임과 공개 경계 |
 | `development/` | [프로젝트 시작](development/project-setup.md), [workflow](development/workflow.md), [build logic](development/build-logic.md), [테스트 작성](development/testing.md), [품질·검증](development/quality.md), [코드 리뷰](development/code-review.md), [커밋 규칙](development/commit.md), [PR 규칙](development/pull-request.md) |
-| `migration/` | [기준선](migration/baseline.md)·[스모크 체크리스트](migration/smoke-checklist.md)·Room 기준 스키마 |
+| `migration/` | [기준선](migration/baseline.md)·Room 기준 스키마 |
 | `plans/` | [작업 계획 안내](plans/README.md). 향후 작업 계획·설계 검토 기록을 둘 공간 |
 
 새 문서는 목적에 맞는 디렉터리에 추가하고 이 안내에서 연결한다. core 모듈 문서는 `modules/core/<module>.md`에 둔다. 공통 개발 규칙과 개별 작업 기록은 각 디렉터리에서 관리한다.

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application.convention)
     alias(libs.plugins.android.application.compose)
@@ -6,6 +8,15 @@ plugins {
     alias(libs.plugins.google.services)
 }
 
+// 릴리스 서명 정보는 저장소에 두지 않고 로컬 local.properties에서 읽는다.
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.reader(Charsets.UTF_8).use(::load)
+    }
+}
+val releaseStoreFile: String? = localProperties.getProperty("release_store_file")
+
 android {
     defaultConfig {
         applicationId = "com.sghore.chimtubeworld"
@@ -13,10 +24,23 @@ android {
         versionName = "1.5.0"
     }
 
+    signingConfigs {
+        // 서명 키가 없는 환경에서도 빌드할 수 있도록 키 경로가 있을 때만 release 서명을 만든다.
+        if (releaseStoreFile != null) {
+            create("release") {
+                storeFile = rootProject.file(releaseStoreFile)
+                storePassword = localProperties.getProperty("release_store_password")
+                keyAlias = localProperties.getProperty("release_key_alias")
+                keyPassword = localProperties.getProperty("release_key_password")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.findByName("release")
         }
     }
     buildFeatures {

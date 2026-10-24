@@ -21,6 +21,20 @@ youtube_api_key="YOUR_YOUTUBE_API_KEY"
 - 배포 중인 `applicationId`와 app namespace는 `com.sghore.chimtubeworld`로 유지한다. 새 모듈 namespace는 `com.sghore.chimtubeworld.<core|feature>.<name>`을 기준으로 한다.
 - Room·Firestore·Manifest·버전·릴리스 설정의 보존 항목은 [마이그레이션 기준선](../migration/baseline.md)을 따른다. 새 템플릿 앱으로 식별자를 교체하는 작업이 아니다.
 
+## 릴리스 서명
+
+`:app`의 release 빌드는 `local.properties`의 아래 키로 서명한다. `release_store_file`은 저장소 루트 기준 상대 경로 또는 절대 경로다. keystore 파일과 비밀번호는 저장소에 커밋하지 않는다(`.gitignore`가 `*.jks`, `*.keystore`를 제외한다).
+
+```properties
+release_store_file=keystore/chimtubeworld-upload.jks
+release_store_password=YOUR_STORE_PASSWORD
+release_key_alias=YOUR_KEY_ALIAS
+release_key_password=YOUR_KEY_PASSWORD
+```
+
+- `release_store_file`이 없으면 서명 설정을 만들지 않으므로 release 빌드는 서명되지 않은 상태로 생성된다. 스토어 업로드용 빌드 전에는 네 키를 모두 준비한다.
+- 서명된 번들은 `./gradlew :app:bundleRelease`로 만들고 `app/build/outputs/bundle/release/app-release.aab`를 업로드한다.
+
 ## 첫 빌드
 
 ```shell

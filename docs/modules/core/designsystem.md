@@ -84,7 +84,7 @@ Shapes의 small 4dp·medium 12dp·large 22dp는 그대로다. M3 추가 슬롯 e
 - app·designsystem은 `androidx.compose.material:material`과 accompanist-insets-ui에 직접 의존하지 않는다. material-icons-extended와 XML theme용 com.google.android.material은 유지한다. Compose convention은 M3를 제공한다.
 - toolbar-compose 2.3.5는 캐시의 Gradle module/POM에서 런타임 Material 2 의존성을 선언한다. 전이 의존성은 제외하지 않으며 CollapsingToolbarScaffold 호출·스크롤 동작을 유지한다. 따라서 앱 소스에 M2 component import가 없어도 runtime classpath에 M2가 남을 수 있다. coil·compose-shimmer는 유지한다.
 
-공통 component와 북마크 입력 화면은 라이트/다크 Preview를 제공한다. M3 AlertDialog의 기본 본문 baseline·버튼 영역 여백, ripple·로딩 애니메이션·텍스트 렌더링에는 시각 차이가 남을 수 있다. 다이얼로그 버튼은 M3의 외곽 24dp padding에 기존 padding을 중복하지 않는다. 빌드 및 실기기 라이트/다크 비교는 [스모크 체크리스트](../../migration/smoke-checklist.md)의 기존 항목으로 별도 확인한다.
+공통 component와 북마크 입력 화면은 라이트/다크 Preview를 제공한다. M3 AlertDialog의 기본 본문 baseline·버튼 영역 여백, ripple·로딩 애니메이션·텍스트 렌더링에는 시각 차이가 남을 수 있다. 다이얼로그 버튼은 M3의 외곽 24dp padding에 기존 padding을 중복하지 않는다. 실기기 라이트/다크 비교는 릴리스 전 별도로 확인한다.
 
 ## 현재 포함된 구현과 리소스
 

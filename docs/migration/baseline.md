@@ -41,22 +41,22 @@
 | Manifest `queries` | `com.nhn.android.webtoon` | 네이버 웹툰 앱 존재 확인용 |
 | 외부 앱 연동 | YouTube 앱(`com.google.android.youtube`), Twitch(`twitch://`), 치지직(`navergameapp://chzzk/`), 네이버 웹툰(`webtoonkr://`) | 현재 `core:common/Constants.kt`, `core:ui/OpenOtherApp.kt` |
 | BuildConfig | `YOUTUBE_API_KEY` ← `local.properties`의 `youtube_api_key` | 현재 core:network에서만 같은 방식으로 생성·사용. app 생성은 제거 |
-| 릴리스 설정 | `minifyEnabled false`, `proguard-rules.pro`에 실제 규칙 없음, gradle에 `signingConfig` 없음 | 서명은 Play App Signing / 업로드 키로 별도 처리하는 것으로 보임 — 확인 필요 |
+| 릴리스 설정 | `minifyEnabled false`, `proguard-rules.pro`에 실제 규칙 없음 | release 서명은 `local.properties`의 `release_*` 키로 구성한다. 설정 방법은 [프로젝트 시작 가이드](../development/project-setup.md#릴리스-서명)를 따른다 |
 | 릴리스 버전 | `versionCode 11` / `versionName "1.5.0"` | 기준선은 10 / 1.4.5이며 릴리스는 버전을 올린다 |
 
 ## 기준선의 과거 구조
 
-기준선은 단일 `:app`, 화면과 공유하는 Room Entity, Activity 범위 GlobalViewModel·문자열 route를 사용했다. 자동 테스트는 기본 예제뿐이었다. 이 과거 구조는 현재 구현 규칙이 아니며, 배포 비교는 [smoke-checklist.md](smoke-checklist.md)를 따른다.
+기준선은 단일 `:app`, 화면과 공유하는 Room Entity, Activity 범위 GlobalViewModel·문자열 route를 사용했다. 자동 테스트는 기본 예제뿐이었다. 이 과거 구조는 현재 구현 규칙이 아니다.
 
 ## 마이그레이션 완료
 
 - 최종 모듈은 `:app`, core 10개(common·model·database·network·domain·data·testing·designsystem·ui·navigation), feature 6개(youtube·chzzk·webtoon·cafe·store·bookmark)의 API·impl이다. 세부 경계는 [모듈 지도](../architecture/spec.md#모듈-지도)를 따른다. app은 조립을 담당하고 모든 feature는 Material 3·Navigation 3·MVI를 사용한다.
 - API는 모든 NavKey·이동 함수·result key를 공개하고 각 impl은 단일 `<name>Entry`로 화면을 등록한다. 화면 상태는 feature가, navigation·외부 실행·Toast·클립보드 side effect는 EntryProvider가 처리한다.
 - 의도된 탭 정책 변경: 현재 탭 재선택은 하위 stack을 비우고 root를 표시한다. 탭 root의 뒤로가기는 이전 방문 탭으로 이동하고 시작 탭(YouTube) root에서는 앱을 종료한다. 다른 탭의 하위 stack은 유지하며 시작 탭 선택 시 방문 이력만 초기화한다.
-- 의도된 오류 표시 변경: cafe·chzzk·youtube·bookmark는 조회 실패 시 기존에 본문에서 보이지 않던 오류 문구를 표시한다. Bookmark 조회 실패 Toast는 유지한다. 이 변경과 탭 정책은 [스모크 체크리스트](smoke-checklist.md)로 확인한다.
+- 의도된 오류 표시 변경: cafe·chzzk·youtube·bookmark는 조회 실패 시 기존에 본문에서 보이지 않던 오류 문구를 표시한다. Bookmark 조회 실패 Toast는 유지한다.
 - 의도된 시스템 바 표시 변경: 강제 흰색 배경을 제거하고 edge-to-edge로 그린다. 상태바·내비게이션바 영역은 상단바·하단바와 다크 테마 색상을 따르며, 북마크처럼 하단바가 없는 화면은 화면 배경이 이어진다. 각 영역의 inset을 한 번만 적용하고 북마크는 키보드 위에서 입력·저장 영역을 스크롤할 수 있다.
 - Twitch 북마크 URL 복사 시 잘못된 `$` 접두사를 제거한다.
-- 모듈 전환 완료는 릴리스 검증 통과를 뜻하지 않는다. 로컬에서 `./gradlew clean test :app:assembleDebug :app:bundleRelease`, Room identityHash 비교·덮어 설치, 기기 스모크를 완료하고 결과를 기록한다. 릴리스 minify는 비활성화한다.
+- 모듈 전환 완료는 릴리스 검증 통과를 뜻하지 않는다. 로컬에서 `./gradlew clean test :app:assembleDebug :app:bundleRelease`, Room identityHash 비교·덮어 설치와 기기 동작 확인을 완료한다. 릴리스 minify는 비활성화한다.
 
 ## Room 스키마 검증 절차
 
@@ -73,4 +73,3 @@
 | `./gradlew :app:kspDebugKotlin` | 성공 (Room 스키마 추출 중 실행) |
 | `./gradlew :app:assembleDebug` | 성공 (`app-debug.apk` 생성, 2026-10-18) |
 | `./gradlew :app:bundleRelease` | 미수행 |
-| 수동 스모크 테스트 | 미수행 — [smoke-checklist.md](smoke-checklist.md)의 "기준선" 열을 직접 채운다 |
