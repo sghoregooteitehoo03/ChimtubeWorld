@@ -143,7 +143,7 @@ internal class BookmarkViewModel @AssistedInject constructor(
         val time = getSecondsFromPosition(bookmark.videoPosition)
         val url = when (currentState.videoSource) {
             VideoSource.YOUTUBE -> "${currentState.videoData!!.url}&t=$time"
-            VideoSource.TWITCH -> "$${currentState.videoData!!.url}?t=$time"
+            VideoSource.TWITCH -> "${currentState.videoData!!.url}?t=$time"
             else -> ""
         }
 

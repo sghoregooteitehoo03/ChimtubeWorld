@@ -185,7 +185,7 @@ class BookmarkViewModelTest {
     }
 
     @Test
-    fun `복사 URL은 변경 중인 입력 대신 저장된 위치를 사용하고 기존 소스별 형식을 유지한다`() = runTest(mainDispatcherRule.testDispatcher) {
+    fun `복사 URL은 변경 중인 입력 대신 저장된 위치를 사용하고 소스별 URL 형식을 적용한다`() = runTest(mainDispatcherRule.testDispatcher) {
         val original = bookmark(videoPosition = -32390000)
         for (source in VideoSource.entries) {
             val vm = BookmarkViewModel(FakeYoutubeRepository(), FakeBookmarkRepository(), video(url = "original-url", bookmarks = listOf(original)), 0, source, null)
@@ -196,7 +196,7 @@ class BookmarkViewModelTest {
             vm.onEvent(BookmarkUiEvent.CopyUrlClicked)
             vm.onEvent(BookmarkUiEvent.BackClicked)
             runCurrent()
-            val url = if (source == VideoSource.YOUTUBE) "original-url&t=10s" else "\$original-url?t=10s"
+            val url = if (source == VideoSource.YOUTUBE) "original-url&t=10s" else "original-url?t=10s"
             assertEquals(listOf(BookmarkUiSideEffect.CopyUrl(url), BookmarkUiSideEffect.NavigateBack), effects)
             job.cancel()
         }

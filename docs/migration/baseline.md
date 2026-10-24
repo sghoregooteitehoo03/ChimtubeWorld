@@ -54,6 +54,7 @@
 - API는 모든 NavKey·이동 함수·result key를 공개하고 각 impl은 단일 `<name>Entry`로 화면을 등록한다. 화면 상태는 feature가, navigation·외부 실행·Toast·클립보드 side effect는 EntryProvider가 처리한다.
 - 의도된 탭 정책 변경: 현재 탭 재선택은 하위 stack을 비우고 root를 표시한다. 탭 root의 뒤로가기는 이전 방문 탭으로 이동하고 시작 탭(YouTube) root에서는 앱을 종료한다. 다른 탭의 하위 stack은 유지하며 시작 탭 선택 시 방문 이력만 초기화한다.
 - 의도된 오류 표시 변경: cafe·chzzk·youtube·bookmark는 조회 실패 시 기존에 본문에서 보이지 않던 오류 문구를 표시한다. Bookmark 조회 실패 Toast는 유지한다. 이 변경과 탭 정책은 [스모크 체크리스트](smoke-checklist.md)로 확인한다.
+- Twitch 북마크 URL 복사 시 잘못된 `$` 접두사를 제거한다.
 - 모듈 전환 완료는 릴리스 검증 통과를 뜻하지 않는다. 로컬에서 `./gradlew clean test :app:assembleDebug :app:bundleRelease`, Room identityHash 비교·덮어 설치, 기기 스모크를 완료하고 결과를 기록한다. 릴리스 minify는 비활성화한다.
 
 ## Room 스키마 검증 절차
