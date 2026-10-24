@@ -2,7 +2,7 @@
 
 이 문서는 작업 종류에 따라 읽어야 할 규칙을 안내한다. 상세 규칙은 링크된 문서에만 두고, 같은 내용을 여러 문서에 중복하지 않는다.
 
-현재는 `:app`과 추출된 common·model·database·network·domain·data·testing·designsystem·ui·navigation core 모듈로 구성된다. Material 3와 Navigation 3 전환까지 적용했으며 feature 분리와 MVI 전환은 후속 단계다. **마이그레이션 진행 중 — 대상 모듈 생성 후 적용** 표시는 후속 구조의 규칙을 뜻한다. 현재 구현·불변 항목은 [기준선](migration/baseline.md), 수동 검증은 [스모크 체크리스트](migration/smoke-checklist.md)를 확인한다.
+프로젝트는 `:app`, 10개 core 모듈, 여섯 feature의 API·impl로 구성된다. 모든 feature는 Material 3·Navigation 3와 MVI 규칙을 따른다. 릴리스 호환성은 [기준선](migration/baseline.md), 수동 검증은 [스모크 체크리스트](migration/smoke-checklist.md)를 확인한다.
 
 ## 문서 디렉터리
 
@@ -48,13 +48,26 @@
 
 ## Core 문서
 
-- [common.md](modules/core/common.md)
-- [data.md](modules/core/data.md)
-- [database.md](modules/core/database.md)
-- [designsystem.md](modules/core/designsystem.md)
-- [domain.md](modules/core/domain.md)
-- [model.md](modules/core/model.md)
-- [navigation.md](modules/core/navigation.md)
-- [network.md](modules/core/network.md)
-- [testing.md](modules/core/testing.md)
-- [ui.md](modules/core/ui.md)
+- `:core:common`: [common.md](modules/core/common.md)
+- `:core:data`: [data.md](modules/core/data.md)
+- `:core:database`: [database.md](modules/core/database.md)
+- `:core:designsystem`: [designsystem.md](modules/core/designsystem.md)
+- `:core:domain`: [domain.md](modules/core/domain.md)
+- `:core:model`: [model.md](modules/core/model.md)
+- `:core:navigation`: [navigation.md](modules/core/navigation.md)
+- `:core:network`: [network.md](modules/core/network.md)
+- `:core:testing`: [testing.md](modules/core/testing.md)
+- `:core:ui`: [ui.md](modules/core/ui.md)
+
+## Feature 모듈
+
+각 feature의 API·impl 경계와 구현 규칙은 [feature.md](modules/feature.md)를 따른다.
+
+| 기능 | 모듈 |
+| --- | --- |
+| YouTube 채널·playlist·videos·북마크 위치 선택 | `:feature:youtube:api`, `:feature:youtube:impl` |
+| 치지직 | `:feature:chzzk:api`, `:feature:chzzk:impl` |
+| 웹툰 | `:feature:webtoon:api`, `:feature:webtoon:impl` |
+| 카페 | `:feature:cafe:api`, `:feature:cafe:impl` |
+| 스토어 | `:feature:store:api`, `:feature:store:impl` |
+| 북마크 추가·수정·삭제 | `:feature:bookmark:api`, `:feature:bookmark:impl` |

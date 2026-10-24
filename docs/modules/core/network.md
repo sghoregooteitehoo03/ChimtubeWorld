@@ -2,7 +2,7 @@
 
 ## 역할과 현재 상태
 
-Step 6에서 Retrofit 서비스·전체 DTO·OkHttp/Retrofit DI와 API별 RemoteDataSource를 추출했다. namespace와 패키지는 `com.sghore.chimtubeworld.core.network`다.
+Retrofit 서비스·DTO·OkHttp/Retrofit DI와 API별 RemoteDataSource를 소유한다. namespace와 패키지는 `com.sghore.chimtubeworld.core.network`다.
 
 - `retrofit/`: 기존 `RetrofitService`(YouTube), `NaverRetrofitService`(Cafe·Chzzk)의 endpoint 정의.
 - `dto/`: `youtubeAPI`, `naver_cafeAPI`, `naver_chzzkAPI`, `naver_storeAPI` 응답 DTO. 필드 이름·기본값·직렬화 매핑을 유지한다.
@@ -28,20 +28,20 @@ Step 6에서 Retrofit 서비스·전체 DTO·OkHttp/Retrofit DI와 API별 Remote
 ## API 키와 빌드 설정
 
 - `sg.android.library`, `sg.android.hilt` convention을 적용한다.
-- `buildFeatures.buildConfig = true`를 켜고 root `local.properties`의 `youtube_api_key`를 app과 같은 `Properties.load`·`buildConfigField("String", "YOUTUBE_API_KEY", ...)` 방식으로 읽는다. 속성 값의 따옴표 처리도 app과 동일하다.
+- `buildFeatures.buildConfig = true`를 켜고 root `local.properties`의 `youtube_api_key`를 `Properties.load`·`buildConfigField("String", "YOUTUBE_API_KEY", ...)` 방식으로 읽는다. 속성 값은 큰따옴표를 포함한 Java 문자열 표현식이어야 한다.
 - YouTube `@GET` 문자열은 network 자체의 `BuildConfig.YOUTUBE_API_KEY`를 참조한다. 생성된 Java 상수이므로 annotation의 컴파일 타임 상수 조건을 유지한다. 키를 출력하거나 로그에 남기지 않는다.
-- app의 기존 `YOUTUBE_API_KEY` 생성 설정은 현재 참조가 없어도 이 단계에서 유지한다.
+- API 키는 network에서만 생성·사용한다. app은 BuildConfig를 생성하지 않는다.
 
 ## 공개 경계와 의존성
 
 - 공개 API는 RemoteDataSource contract와 DTO다. Retrofit API·datasource 구현체·DI 모듈·qualifier는 `internal`이다.
 - network는 다른 프로젝트 모듈에 의존하지 않는다. Retrofit·OkHttp·Gson converter는 구현 의존성이다.
-- Step 7 전까지 app의 repository·PagingSource가 datasource에 의존하고 DTO → model 변환도 기존 app 위치에 유지한다. 이후 `:core:data`가 이 경계를 소비한다. domain과 feature에 DTO를 노출하지 않는다.
-- domain model, mapper, repository 정책, Room, Firestore, Jsoup, UI state는 포함하지 않는다. Firestore provider와 Jsoup 접근은 Step 7 전까지 app에 유지한다.
+- `:core:data`의 repository·PagingSource가 datasource를 소비하고 DTO → model을 변환한다. domain과 feature에 DTO를 노출하지 않는다.
+- domain model, mapper, repository 정책, Room, Firestore, Jsoup, UI state는 포함하지 않는다. Firestore provider와 Jsoup 접근은 `:core:data`에 둔다.
 
 ## 참고 구현과 검증
 
 - [현재 구현](../../../core/network/src/main/java/com/sghore/chimtubeworld/core/network).
-- 참고 템플릿: `.ai-work/reference/AndroidComposeTemplate/core/network`의 `datasource`, `di/NetworkModule`, `dto`, `retrofit`. 경계 구조만 참고하며 Moshi·로깅 설정은 도입하지 않는다.
+- 빌드 설정: [build.gradle.kts](../../../core/network/build.gradle.kts). 구현 예제는 위 현재 소스와 모듈 경계 규칙을 따른다.
 - 컴파일·조립 검증: `./gradlew :core:network:compileDebugKotlin :app:assembleDebug`.
 - 기존 동작 보존 기준은 [마이그레이션 기준선](../../migration/baseline.md)을 따른다.

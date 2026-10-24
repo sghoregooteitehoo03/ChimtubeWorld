@@ -1,6 +1,6 @@
 # :core:navigation
 
-Step 11에서 템플릿의 stack·Navigator 정책을 도입했다. 패키지는 `com.sghore.chimtubeworld.core.navigation`이다. 화면 key와 entry는 feature 분리 전까지 [app/navigation](../../../app/src/main/java/com/sghore/chimtubeworld/navigation)에 둔다.
+패키지는 `com.sghore.chimtubeworld.core.navigation`이다. 화면 key·이동 확장 함수·result key는 각 feature API, EntryProvider는 각 feature impl에 둔다. app/navigation은 TopLevelDestination을 소유한다.
 
 ## 역할
 
@@ -23,7 +23,7 @@ Navigation 3의 top-level stack, 탭별 sub-stack, back stack 조작, navigation
 - 현재 탭을 다시 선택하면 현재 sub-stack을 root만 남기고 비운다.
 - 다른 top-level 탭을 선택하면 그 탭의 sub-stack을 유지한다. 이미 방문한 탭은 top-level 이력에서 제거 후 끝에 추가하고, 시작 탭(YouTube)을 선택하면 top-level 이력만 시작 탭으로 초기화한다.
 - top-level key가 아닌 key 이동은 현재 sub-stack 끝에 추가한다. 동일 key를 자동 제거하지 않는다.
-- 뒤로가기는 child 화면을 먼저 pop하고, 탭 root에서는 이전 top-level 탭으로 이동한다. 시작 탭 root에서는 `false`를 반환하며 NavDisplay가 시스템 뒤로가기를 가로채지 않아 앱을 종료한다. 현재 탭 재선택과 탭 root 뒤로가기는 Step 11의 의도된 정책 변경이다.
+- 뒤로가기는 child 화면을 먼저 pop하고, 탭 root에서는 이전 top-level 탭으로 이동한다. 시작 탭 root에서는 `false`를 반환하며 NavDisplay가 시스템 뒤로가기를 가로채지 않아 앱을 종료한다. 기준 배포 버전과의 의도된 정책 차이는 [기준선](../../migration/baseline.md#마이그레이션-완료)을 참고한다.
 - `popUpTo`는 현재 sub-stack에만 적용한다.
 - result는 `NavigationResultKey<T>`로 저장하고 `consumeResult`에서 읽은 즉시 제거한다. 프로세스 복원 범위는 아니다.
 
@@ -37,7 +37,7 @@ Navigation 3의 top-level stack, 탭별 sub-stack, back stack 조작, navigation
 ## 현재 구현 참고
 
 - [NavigationState](../../../core/navigation/src/main/java/com/sghore/chimtubeworld/core/navigation/NavigationState.kt), [Navigator](../../../core/navigation/src/main/java/com/sghore/chimtubeworld/core/navigation/Navigator.kt), [NavigatorTest](../../../core/navigation/src/test/java/com/sghore/chimtubeworld/core/navigation/NavigatorTest.kt).
-- 5개 탭은 YouTube·Chzzk·Webtoon·Cafe·Store 순서다. `PlaylistsKey`, `VideosKey`, `AddBookmarkKey`, `EditBookmarkKey`도 현재 app이 소유한다. feature 분리 시 각 API의 navigation 계약과 impl EntryProvider로 옮긴다.
+- 5개 탭은 YouTube·Chzzk·Webtoon·Cafe·Store 순서다. `PlaylistsKey`·`VideosKey`는 youtube API, `AddBookmarkKey`·`EditBookmarkKey`는 bookmark API가 소유하고 각 impl의 단일 entry 함수가 등록한다.
 - `VideoSource` enum이 source를 표현하며 drawable ID를 key에 저장하지 않는다. EditBookmark는 직렬화 가능한 model의 `Video`·`Bookmark`를 사용한다.
 - `BookmarkResultKey`의 결과는 현재 표시 중인 Videos entry가 `consumeResult`로 한 번 소비하고 기존 ViewModel의 목록 갱신 함수로 전달한다. 결과는 메모리 수명이며 프로세스 재생성 시 목록은 기존 repository 조회로 다시 로딩한다.
 - 공유로 생성하는 AddBookmark key에는 URL과 요청 ID를 보관한다. 같은 URL의 연속 공유도 서로 다른 entry·ViewModel을 사용한다.

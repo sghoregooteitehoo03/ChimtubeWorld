@@ -2,9 +2,9 @@
 
 검증 범위와 완료 보고는 [quality.md](quality.md), 공통 도구의 책임은 [core/testing.md](../modules/core/testing.md)를 따른다.
 
-Step 8에서 `:core:testing`의 Fake·fixture·MainDispatcherRule과 `:core:data`의 repository·mapper·PagingSource 로컬 테스트를 추가했다. Step 13에서 webtoon·store, Step 15에서 cafe·chzzk의 ViewModel·Compose Screen 테스트를 작성했다. Step 17에서 youtube·playlist·videos·bookmark의 ViewModel·Compose Screen 테스트와 북마크 위치 입력의 Parameterized 테스트를 작성해 여섯 feature의 MVI 테스트를 적용했다. 테스트 작성과 실행 통과는 구분하며, 수동 동작 확인은 [마이그레이션 기준선](../migration/baseline.md)과 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다.
+`:core:testing`은 Fake·fixture·MainDispatcherRule을 제공하고 `:core:data`는 repository·mapper·PagingSource 로컬 테스트를 소유한다. 여섯 feature impl은 ViewModel·Compose Screen 테스트를, bookmark impl은 위치 입력 Parameterized 테스트를 둔다. 테스트 작성과 실행 통과는 구분하며 수동 동작 확인은 [기준선](../migration/baseline.md)과 [스모크 체크리스트](../migration/smoke-checklist.md)를 따른다.
 
-Step 11의 [NavigatorTest](../../core/navigation/src/test/java/com/sghore/chimtubeworld/core/navigation/NavigatorTest.kt)는 템플릿 테스트를 5개 탭에 맞추어 확장했다. 탭 재선택·sub-stack 유지·탭 이력·root 뒤로가기·popUpTo·결과 1회 소비를 검증한다. [NavigationKeysTest](../../app/src/test/java/com/sghore/chimtubeworld/navigation/NavigationKeysTest.kt)는 각 feature API의 모든 key 9개(YoutubeKey·PlaylistsKey·VideosKey·ChzzkKey·WebtoonKey·CafeKey·StoreKey·AddBookmarkKey·EditBookmarkKey)와 특수문자 인자·Video/Bookmark 직렬화를 확인한다. 각각 `:core:navigation:testDebugUnitTest`, `:app:testDebugUnitTest`로 실행하며 기기 스모크를 대체하지 않는다.
+[NavigatorTest](../../core/navigation/src/test/java/com/sghore/chimtubeworld/core/navigation/NavigatorTest.kt)는 5개 탭 정책을 검증한다. 탭 재선택·sub-stack 유지·탭 이력·root 뒤로가기·popUpTo·결과 1회 소비를 검증한다. [NavigationKeysTest](../../app/src/test/java/com/sghore/chimtubeworld/navigation/NavigationKeysTest.kt)는 각 feature API의 모든 key 9개(YoutubeKey·PlaylistsKey·VideosKey·ChzzkKey·WebtoonKey·CafeKey·StoreKey·AddBookmarkKey·EditBookmarkKey)와 특수문자 인자·Video/Bookmark 직렬화를 확인한다. 각각 `:core:navigation:testDebugUnitTest`, `:app:testDebugUnitTest`로 실행하며 기기 스모크를 대체하지 않는다.
 
 ## 테스트 위치와 대상
 
@@ -62,10 +62,10 @@ fun `요청 URL을 기록하고 설정한 영상을 반환한다`() = runTest {
 - [BookmarkRepositoryImplTest](../../core/data/src/test/java/com/sghore/chimtubeworld/core/data/repository/BookmarkRepositoryImplTest.kt)는 Entity 저장·삭제 인자, 내용 기반 ID 조회와 DAO 실패 전파를 확인한다. `Bookmark.equals`는 ID만 비교하므로 [BookmarkMapperTest](../../core/data/src/test/java/com/sghore/chimtubeworld/core/data/mapper/BookmarkMapperTest.kt)와 영상 북마크 변환 테스트는 모든 모델 필드를 별도로 비교한다.
 - [CafeRepositoryImplTest](../../core/data/src/test/java/com/sghore/chimtubeworld/core/data/repository/CafeRepositoryImplTest.kt)는 `StandardTestDispatcher(testScheduler)`를 생성자에 전달하고 읽음 기록이 없을 때만 저장하는 정책과 조회·저장 실패를 확인한다.
 - data의 `datasource/FakeCafeRemoteDataSource`, `FakeYoutubeRemoteDataSource`, `SpyDao`는 data의 `src/test`에만 둔다. Spy의 시도 목록과 성공 목록을 구분하며 Room SQL·충돌 정책·실제 DB 영속성은 검증하지 않는다.
-- [PagingSource 테스트](../../core/data/src/test/java/com/sghore/chimtubeworld/core/data/repository/dataSource)는 네 source를 직접 생성하고 `paging-common`의 `LoadParams.Refresh`·`Append`로 `load()` 결과를 확인한다. Main/Sub playlist는 Fake의 공개 suspend 메서드 참조를 기존 callback 생성자에 전달한다. private helper나 production 가시성 변경이 필요하지 않다. 요청 ID와 응답 ID를 다르게 설정하고 DTO·북마크 매핑, 기존 key·빈 응답·Error 처리를 확인한다. Pager 전체 수명·UI 스크롤·refresh anchor는 이번 범위에서 검증하지 않는다.
+- [PagingSource 테스트](../../core/data/src/test/java/com/sghore/chimtubeworld/core/data/repository/dataSource)는 네 source를 직접 생성하고 `paging-common`의 `LoadParams.Refresh`·`Append`로 `load()` 결과를 확인한다. Main/Sub playlist는 Fake의 공개 suspend 메서드 참조를 기존 callback 생성자에 전달한다. private helper나 production 가시성 변경이 필요하지 않다. 요청 ID와 응답 ID를 다르게 설정하고 DTO·북마크 매핑, 기존 key·빈 응답·Error 처리를 확인한다. Pager 전체 수명·UI 스크롤·refresh anchor는 이 단위 테스트의 검증 범위가 아니다.
 - 공통 Fake의 Paging 응답은 `paging-testing`의 `asSnapshot()`으로 목록을 확인한다. 이 라이브러리는 `:core:testing` 자체 테스트와 북마크 결과의 실제 Paging 목록 변환을 검증하는 `:feature:youtube:impl`의 `testImplementation`에만 추가하며 production 의존성은 늘리지 않는다.
 - `CafeRepositoryImpl.getCafeInfo()`는 Jsoup 정적 연결로 실제 웹을 읽고 주입 가능한 HTML 경계가 없어 제외한다. `CafePostPagingSource`의 사용되지 않는 private Jsoup helper도 제외한다. 이 source의 `load()`는 RemoteDataSource와 DAO만 사용하므로 테스트한다.
-- Twitch·YouTube repository의 `getChannels()`는 Firestore 쿼리·Task·문서 변환을 직접 수행한다. 현재 경계로 서버 없이 Fake를 주입할 수 없어 제외한다. `YoutubeRepositoryImpl.getVideo()` 직접 테스트도 Firestore 생성자 의존성 때문에 이번 구성에서는 제외하며 영상 DTO 변환은 `YoutubePagingSource.load()`에서 확인한다. Firestore mock framework나 새 production 추상화는 도입하지 않는다.
+- Twitch·YouTube repository의 `getChannels()`는 Firestore 쿼리·Task·문서 변환을 직접 수행한다. 현재 경계로 서버 없이 Fake를 주입할 수 없어 제외한다. `YoutubeRepositoryImpl.getVideo()` 직접 테스트도 Firestore 생성자 의존성 때문에 직접 테스트에서 제외하며 영상 DTO 변환은 `YoutubePagingSource.load()`에서 확인한다. Firestore mock framework나 새 production 추상화는 도입하지 않는다.
 
 ## State와 side effect
 
@@ -106,16 +106,16 @@ fun `요청 URL을 기록하고 설정한 영상을 반환한다`() = runTest {
 
 webtoon·store는 고정 목록만 사용하므로 repository Fake나 로딩·실패·재시도 테스트가 필요하지 않다. cafe·chzzk는 core:testing의 Fake·fixture로 로딩·실패와 사용자 입력을 검증한다. 재시도 입력은 추가하지 않았으며 관련 테스트도 없다. Cafe의 Paging 단위 테스트는 Flow 교체와 캐시 수집 계약을 확인하고, 게시글 표시·클릭은 `flowOf(PagingData.from(...))`을 주입하는 Screen 테스트에서 확인한다. 실제 Pager 스크롤·원격 페이지 로딩은 기기 스모크 범위다.
 
-Step 17 테스트는 작성했지만 샌드박스의 JDK 실행 오류(`Bad CPU type in executable`)로 Gradle이 시작되지 않아 실행 통과를 확인하지 못했다. 로컬에서 `./gradlew test :feature:youtube:impl:assembleDebugAndroidTest :feature:bookmark:impl:assembleDebugAndroidTest :app:assembleDebug`를 실행해야 한다. 공유 인텐트 → 추가 → 결과 소비, 편집·복사·삭제, 실제 외부 앱/Custom Tabs 실행은 기기 스모크로 별도 확인한다.
+릴리스 검증은 로컬에서 `./gradlew clean test :app:assembleDebug :app:bundleRelease`로 수행한다. Compose 테스트는 각 feature impl의 `assembleDebugAndroidTest`와 실행 가능한 기기에서 `connectedDebugAndroidTest`로 별도 검증한다. 공유 인텐트 → 추가 → 결과 소비, 편집·복사·삭제, 실제 외부 앱/Custom Tabs 실행은 기기 스모크로 확인한다. 샌드박스에서 실행하지 못한 결과를 통과로 기록하지 않는다.
 
 ViewModel 테스트는 MainDispatcherRule·runTest·선행 effect 수집·ViewModelStore 정리를 사용하고, Screen 테스트는 `createComposeRule` v2에서 theme·Screen만 구성한다. 외부 앱 설치 여부·실제 Intent·Custom Tabs fallback과 라이트/다크 외형은 기기 스모크로 확인한다. APK 조립은 기기 테스트 실행을 대신하지 않는다.
 
 ## 실행과 결과
 
-현재 core 테스트와 app 조립은 아래 첫 명령으로 검증한다. feature 명령은 대상 모듈 생성 후 실제 경로로 바꿔 사용한다.
+전체 로컬 테스트와 app 조립·릴리스 번들은 아래 첫 명령으로 검증한다. feature별 명령의 `<name>`은 실제 feature 이름으로 바꾼다.
 
 ```shell
-./gradlew :core:testing:testDebugUnitTest :core:data:testDebugUnitTest :app:assembleDebug
+./gradlew clean test :app:assembleDebug :app:bundleRelease
 ./gradlew :feature:<name>:impl:testDebugUnitTest :core:data:testDebugUnitTest
 ./gradlew :feature:<name>:impl:assembleDebugAndroidTest
 # 실행 가능한 기기 또는 에뮬레이터가 있을 때

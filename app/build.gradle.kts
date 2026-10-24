@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application.convention)
     alias(libs.plugins.android.application.compose)
@@ -8,17 +6,11 @@ plugins {
     alias(libs.plugins.google.services)
 }
 
-val properties = Properties().apply {
-    rootProject.file("local.properties").inputStream().use { load(it) }
-}
-
 android {
     defaultConfig {
         applicationId = "com.sghore.chimtubeworld"
-        versionCode = 10
-        versionName = "1.4.5"
-
-        buildConfigField("String", "YOUTUBE_API_KEY", properties.getProperty("youtube_api_key"))
+        versionCode = 11
+        versionName = "1.5.0"
     }
 
     buildTypes {
@@ -28,7 +20,7 @@ android {
         }
     }
     buildFeatures {
-        buildConfig = true
+        buildConfig = false
     }
     namespace = "com.sghore.chimtubeworld"
 }

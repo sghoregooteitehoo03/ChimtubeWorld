@@ -10,7 +10,7 @@ ChimtubeWorld의 로컬 빌드 준비를 설명한다. 구조는 [spec.md](../ar
 
 ## 로컬 설정
 
-- 루트 `local.properties`에 `sdk.dir`과 `youtube_api_key`를 준비한다. 키는 `app/build.gradle.kts`에서 그대로 Java 문자열 표현식으로 전달하므로 값에 큰따옴표를 포함한다.
+- 루트 `local.properties`에 `sdk.dir`과 `youtube_api_key`를 준비한다. 키는 `core/network/build.gradle.kts`에서 그대로 Java 문자열 표현식으로 전달하므로 값에 큰따옴표를 포함한다.
 
 ```properties
 youtube_api_key="YOUR_YOUTUBE_API_KEY"
@@ -27,6 +27,14 @@ youtube_api_key="YOUR_YOUTUBE_API_KEY"
 ./gradlew :app:assembleDebug
 ```
 
-현재는 단일 app이다. core·feature 명령은 모듈 생성 후에만 실행한다. convention 구성과 Room 미적용 이유는 [build-logic.md](build-logic.md)를 따른다.
+앱은 core 10개와 여섯 feature의 API·impl을 조립한다. 모듈별 명령은 [quality.md](quality.md), convention 구성과 database의 Room 설정은 [build-logic.md](build-logic.md)를 따른다. 릴리스 버전은 `versionCode 11` / `versionName "1.5.0"`이며 minify는 비활성화한다.
 
 Codex 샌드박스에서는 네트워크·Java 실행 환경·Gradle lock 접근 제약으로 Gradle 실행이 불가능할 수 있다. 이 경우 정적 검증과 미실행 사유를 보고하고 Claude가 로컬에서 위 명령을 실행한다. 빌드·기기 테스트의 성공을 추정해서 보고하지 않는다.
+
+## 템플릿 식별자 확인
+
+모듈·패키지·문서를 추가하거나 변경한 뒤 저장소 루트에서 아래 검색을 실행한다. 프로젝트 namespace로 바꾸지 않은 식별자는 정리한다. 원본 템플릿 저장소 URL을 출처로 남기는 것은 허용한다.
+
+```shell
+rg -n 'androidcompose[t]emplate|AndroidCompose[T]emplate|com[.]sg[.]' app core feature build-logic settings.gradle.kts docs
+```

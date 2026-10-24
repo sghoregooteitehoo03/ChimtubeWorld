@@ -8,7 +8,7 @@
 
 ## 현재 상태와 구현 규칙
 
-- 현재는 common·model·database·network·domain·data·testing·designsystem·ui·navigation core 모듈 추출, Material 3·Navigation 3 전환과 여섯 feature의 api/impl 분리를 완료했다. Step 13(webtoon·store), Step 15(cafe·chzzk), Step 17(youtube·bookmark)에서 여섯 feature 모두 Contract·BaseViewModel·onEvent·Route/Screen·EntryProvider 기반 MVI, 문자열 리소스·Preview·ViewModel 및 Screen 테스트를 작성했다. youtube의 playlist·videos와 bookmark 추가·수정은 AssistedInject·creationCallback을 유지하며 최초 조회는 생성자 인자로 init에서 시작한다. 북마크 선택·삭제 확인은 UiState, 이동·외부 실행·Toast·클립보드는 EntryProvider가 처리하는 side effect다. 모든 NavKey·Navigator 이동 확장 함수·BookmarkResultKey는 feature API에 두며 각 impl은 모든 소유 key를 등록하는 entry 함수 하나만 공개한다. youtube impl은 bookmark api의 이동 확장 함수·BookmarkResultKey만 사용한다. 공유 VideoSource는 core:model에 있고 chzzk의 repository 계약은 TwitchRepository 이름을 유지한다. Resource의 마지막 사용처를 제거해 core:common의 래퍼를 삭제했다. Step 17 빌드·테스트는 샌드박스 JDK의 Bad CPU type 오류로 실행하지 못했으며 로컬 실행·기기 검증이 필요하다. 적용 상태와 불변 항목은 [프로젝트 명세](docs/architecture/spec.md)와 [마이그레이션 기준선](docs/migration/baseline.md)을 따른다.
+- 프로젝트는 [프로젝트 명세](docs/architecture/spec.md)와 `docs/modules`의 모듈 규칙을 따른다. 멀티모듈 전환은 완료했으며 릴리스 호환성은 [기준선](docs/migration/baseline.md)을 따른다.
 
 - 현재 프로젝트의 상태를 확인할 때는 Gradle 설정과 Kotlin 타입 선언, 실제 구현, 코드 주석, `docs` 순서로 확인한다.
 - 문서와 구현이 다르면 현재 상태는 구현을 기준으로 판단하고, 작업 범위에 포함되면 문서도 실제 구조에 맞게 갱신한다.

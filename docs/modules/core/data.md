@@ -1,6 +1,6 @@
 # :core:data
 
-Step 7에서 app의 repository 구현·PagingSource·mapper·Firestore provider를 추출했다. namespace와 package는 `com.sghore.chimtubeworld.core.data`다. 기존 동작 보존 기준은 [마이그레이션 기준선](../../migration/baseline.md)을 따른다.
+repository 구현·PagingSource·mapper·Firestore provider를 소유한다. namespace와 package는 `com.sghore.chimtubeworld.core.data`다. 호환성 기준은 [기준선](../../migration/baseline.md)을 따른다.
 
 ## 역할
 
@@ -40,11 +40,11 @@ domain repository contract의 구현, remote/local 저장소 조합, data 타입
 
 `sg.android.library`, `sg.android.hilt` convention을 적용한다. Paging 구현은 `paging-common`으로 충분하며 Android Paging runtime은 사용하지 않는다. coroutines-core·coroutines-play-services·Firestore·Jsoup은 구현 의존성이다. google-services plugin과 설정 파일은 app에 유지한다.
 
-app ViewModel은 domain repository 계약을 직접 사용하고 data는 Hilt 그래프 조립을 위해 의존한다. app의 직접 database·network 의존성과 OkHttp·Retrofit·Gson converter·Firestore·Jsoup·coroutines-play-services·Paging runtime 의존성은 제거했다. Room 직접 의존성은 Step 5에서 이미 제거됐다. UI의 paging-compose와 navigation 인자 직렬화에 사용하는 Gson 직접 의존성은 유지한다. 기존 converter가 제공하던 Gson 2.13.1과 같은 버전을 사용한다.
+feature ViewModel은 domain repository 계약을 직접 사용한다. app은 Hilt 그래프 조립을 위해 data에 의존하며 database·network에는 직접 의존하지 않는다. app에는 Room·Retrofit·Gson·Firestore·Jsoup·Paging runtime 의존성을 두지 않는다. Paging Compose는 화면을 소유한 feature와 공통 ui가 사용한다.
 
 ## 단위 테스트
 
-Step 8에서 `src/test`에 JUnit 4·`runTest` 기반 테스트를 추가했다. internal 구현체와 mapper는 같은 모듈 테스트에서 직접 사용하며 production 접근 제한자·쿼리·동작은 변경하지 않는다.
+`src/test`에 JUnit 4·`runTest` 기반 테스트를 둔다. internal 구현체와 mapper는 같은 모듈 테스트에서 직접 사용하며 테스트를 위해 production 접근 제한자·쿼리·동작을 변경하지 않는다.
 
 | 테스트 클래스 | 검증 범위 |
 | --- | --- |
@@ -65,5 +65,5 @@ Step 8에서 `src/test`에 JUnit 4·`runTest` 기반 테스트를 추가했다. 
 
 - [현재 소스](../../../core/data/src/main/java/com/sghore/chimtubeworld/core/data)
 - [domain 계약](domain.md)
-- 참고 템플릿: `.ai-work/reference/AndroidComposeTemplate/core/data`의 repository 구현·mapper·DataModule·Gradle 설정.
+- 빌드 설정: [build.gradle.kts](../../../core/data/build.gradle.kts). 구현 예제는 위 현재 소스와 모듈 경계 규칙을 따른다.
 - 단위 테스트·조립 검증: `./gradlew :core:testing:testDebugUnitTest :core:data:testDebugUnitTest :app:assembleDebug`. 실행 결과는 별도 확인하며 테스트 추가만으로 통과를 의미하지 않는다.

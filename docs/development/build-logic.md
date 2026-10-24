@@ -10,12 +10,12 @@
 
 - 이 프로젝트의 Gradle daemon 최대 heap은 `gradle.properties`의 `-Xmx4096m`(4 GB)으로 설정한다. 템플릿은 2 GB를 사용하지만, 여러 feature의 androidTest APK를 한 빌드에서 패키징할 때 2 GB에서 `OutOfMemoryError: Java heap space`가 발생해 늘렸다.
 - plugin id는 참조 구현과 같은 `sg.*`를 유지한다. 등록·내부 적용·catalog alias·문서의 이름을 일치시켜 불필요한 이름 변경을 줄인다. build-logic group은 `com.sghore.chimtubeworld.buildlogic`이다.
-- app에는 application, application.compose, hilt, serialization을 적용한다. 기존 SDK 설정은 catalog에서, Java 17 호환성은 Android extension에서 제공한다. 앱 식별자·버전·BuildConfig·릴리스 설정·google-services는 app에 남긴다.
-- Compose convention은 Material 3와 공통 UI·Lifecycle·테스트 의존성을 추가한다. 기존 Material 2는 app과 designsystem이 선언하며 icons-extended는 app이 계속 선언한다.
-- Room convention은 `room.incremental=true`, `room.schemaLocation=$projectDir/schemas`를 추가하므로 현재 app에는 적용하지 않는다. 기존 Room 의존성과 KSP 설정을 유지한다.
-- library는 추출된 core에, library.compose는 designsystem·ui·navigation에 적용한다. serialization은 app·model에 적용한다. feature.api·feature.impl·room은 아직 적용하지 않았다. **마이그레이션 진행 중 — 대상 모듈 생성 후 적용**. [기준선](../migration/baseline.md)을 확인한다. feature의 `:core:*` 참조는 plugin을 적용할 때만 평가한다.
+- app에는 application, application.compose, hilt, serialization을 적용한다. SDK는 catalog, Java 17 호환성은 Android extension이 제공한다. 앱 식별자·버전·릴리스 설정·google-services는 app에 둔다. app의 BuildConfig는 비활성화하며 API 키 생성은 network가 담당한다.
+- Compose convention은 Material 3와 공통 UI·Lifecycle·테스트 의존성을 추가한다. Material icons-extended는 designsystem과 필요한 feature impl이 선언한다.
+- Room convention은 database에 적용하며 runtime·KTX·compiler와 `room.incremental=true`, `room.schemaLocation=$projectDir/schemas`를 설정한다. `exportSchema = false` 유지와 스키마 검증은 [database 규칙](../modules/core/database.md#빌드-설정과-스키마-보존)을 따른다.
+- library는 core의 기본 convention이고 library.compose는 designsystem·ui·navigation에 적용한다. serialization은 app·model과 feature API에, feature.api·feature.impl은 여섯 feature에 적용한다.
 
-Step 11의 app은 navigation3-ui와 Hilt lifecycle-viewmodel-compose를 직접 사용한다. navigation은 navigation3-runtime을 공개하고 lifecycle-viewmodel-navigation3로 entry ViewModelStore를 유지한다. 미적용 feature.impl convention의 Hilt Navigation Compose 선언은 feature 분리 단계에서 검토한다.
+app은 navigation3-ui를 사용한다. navigation은 navigation3-runtime을 공개하고 lifecycle-viewmodel-navigation3로 entry ViewModelStore를 유지한다. feature.impl convention은 Hilt Navigation Compose를 제공하며 인자 있는 화면은 EntryProvider의 `hiltViewModel(creationCallback)`으로 생성한다.
 
 ## 공통 테스트 구성
 

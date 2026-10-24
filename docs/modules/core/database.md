@@ -30,7 +30,7 @@ Room의 Entity, DAO, AppDatabase와 Room 객체를 제공하는 Hilt module을 �
 - Entity와 DAO는 저장 기술 경계의 타입이다. domain 또는 feature API로 노출하지 않는다.
 - Database 생성과 Hilt 제공 module은 database 내부 세부사항으로 `internal`을 유지한다.
 - database는 model, domain, data, feature, app에 의존하지 않는다.
-- 현재 DAO 소비자는 `:app`의 repository와 PagingSource다. `BookmarkEntity`는 app의 `data/mapper/BookmarkMapper.kt`에서 `:core:model`의 `Bookmark`와 양방향 변환한다. mapper는 data 계층 책임이므로 아직 없는 `:core:data` 대신 repository가 있는 app에 `internal`로 두며, Step 7에서 함께 이동한다.
+- DAO 소비자는 `:core:data`의 repository와 PagingSource다. `BookmarkEntity` ↔ `:core:model`의 `Bookmark` 변환은 data의 `mapper/BookmarkMapper.kt`에 `internal`로 둔다.
 - `ReadHistoryEntity`는 카페 repository·PagingSource 내부에만 머문다. 외부에는 기존처럼 `Post.isRead`와 읽음 처리 함수만 제공한다.
 
 ## 빌드 설정과 스키마 보존
@@ -47,8 +47,8 @@ Room의 Entity, DAO, AppDatabase와 Room 객체를 제공하는 Hilt module을 �
 3. JSON 재추출이 필요하면 `exportSchema = true`로 임시 변경해 빌드한다. convention이 설정한 `core/database/schemas/com.sghore.chimtubeworld.core.database.AppDatabase/2.json` 전체 내용과 identityHash를 기준 JSON과 비교한 뒤 `exportSchema = false`로 복원한다. 기준 JSON 자체는 수정하지 않는다.
 4. 기준 빌드에서 북마크·읽음 기록을 만든 뒤 새 빌드를 덮어 설치하여 데이터 유지와 조회·수정·삭제를 확인한다. 정적 대조만으로 빌드·덮어 설치 검증을 대체하지 않는다.
 
-## 구현과 템플릿 참고
+## 구현 참고
 
 - [현재 소스](../../../core/database/src/main/java/com/sghore/chimtubeworld/core/database)
-- [현재 mapper](../../../app/src/main/java/com/sghore/chimtubeworld/data/mapper/BookmarkMapper.kt)
-- 참고 템플릿: `core/database/build.gradle.kts`, `core/database/src/main/java/com/sg/androidcomposetemplate/core/database`와 `core/data/src/main/java/com/sg/androidcomposetemplate/core/data/mapper/TemplateMapper.kt`.
+- [현재 mapper](../../../core/data/src/main/java/com/sghore/chimtubeworld/core/data/mapper/BookmarkMapper.kt)
+- 빌드 설정: [build.gradle.kts](../../../core/database/build.gradle.kts). 구현 예제는 위 현재 소스와 모듈 경계 규칙을 따른다.

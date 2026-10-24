@@ -1,6 +1,6 @@
 # :core:ui
 
-Step 9에서 추출했다. namespace/package는 `com.sghore.chimtubeworld.core.ui`이며 library·library.compose convention을 적용한다.
+namespace/package는 `com.sghore.chimtubeworld.core.ui`이며 library·library.compose convention을 적용한다.
 
 ## 역할
 
@@ -32,17 +32,17 @@ feature가 공통으로 사용하는 MVI 기반 `BaseViewModel`과 `:core:model`
 - 테스트는 event를 발생시키기 전에 수집을 시작한다. `backgroundScope.launch(UnconfinedTestDispatcher(testScheduler))`로 같은 scheduler에서 수집을 먼저 시작하고, 생산 작업을 진행한 뒤 관찰한 effect를 확인한다.
 - 수집 작업과 ViewModel coroutine은 테스트 종료 시 정리한다. 현재 stream 동작을 테스트 편의에 맞춰 변경하지 않는다.
 
-작성 방법과 향후 화면 테스트는 [테스트 가이드](../../development/testing.md)를 따른다.
+작성 방법과 화면 테스트는 [테스트 가이드](../../development/testing.md)를 따른다.
 
-## 현재 포함된 구현과 이동 경계
+## 현재 포함된 구현과 경계
 
-- `base/BaseContract.kt`, `base/BaseViewModel.kt`: 템플릿에서 package만 조정해 복사했다. Step 13에서 webtoon·store, Step 15에서 cafe·chzzk의 Contract·ViewModel이 사용한다. 나머지 화면은 후속 feature MVI 단계에서 적용하며 base stream 동작은 유지한다.
-- `PagingRowList.kt`: `LazyPagingItems`를 받는 기존 목록을 그대로 이동했다. designsystem의 `RowItemCollocate`를 조합하며 모델 표시용 신규 View는 아직 없다.
-- `BottomNavigationBar`는 app의 `presentation/ReUseableView.kt`에 유지한다. 앱 탭 정의를 사용하는 navigation chrome이다. 모델·navigation에 의존하지 않는 `ScreenScaffold`는 designsystem이 제공한다.
-- `OpenOtherApp.kt`: Step 12에서 app으로의 feature 의존성을 없애기 위해 이동한 공유 Android UI helper다. 공개 클래스·메서드를 app과 webtoon·store·cafe·chzzk가 사용하며 순수 Kotlin common에는 두지 않는다. Step 13의 webtoon·store와 Step 15의 cafe·chzzk는 Route가 전달한 side effect를 각 EntryProvider에서 이 helper로 실행한다. 기존 패키지·스킴·웹 fallback·실패 토스트는 유지한다.
+- `base/BaseContract.kt`, `base/BaseViewModel.kt`: 여섯 feature의 Contract·ViewModel이 사용하는 MVI 기반 타입이다. stream 수명과 구독 정책은 위 기준을 따른다.
+- `PagingRowList.kt`: `LazyPagingItems`를 받고 designsystem의 `RowItemCollocate`를 조합한다.
+- `BottomNavigationBar`는 app의 `presentation/ReUseableView.kt`에 둔다. 앱 탭 정의를 사용하는 navigation chrome이다. 모델·navigation에 의존하지 않는 `ScreenScaffold`는 designsystem이 제공한다.
+- `OpenOtherApp.kt`: 공유 Android UI helper로 각 feature EntryProvider가 Route에서 전달받은 외부 실행 side effect를 연결한다. 패키지·스킴·웹 fallback·실패 토스트 동작을 보존하며 순수 Kotlin common에는 두지 않는다.
 
 ## 현재 구현 참고
 
 - [현재 소스](../../../core/ui/src/main/java/com/sghore/chimtubeworld/core/ui)
 - [app chrome](../../../app/src/main/java/com/sghore/chimtubeworld/presentation/ReUseableView.kt)
-- 참고 템플릿: `core/ui/build.gradle.kts`, `core/ui/src/main/AndroidManifest.xml`, `core/ui/src/main/java/com/sg/androidcomposetemplate/core/ui/base`.
+- 빌드 설정: [build.gradle.kts](../../../core/ui/build.gradle.kts). 구현 예제는 위 현재 소스와 모듈 경계 규칙을 따른다.

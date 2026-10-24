@@ -1,6 +1,6 @@
 # :core:designsystem
 
-Step 9에서 추출했다. namespace/package는 `com.sghore.chimtubeworld.core.designsystem`이다. library·library.compose convention을 적용한다. Step 10에서 Material 3로 전환했다. 공개 Shapes·Typography 타입을 위해 `androidx.compose.material3:material3`를 `api`로 제공한다.
+namespace/package는 `com.sghore.chimtubeworld.core.designsystem`이다. library·library.compose convention을 적용한다. Material 3를 사용하며 공개 Shapes·Typography 타입을 위해 `androidx.compose.material3:material3`를 `api`로 제공한다.
 
 ## 역할
 
@@ -75,28 +75,28 @@ Shapes의 small 4dp·medium 12dp·large 22dp는 그대로다. M3 추가 슬롯 e
 
 ## 컴포넌트와 의존성
 
-- Scaffold, Text, Icon, IconButton, Surface, Button, TextField, AlertDialog, CircularProgressIndicator를 M3로 전환했다. Divider는 HorizontalDivider, BottomNavigation/Item은 NavigationBar/Item으로 바꿨다. 현재 Card·OutlinedTextField 사용처는 없다.
-- accompanist TopAppBar를 M3 TopAppBar로 교체했다. 상/하단바 높이는 56dp이고 상단바는 스크롤 동작 없이 elevation 0이다. 뒤로가기 아이콘 슬롯 너비를 지정해 제목 시작 위치 72dp를 유지한다.
+- Scaffold, Text, Icon, IconButton, Surface, Button, TextField, AlertDialog, CircularProgressIndicator는 M3를 사용한다. 구분선은 HorizontalDivider, 하단바는 NavigationBar/Item을 사용한다. 현재 Card·OutlinedTextField 사용처는 없다.
+- 상단바는 M3 TopAppBar를 사용한다. 상/하단바 높이는 56dp이고 상단바는 스크롤 동작 없이 elevation 0이다. 뒤로가기 아이콘 슬롯 너비를 지정해 제목 시작 위치 72dp를 유지한다.
 - NavigationBar는 기존 XML background를 명시하고 tint 없이 8dp 그림자를 유지한다. indicator는 Transparent이며 내부 Row로 M3 기본 8dp 항목 간격을 제거해 기존 5개 탭의 균등 폭을 유지한다. 아이콘 drawable·선택 판단·navigation 콜백은 그대로다.
 - MainActivity의 enableEdgeToEdge·setSystemBarsColor는 유지한다. M2의 기존 무인셋 overload와 같은 동작을 위해 Scaffold.contentWindowInsets·TopAppBar.windowInsets·NavigationBar.windowInsets는 모두 0이다. 시스템 바를 중복해서 패딩하지 않는다.
 - TextField는 기존 text/cursor/indicator 색상과 투명 container, 14sp 스타일을 명시한다. Button은 48dp 높이·8dp 모서리·16/8dp content padding과 M2 elevation(default 2, pressed 8, focused/hovered 4, disabled 0dp)을 유지한다.
 - 로딩 원은 기존 색상에 투명 track·Square stroke cap·gap 0dp를 명시한다. M3 자체의 회전 애니메이션 타이밍은 M2와 다를 수 있다.
-- app·designsystem의 직접 `androidx.compose.material:material`, app의 accompanist-insets-ui 및 미사용 catalog alias/version을 제거했다. material-icons-extended와 XML theme용 com.google.android.material은 유지한다. Compose convention은 이미 M3를 제공하므로 변경하지 않는다.
+- app·designsystem은 `androidx.compose.material:material`과 accompanist-insets-ui에 직접 의존하지 않는다. material-icons-extended와 XML theme용 com.google.android.material은 유지한다. Compose convention은 M3를 제공한다.
 - toolbar-compose 2.3.5는 캐시의 Gradle module/POM에서 런타임 Material 2 의존성을 선언한다. 전이 의존성은 제외하지 않으며 CollapsingToolbarScaffold 호출·스크롤 동작을 유지한다. 따라서 앱 소스에 M2 component import가 없어도 runtime classpath에 M2가 남을 수 있다. coil·compose-shimmer는 유지한다.
 
-라이트/다크 Preview를 기존 component에 적용하고 북마크 입력 Preview를 추가했다. M3 AlertDialog의 기본 본문 baseline·버튼 영역 여백, ripple·로딩 애니메이션·텍스트 렌더링에는 시각 차이가 남을 수 있다. 다이얼로그 버튼은 M3의 외곽 24dp padding에 기존 padding을 중복하지 않는다. 빌드 및 실기기 라이트/다크 비교는 [스모크 체크리스트](../../migration/smoke-checklist.md)의 기존 항목으로 별도 확인한다.
+공통 component와 북마크 입력 화면은 라이트/다크 Preview를 제공한다. M3 AlertDialog의 기본 본문 baseline·버튼 영역 여백, ripple·로딩 애니메이션·텍스트 렌더링에는 시각 차이가 남을 수 있다. 다이얼로그 버튼은 M3의 외곽 24dp padding에 기존 padding을 중복하지 않는다. 빌드 및 실기기 라이트/다크 비교는 [스모크 체크리스트](../../migration/smoke-checklist.md)의 기존 항목으로 별도 확인한다.
 
 ## 현재 포함된 구현과 리소스
 
 - `theme/Color.kt`, `Shape.kt`, `Theme.kt`, `Type.kt`: Material 3 ColorScheme·Shapes·Typography와 `ChimtubeWorldTheme(darkTheme: Boolean = false, content)`를 제공한다.
 - `component/ReUseableView.kt`: 모델·Paging·navigation에 의존하지 않는 `TitleTextWithExplain`, `RowList`, `RowItemCollocate`와 theme 적용 Preview.
-- `res/values/colors.xml`, `values-night/colors.xml`: 기존 파일 전체를 값·이름·qualifier 변경 없이 이동했다. app의 XML theme도 리소스 병합으로 이 색상을 사용한다. 런처 전용 `ic_launcher_background`는 app에 유지한다.
+- `res/values/colors.xml`, `values-night/colors.xml`: 기존 값·이름·qualifier를 보존한다. app의 XML theme도 리소스 병합으로 이 색상을 사용한다. 런처 전용 `ic_launcher_background`는 app에 유지한다.
 - `drawable-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}`: `youtube`, `chzzk`, `twitch`, `webtoon`, `cafe`, `store`와 각각의 `_darker` 변형(12종, 60파일). 현재 탭 chrome과 영상 종류 표시에 쓰이며 미사용 twitch 탭 변형도 같은 아이콘 묶음으로 보존한다.
-- `drawable/ic_close.xml`, `ic_twitch_bedge.xml`: 현재 참조는 없지만 범용 닫기·플랫폼 배지 아이콘으로 함께 이동한다.
-- app에 남긴 리소스: `webtoon_cover_1..5`(웹툰 화면), `marple`, `naver`(스토어 화면), `ic_logo`(현재 미사용 로고), `splash`(XML splash), `ic_launcher_foreground`와 mipmap·`ic_launcher_background`(런처), `themes.xml`·`values-night/themes.xml`(앱 XML theme), `attrs.xml`과 `dimens.xml`의 `pageMargin`·`pagerWidth`(공유 사용처 없음). 단일 화면 자산은 feature 분리 시 이동을 검토한다.
+- `drawable/ic_close.xml`, `ic_twitch_bedge.xml`: 현재 참조는 없지만 범용 닫기·플랫폼 배지 아이콘으로 보존한다.
+- 화면 전용 자산 `webtoon_cover_1..5`는 webtoon impl, `marple`·`naver`는 store impl이 소유한다. app은 `ic_logo`(현재 미사용 로고), `splash`, 런처 drawable·mipmap·`ic_launcher_background`, XML theme, `attrs.xml`·`dimens.xml`을 소유한다.
 
 ## 현재 구현 참고
 
 - [현재 소스](../../../core/designsystem/src/main/java/com/sghore/chimtubeworld/core/designsystem)
 - [현재 리소스](../../../core/designsystem/src/main/res)
-- 참고 템플릿: `core/designsystem/build.gradle.kts`, `core/designsystem/src/main/AndroidManifest.xml`, `core/designsystem/src/main/java/com/sg/androidcomposetemplate/core/designsystem`.
+- 빌드 설정: [build.gradle.kts](../../../core/designsystem/build.gradle.kts). 구현 예제는 위 현재 소스와 모듈 경계 규칙을 따른다.
